@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-<!-- start right frame TESTING -->
+<!-- start right frame -->
 <head>
     <title>ADA Troubleshooter</title>
     ~[wc:commonscripts]
@@ -49,15 +49,16 @@
                                 powerTools.adaTroubleshooter.conversionInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayConversion();
+                                powerTools.adaTroubleshooter.retrieveCalendar();
                             });
                         },
-                        /*Retrieve Calendar Date info, default to today*/
+
                         retrieveCalendar: function(){
-                            /*                  $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?date=' +
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?date=' +
                              powerTools.adaTroubleshooter.dateEntered, function(result){
                              result.pop();
                              powerTools.adaTroubleshooter.dateInfo = result;
-                             });*/
+                             });
                         },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
