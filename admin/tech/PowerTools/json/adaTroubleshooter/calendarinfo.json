@@ -1,0 +1,129 @@
+{
+  ~[tlist_sql;
+SELECT to_char(c1.date_value,'~[datetext:mmddyyyy]'),
+c2.abbreviation,
+b1.name,
+a1.name,
+a1.id,
+CASE
+WHEN c1.insession = '1'
+THEN 'Yes'
+ELSE 'No'
+END,
+c1.membershipvalue,
+CASE
+WHEN (
+SELECT track
+FROM ps.students
+WHERE id = ~(id)
+) IS NULL
+THEN '1'
+WHEN (
+SELECT upper(track)
+FROM ps.students
+WHERE id = ~(id)
+) = 'A'
+THEN (
+SELECT to_char(c2.A)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+WHEN (
+SELECT upper(track)
+FROM ps.students
+WHERE id = ~(id)
+) = 'B'
+THEN (
+SELECT to_char(c2.B)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+WHEN (
+SELECT upper(track)
+FROM ps.students WHERE id = ~(id)
+) = 'C'
+THEN (
+SELECT to_char(c2.C)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+WHEN (
+SELECT upper(track)
+FROM ps.students
+WHERE id = ~(id)
+) = 'D'
+THEN (
+SELECT to_char(c2.D)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+WHEN (
+SELECT upper(track)
+FROM ps.students
+WHERE id = ~(id)
+) = 'E'
+THEN (
+SELECT to_char(c2.E)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+WHEN (
+SELECT upper(track)
+FROM ps.students
+WHERE id = ~(id)
+) = 'F'
+THEN (
+SELECT to_char(c2.F)
+FROM PS.calendar_day c2
+WHERE c2.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c2.schoolid = c1.schoolid
+)
+ELSE '0' END,
+Track_In_Session,
+(
+SELECT ((max(b2.end_time)-min(b2.start_time))/60)
+FROM ps.bell_schedule_items b2
+WHERE b2.bell_schedule_id = b1.id
+), Minutes
+FROM ps.calendar_day c1
+LEFT JOIN PS.cycle_day c2
+ON c1.cycle_day_id = c2.id
+LEFT JOIN PS.bell_schedule b1
+ON c1.bell_schedule_id = b1.id
+LEFT JOIN ps.attendance_conversion a1
+ON b1.attendance_conversion_id = a1.id
+WHERE c1.date_value = to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND c1.schoolid = (
+SELECT schoolid
+FROM (
+SELECT schoolid,
+entrydate,
+exitdate
+FROM ps.students
+WHERE id = ~(id)
+UNION ALL
+SELECT schoolid,
+entrydate,
+exitdate
+FROM ps.reenrollments
+WHERE studentid = ~(id)
+)
+WHERE entrydate <= to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+AND exitdate > to_date('~[gpv:dateentered]','~[datetext:mmddyyyy]')
+)
+]
+"date" : "~(c1.datevalue)",
+"day" : "~(c2.abbreviation)",
+"bellschedule" : "~(b1.name)",
+"attendanceconversion" : "~(a1.name)",
+"attendanceconversionid" : "~(a1.id)",
+"dayinsession" : "~(c1.insession)",
+"membershipvalue" : "~(c1.membershipvalue)",
+"trackinsession" : "~(Track_in_session)"
+[/tlist_sql]
+}
