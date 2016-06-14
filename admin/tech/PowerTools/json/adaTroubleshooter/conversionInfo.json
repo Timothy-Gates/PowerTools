@@ -1,0 +1,16 @@
+[
+  ~[tlist_sql;
+SELECT input_value, attendance_value, daypartid
+FROM ps.attendance_conversion_items
+WHERE fteid =~[gpv:fteid]
+AND conversion_mode_code ='~[gpv:modeCode]'
+ORDER BY input_value
+]
+{
+  "periodLabel" : "~(input_value)",
+  "periodValue": "~(attendance_value)",
+  "dayPartId": "~(daypartid)"
+},
+[/tlist_sql]
+{}
+]
