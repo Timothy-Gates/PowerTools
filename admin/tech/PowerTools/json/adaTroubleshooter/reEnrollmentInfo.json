@@ -1,0 +1,17 @@
+[
+  ~[tlist_sql;
+SELECT entrydate, exitdate, grade_level
+FROM ps.reenrollments
+WHERE studentid=35 AND schoolid=100
+]
+{
+"entrydate": "~(entrydate)",
+"exitdate": "~(exitdate)",
+"grade_level": "~(grade_level)"
+},
+[/tlist_sql]
+{}
+]
+
+
+

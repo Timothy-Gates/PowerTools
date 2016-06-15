@@ -1,18 +1,19 @@
 [
   ~[tlist_sql;
-  SELECT a.date_value, a.insession, a.membershipvalue, a.a, a.b, a.c, a.d, a.e, a.f,
-  b.name, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, e.att_code, e.calculate_ada_yn,
-  e.calculate_adm_yn, e.description, e.presence_status_cd
-  FROM ps.calendar_day a
-  LEFT JOIN ps.bell_schedule b
-  ON a.bell_schedule_id = b.id
-  LEFT JOIN ps.cycle_day c
-  ON a.cycle_day_id = c.id
-  LEFT JOIN ps.attendance d
-  ON a.id = d.calendar_dayid AND d.studentid = '35' AND d.att_mode_code='ATT_ModeDaily'
-  LEFT JOIN ps.attendance_code e
-  ON d.attendance_codeid = e.id
-  WHERE a.date_value >='25-SEP-15' AND a.date_value <='25-SEP-15' AND a.schoolid='100'
+SELECT a.date_value, a.insession, a.membershipvalue, a.a, a.b, a.c, a.d, a.e, a.f,
+b.name, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, e.att_code, e.calculate_ada_yn,
+e.calculate_adm_yn, e.description, e.presence_status_cd
+FROM ps.calendar_day a
+LEFT JOIN ps.bell_schedule b
+ON a.bell_schedule_id = b.id
+LEFT JOIN ps.cycle_day c
+ON a.cycle_day_id = c.id
+LEFT JOIN ps.attendance d
+ON a.id = d.calendar_dayid AND d.studentid = '35' AND d.att_mode_code='ATT_ModeDaily'
+LEFT JOIN ps.attendance_code e
+ON d.attendance_codeid = e.id
+WHERE a.date_value >= to_date('09/01/15','MM/DD/YY') AND a.date_value <= to_date('09/30/15','MM/DD/YY')AND a.schoolid='100'
+ORDER BY a.date_value
 ]
 {
   "date": "~(a.date_value)",
@@ -38,6 +39,3 @@
 [/tlist_sql]
 {}
 ]
-
-
-
