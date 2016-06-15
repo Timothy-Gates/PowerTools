@@ -1,41 +1,42 @@
 [
-  ~[tlist_sql;
+~[tlist_sql;
 SELECT a.date_value, a.insession, a.membershipvalue, a.a, a.b, a.c, a.d, a.e, a.f,
-        b.name, c.ada_value_code, c.ada_value_time, c.ada_value, d.att_code, d.calculate_ada_yn,
-        d.calculate_adm_yn, d.description, d.presence_status_cd, e.day_name
+b.name, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, e.att_code, e.calculate_ada_yn,
+e.calculate_adm_yn, e.description, e.presence_status_cd
 FROM ps.calendar_day a
 LEFT JOIN ps.bell_schedule b
-ON a.bell_scheduleiid = b.id
-LEFT JOIN ps.attendance c
-ON a.id = c.calendar_dayid
-LEFT JOIN ps.attendance_code d
-ON c.attendance_codeid = d.id
-LEFT JOIN ps.cycle_day e
-ON a.cycle_day_id = e.id
-WHERE EXTRACT(month FROM a.date_value) = ~[gpv:currentMonth] AND EXTRACT(year FROM a.date_value) = ~[gpv:currentYear]
-AND a.schoolid = (~curschoolid) AND c.studentid = (~curstudid)
+ON a.bell_schedule_id = b.id
+LEFT JOIN ps.cycle_day c
+ON a.cycle_day_id = c.id
+LEFT JOIN ps.attendance d
+ON a.id = d.calendar_dayid AND d.studentid = '35'
+LEFT JOIN ps.attendance_code e
+ON d.attendance_codeid = e.id
+WHERE a.date_value >='01-JUN-15' AND a.date_Value <='30-JUN-15' AND a.schoolid='100'
+ORDER BY a.date_value
 ]
 {
-"date": "~(a.date_value)",
-"inSession": "~(a.insession)",
-"membershipValue": "~(a.membershipvalue)",
-"trackA": "~(a.a)",
-"trackB": "~(a.b)",
-"trackC": "~(a.c)",
-"trackD": "~(a.d)",
-"trackE": "~(a.e)",
-"trackF": "~(a.f)",
-"bellScheduleName": "~(b.name)",
-"adaValueCode": "~(c.ada_value_code)",
-"adaValueTime": "~(c.ada_value_time",
-"adaValue": "~(c.ada_value)",
-"attCode": "~(d.att_code)",
-"countsAda": "~(d.calculate_ada_yn)",
-"countsAdm": "~(d.calculate_adm_yn)",
-"attCodeDescription": "~(d.description)",
-"presenceStatus": "~(d.presence_status_cd)",
-"cycleDayName": "~(e.day_name)"
-}
+  "date": "~(a.date_value)",
+  "inSession": "~(a.insession)",
+  "membershipValue": "~(a.membershipvalue)",
+  "trackA": "~(a.a)",
+  "trackB": "~(a.b)",
+  "trackC": "~(a.c)",
+  "trackD": "~(a.d)",
+  "trackE": "~(a.e)",
+  "trackF": "~(a.f)",
+  "bellScheduleName": "~(b.name)",
+  "cycleDayName": "~(c.day_name)",
+  "adaValueCode": "~(d.ada_value_code)",
+  "adaValueTime": "~(d.ada_value_time)",
+  "admValue": "~(d.adm_value)",
+  "attCode": "~(e.att_code)",
+  "countsInADA": "~(e.calculate_ada_yn)",
+  "countsInAdm": "~(e.calculate_adm_yn)",
+  "codeDescription": "~(e.description)",
+  "presenceStatus": "~(e.presence_status_cd)"
+},
 [/tlist_sql]
 {}
 ]
+

@@ -15,7 +15,7 @@
                         studentFrn: '~(frn)',
                         studentInfo: {},
                         fteInfo: {},
-                        dateInfo: {},
+                        dateInfo: [],
                         reEnrollInfo: {},
                         currentDate: {day: 1,month: 1, year: 1990},
                         conversionInfo: {},
@@ -54,11 +54,11 @@
                         },
 
                         retrieveCalendar: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?date=' +
-                             powerTools.adaTroubleshooter.dateEntered, function(result){
-                             result.pop();
-                             powerTools.adaTroubleshooter.dateInfo = result;
-                             });
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json', function(result){
+                                result.pop();
+                                alert(result);
+                                powerTools.adaTroubleshooter.dateInfo = result;
+                            });
                         },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
