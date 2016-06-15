@@ -5,32 +5,32 @@ FROM ps.fte f1
 LEFT JOIN ps.schools s1
 ON f1.schoolid = s1.school_number
 WHERE f1.id = (
-SELECT fteid
-FROM (
-SELECT fteid, entrydate, exitdate
-FROM ps.students
-WHERE id ='~[gpv:id]'
-UNION ALL
-SELECT fteid, entrydate, exitdate
-FROM ps.reenrollments
-WHERE studentid = '~[gpv:id]'
-)
-WHERE entrydate <= to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
-AND exitdate > to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
-)
+  SELECT fteid
+  FROM (
+    SELECT fteid, entrydate, exitdate
+    FROM ps.students
+    WHERE id ='~[gpv:id]'
+    UNION ALL
+    SELECT fteid, entrydate, exitdate
+    FROM ps.reenrollments
+    WHERE studentid = '~[gpv:id]'
+  )
+  WHERE entrydate <= to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
+  AND exitdate > to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
+  )
 AND f1.schoolid = (
-SELECT schoolid
-FROM (
-SELECT schoolid, entrydate, exitdate
-FROM ps.students
-WHERE id = '~[gpv:id]'
-UNION ALL
-SELECT schoolid, entrydate, exitdate
-FROM ps.reenrollments
-WHERE studentid = '~[gpv:id]'
-)
-WHERE entrydate <= to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
-AND exitdate > to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
+  SELECT schoolid
+  FROM (
+    SELECT schoolid, entrydate, exitdate
+    FROM ps.students
+    WHERE id = '~[gpv:id]'
+    UNION ALL
+    SELECT schoolid, entrydate, exitdate
+    FROM ps.reenrollments
+    WHERE studentid = '~[gpv:id]'
+  )
+  WHERE entrydate <= to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
+  AND exitdate > to_date('~[gpv:dateentered]', '~[datetext:mmddyyyy]')
 )
 ]
 "fteid": "~(f1.id)",

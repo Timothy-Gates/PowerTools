@@ -49,8 +49,6 @@
                                 powerTools.adaTroubleshooter.conversionInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayConversion();
-                                powerTools.adaTroubleshooter.retrieveCalendar();
-                                powerTools.adaTroubleshooter.retrieveReEnrollments();
                             });
                         },
 
@@ -58,6 +56,15 @@
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?',function(result){
                                         result.pop();
                                         powerTools.adaTroubleshooter.dateInfo = result;
+                            });
+                        },
+                        /* Retrieve ReEnrollment Records by current studentid and current schoolid */
+                        retrieveReEnrollments: function(){
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/reEnrollmentInfo.json',function(result){
+                                result.pop();
+                                powerTools.adaTroubleshooter.reEnrollInfo = result;
+                            }).done(function(){
+                                powerTools.adaTroubleshooter.displayPrevEnrollments();
                             });
                         },
                         <!--Build Calendar and set it to current Month -->
@@ -87,15 +94,6 @@
                             $j('#calendarData > tbody:last-child').append(
                                     '</tr></tbody></table>'
                             );
-                        },
-                        /* Retrieve ReEnrollment Records by current studentid and current schoolid */
-                        retrieveReEnrollments: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/reEnrollmentInfo.json',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.reEnrollInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.displayPrevEnrollments();
-                            });
                         },
                         /* Display Student Info */
                         displayStudent: function(){
@@ -151,6 +149,8 @@
         $j(document).ready(function(){
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.retrieveFte();
+            powerTools.adaTroubleshooter.retrieveCalendar();
+            powerTools.adaTroubleshooter.retrieveReEnrollments();
             powerTools.adaTroubleshooter.buildCalendar();
         });
 
