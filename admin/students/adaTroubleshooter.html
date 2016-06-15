@@ -55,9 +55,9 @@
                         },
 
                         retrieveCalendar: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.dateInfo = result;
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?',function(result){
+                                        result.pop();
+                                        powerTools.adaTroubleshooter.dateInfo = result;
                             });
                         },
                         <!--Build Calendar and set it to current Month -->
@@ -82,13 +82,11 @@
                                     $j('#calendar > tbody:last-child').append(
                                             '<td class="square">' + daysObj[i][j].day + '</td>'
                                     );
-
                                 }
                             }
                             $j('#calendarData > tbody:last-child').append(
                                     '</tr></tbody></table>'
                             );
-
                         },
                         /* Retrieve ReEnrollment Records by current studentid and current schoolid */
                         retrieveReEnrollments: function(){

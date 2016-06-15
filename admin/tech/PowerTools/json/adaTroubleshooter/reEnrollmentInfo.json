@@ -1,6 +1,6 @@
 [
 ~[tlist_sql;
-SELECT entrydate, exitdate, grade_level
+SELECT to_char(entrydate,'~[datetext:mmddyyyy]'), to_char(exitdate,'~[datetext:mmddyyyy]'), grade_level
 FROM ps.reenrollments
 WHERE studentid=~(curstudid) AND schoolid=~(curschoolid)
 ORDER BY entrydate DESC
