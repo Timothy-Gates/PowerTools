@@ -95,6 +95,8 @@
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/reEnrollmentInfo.json',function(result){
                                 result.pop();
                                 powerTools.adaTroubleshooter.reEnrollInfo = result;
+                            }).done(function(){
+                                powerTools.adaTroubleshooter.displayPrevEnrollments();
                             });
                         },
                         /* Display Student Info */
@@ -132,6 +134,20 @@
                                     '</table>'
                             );
                         },
+                        displayPrevEnrollments: function(){
+                            $j('#conversionData').append(
+                                    '<table class="grid" id="prevEnrollmentTable"><th colspan="3" align="center">Previous Enrollments</th>'+
+                                    '<tr><td align="center">Entry Date</td><td align="center">Exit Date</td><td align="center">Grade Level</td></tr>+' +
+                                    '<tbody id="prevEnrollmentBody"></tbody></table>'
+                            );
+                            for(var i=0; i < powerTools.adaTroubleshooter.reEnrollInfo.length; i++){
+                                $j('#prevEnrollmentBody').append(
+                                        '<tr><td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].entryDate + '</td>' +
+                                        '<td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].exitDate + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.reEnrollInfo[i].gradeLevel + '</td></tr>'
+                                );
+                            }
+                        }
                     }
                 };
         $j(document).ready(function(){
