@@ -10,15 +10,15 @@
         var powerTools = powerTools || {
                     adaTroubleshooter: {
                         studentCompletionCount: 0,
-                        dateEntered: '06/09/2015',
+                        dateEntered: '06/09/2016',
                         studentId: '~(id)',
                         studentFrn: '~(frn)',
                         studentInfo: {},
                         fteInfo: {},
                         dateInfo: {},
                         reEnrollInfo: {},
-                        currentDate: {day: 1,month: 1, year: 1990},
-                        conversionInfo: {},
+                        currentDate: {day: 0,month: 0, year: 0},
+                        daysObjects: [],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json?id=' +
@@ -37,67 +37,64 @@
                                 powerTools.adaTroubleshooter.fteInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayFte();
-                                powerTools.adaTroubleshooter.retrieveConversion();
-                            });
-                        },
-                        /* Retrieve Attendance Conversion information with FTE ID and student FRN */
-                        retrieveConversion: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/conversionInfo.json?fteID=' +
-                                    powerTools.adaTroubleshooter.fteInfo.fteid + '&modeCode=' +
-                                    powerTools.adaTroubleshooter.fteInfo.conversionmodecode.toLowerCase(), function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.conversionInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.displayConversion();
-                                powerTools.adaTroubleshooter.retrieveCalendar();
-                                powerTools.adaTroubleshooter.retrieveReEnrollments();
-                            });
-                        },
-
-                        retrieveCalendar: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.dateInfo = result;
                             });
                         },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
+                            $j('#calendarData').empty();
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-                            var daysObj = [];
-                            var day = 0;
+                            var startDate = new Date(powerTools.adaTroubleshooter.currentDate.year,powerTools.adaTroubleshooter.currentDate.month-1, 1);
+                            var inMonth = 0;
+                            var outMonth = startDate.getDay() -1;
+                            var day = getDaysInMonth(startDate.getMonth()-1)-outMonth;
                             $j('#calendarData').append(
-                                    '<table class="grid" id="calendar" style="max-width:1200px"><th colspan="7" align=""center"><div style="width: 53%; float: left; text-align: right;">' +
-                                    months[powerTools.adaTroubleshooter.currentDate.month-1] + powerTools.adaTroubleshooter.currentDate.year + '</div><div style="width: 47%; float: left; text-align: right;"><input type="text" class="psDateWidget" /></div></th><tbody>'+
-                                    '<tr><td>Sun</td><td>Mon</td><td>Tues</td><td>Wed</td><td>Thurs</td><td>Fri</td><td>Sat</td>'
+                                  '<table class="grid" id="calendar" style="max-width:1200px"><th colspan="7" align=""center">' +
+                                  months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
+                                  '<tr><td>Sun</td><td>Mon</td><td>Tues</td><td>Wed</td><td>Thurs</td><td>Fri</td><td>Sat</td>'
                             );
-                            for(var i=0; i<5; i++){
+                            for(var i=0; i<6; i++){
                                 $j('#calendar > tbody:last-child').append(
                                         '</tr><tr>'
                                 );
-                                daysObj.push([]);
                                 for(var j=0;j<7;j++){
-                                    day++;
-                                    daysObj[i].push({day:day});
+                                    if(inMonth == 0 && day > getDaysInMonth(startDate.getMonth()-1)){
+                                        day = 1;
+                                        inMonth = 1;
+                                    }
+                                    else if(inMonth == 1 && day > getDaysInMonth(startDate.getMonth())){
+                                        day = 1;
+                                        inMonth == 2;
+                                    }
+                                    if(inMonth == 1) {
+                                        powerTools.adaTroubleshooter.daysObjects.push({day: day});
+                                    }
                                     $j('#calendar > tbody:last-child').append(
-                                            '<td class="square">' + daysObj[i][j].day + '</td>'
+                                            '<td class="square">' + day + '</td>'
                                     );
+                                    day++;
                                 }
                             }
                             $j('#calendarData > tbody:last-child').append(
-                                    '</tr></tbody></table>'
+                                  '</tr></tbody></table>'
                             );
+                            function getDaysInMonth(month)
+                            {
+                                if(month == 1)
+                                {
+                                    if(powerTools.adaTroubleshooter.currentDate.year %4 == 0 && powerTools.adaTroubleshooter.currentDate.year % 100 != 0 ||
+                                            powerTools.adaTroubleshooter.currentDate.year % 400 == 0) {
+                                        return 29;
+                                    }
+                                }
+                                else if(month == -1){
+                                    return 31;
+                                }
+                                return daysInMonth[month];
+                            }
+
                         },
-                        /* Retrieve ReEnrollment Records by current studentid and current schoolid */
-                        retrieveReEnrollments: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/reEnrollmentInfo.json',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.reEnrollInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.displayPrevEnrollments();
-                            });
-                        },
-                        /* Display Student Info */
+                        /* How does this work */
                         displayStudent: function(){
                             $j('#studentData').append(
                                     '<table class="grid" id="studentTable"><th colspan="2" align="center">Student Information</th>'+
@@ -107,19 +104,6 @@
                                     '<tr><td>Track:</td><td>' + powerTools.adaTroubleshooter.studentInfo.track + '</td></tr>'+
                                     '</table>'
                             );
-                        },
-                        /* Display Conversion Info */
-                        displayConversion: function(){
-                            $j('#conversionData').append(
-                                    '<table class="grid" id="conversionTable"><th colspan="2" align="center">Conversion Information</th>'+
-                                    '<tr><td align="center">Periods\\Intervals\\Time in Attendance</td><td align="center">Attendance Points Awarded</td></tr><tbody id="conversionBody"></tbody></table>'
-                            );
-                            for(var i=0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++){
-                                $j('#conversionBody').append(
-                                        '<tr><td align="center">' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel + '</td>' +
-                                        '<td align="center">' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                );
-                            }
                         },
                         /* Display School Info */
                         displayFte: function(){
@@ -131,36 +115,34 @@
                                     '<tr><td>Attendance Conversion:</td><td>' + powerTools.adaTroubleshooter.fteInfo.conversionmodecode + '</td></tr>'+
                                     '</table>'
                             );
-                        },
-                        displayPrevEnrollments: function(){
-                            $j('#conversionData').append(
-                                    '<table class="grid" id="prevEnrollmentTable"><th colspan="3" align="center">Previous Enrollments</th>'+
-                                    '<tr><td align="center">Entry Date</td><td align="center">Exit Date</td><td align="center">Grade Level</td></tr>+' +
-                                    '<tbody id="prevEnrollmentBody"></tbody></table>'
-                            );
-                            for(var i=0; i < powerTools.adaTroubleshooter.reEnrollInfo.length; i++){
-                                $j('#prevEnrollmentBody').append(
-                                        '<tr><td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].entryDate + '</td>' +
-                                        '<td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].exitDate + '</td>'+
-                                        '<td>' + powerTools.adaTroubleshooter.reEnrollInfo[i].gradeLevel + '</td></tr>'
-                                );
-                            }
                         }
                     }
                 };
         $j(document).ready(function(){
+            var today = new Date();
+            powerTools.adaTroubleshooter.currentDate.day = today.getDate();
+            powerTools.adaTroubleshooter.currentDate.month = today.getMonth() +1;
+            powerTools.adaTroubleshooter.currentDate.year = today.getFullYear();
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.retrieveFte();
             powerTools.adaTroubleshooter.buildCalendar();
+            $j('#dateSelector').on('change', function () {
+                var selectedDate =[3];
+                selectedDate = $j('#dateSelector').val().split("/");
+                powerTools.adaTroubleshooter.currentDate.month = selectedDate[0];
+                powerTools.adaTroubleshooter.currentDate.day = selectedDate[1];
+                powerTools.adaTroubleshooter.currentDate.year = selectedDate[2];
+                powerTools.adaTroubleshooter.buildCalendar();
+            });
         });
 
     </script>
-    <style>
-        .square {
-            width: 14.28%;
-            padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
-        }
-    </style>
+<style>
+    .square {
+        width: 14.28%;
+        padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+    }
+</style>
 </head>
 <body>
 ~[wc:admin_header_frame_css]
@@ -175,16 +157,16 @@
     <div id="dateSelection">
         <table class="linkDescList">
             <tb><p><b>This utility will help to determine how Average Daily Attendance and Membership are calculated, should the attendance views
-                be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
-                    the Premier Attendance Views Data</a>.
+               be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
+               the Premier Attendance Views Data</a>.
             </b></p></tb>
         </table>
     </div>
     <div id="error"></div>
     <div id="studentData"></div>
     <div id="fteData"></div>
-    <div id="conversionData"></div>
     <div id="dayInformation"></div>
+        <table class="linkDescList"><th>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th></table>
     <div id="calendarData" align="center"></div>
     <div id="prevEnrollmentData"></div>
     <div id="calendarLegend"></div>
