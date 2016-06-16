@@ -22,26 +22,35 @@
                         conversionInfo:{},
                         /* Retrieve Student info */
                         retrieveStudent: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json?id=' +
-                                    powerTools.adaTroubleshooter.studentId + '&dateEntered=' +
-                                    powerTools.adaTroubleshooter.dateEntered, function(result){
-                                powerTools.adaTroubleshooter.studentInfo = result;
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json', function(result){
+                                    result.pop();
+                                    powerTools.adaTroubleshooter.studentInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayStudent();
+                               /* powerTools.adaTroubleshooter.retrieveFte();*/
                             });
                         },
-                        /* Retrieve School info */
-                        retrieveFte: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/fteinfo.json?id=' +
-                                    powerTools.adaTroubleshooter.studentId + '&dateentered=' +
-                                    powerTools.adaTroubleshooter.dateEntered, function(result){
+                        /* Iterate through studentInfo to find FteID for enrollment based on dateEntered */
+                        /*grabValidFTE: function(fteId){
+                            for(var i=0; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                if(powerTools.adaTroubleshooter.studentInfo[i].entryDate <= powerTools.adaTroubleshooter.dateEntered &&
+                                powerTools.adaTroubleshooter.studentInfo[i].exitDate >= powerTools.adaTroubleshooter.dateEntered){
+                                    return(powerTools.adaTroubleshooter.studentInfo[i].fteID);
+                                }
+                            }
+                            return(false);
+                        },*/
+                        /* Retrieve FTE info for current enrollment*/
+                        /*retrieveFte: function(){
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/fteinfo.json?fteId=' +
+                                    powerTools.adaTroubleshooter.studentInfo[0].fteId, function(result){
                                 powerTools.adaTroubleshooter.fteInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayFte();
                                 powerTools.adaTroubleshooter.retrieveConversion();
                             });
-                        },
-                        /* Retrieve Attendance Conversion information with FTE ID and student FRN */
+                        },*/
+                        /* Retrieve Attendance Conversion information with FTE ID */
                         retrieveConversion: function(){
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/conversionInfo.json?fteID=' +
                                     powerTools.adaTroubleshooter.fteInfo.fteid + '&modeCode=' +
@@ -51,16 +60,6 @@
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayConversion();
                                 powerTools.adaTroubleshooter.retrieveCalendar();
-                                powerTools.adaTroubleshooter.retrieveReEnrollments();
-                            });
-                        },
-                        /* Retrieve ReEnrollment Records by current studentid and current schoolid */
-                        retrieveReEnrollments: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/reEnrollmentInfo.json',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.reEnrollInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.displayPrevEnrollments();
                             });
                         },
                         retrieveCalendar: function(){
@@ -127,13 +126,22 @@
                         /* How does this work */
                         displayStudent: function(){
                             $j('#studentData').append(
-                                    '<table class="grid" id="studentTable"><th colspan="2" align="center">Student Information</th>'+
-                                    '<tr><td>Entry Date:</td><td>' + powerTools.adaTroubleshooter.studentInfo.entrydate + '</td></tr>'+
-                                    '<tr><td>Exit Date:</td><td>' + powerTools.adaTroubleshooter.studentInfo.exitdate + '</td></tr>'+
-                                    '<tr><td>Membership Share:</td><td>' + powerTools.adaTroubleshooter.studentInfo.membershipshare + '</td></tr>'+
-                                    '<tr><td>Track:</td><td>' + powerTools.adaTroubleshooter.studentInfo.track + '</td></tr>'+
-                                    '</table>'
+                                    '<table class="grid" id="studentTable"><th colspan="7" align="center">Student Information</th>'+
+                                    '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Membership Share</td>'+
+                                    '<td>FTE Name</td><td>Attendance Mode</td><td>Attendance Conversion</td></tr>'+
+                                    '<tbody id="studentTableBody"></tbody></table>'
                             );
+                            for(var i=0; i<powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                $j('#studentTableBody').append(
+                                        '<tr><td>' + powerTools.adaTroubleshooter.studentInfo[i].entryDate + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].exitDate + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].gradeLevel + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].membershipShare + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].fteName + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].attModeCode + '</td>'+
+                                        '<td>' + powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
+                                );
+                            }
                         },
                         /* Display School Info */
                         displayFte: function(){
@@ -158,22 +166,7 @@
                                         '<td align="center">' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
                                 );
                             }
-                        },
-                        displayPrevEnrollments: function(){
-                            $j('#conversionData').append(
-                                    '<table class="grid" id="prevEnrollmentTable"><th colspan="3" align="center">Previous Enrollments</th>'+
-                                    '<tr><td align="center">Entry Date</td><td align="center">Exit Date</td><td align="center">Grade Level</td></tr>+' +
-                                    '<tbody id="prevEnrollmentBody"></tbody></table>'
-                            );
-                            for(var i=0; i < powerTools.adaTroubleshooter.reEnrollInfo.length; i++){
-                                $j('#prevEnrollmentBody').append(
-                                        '<tr><td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].entryDate + '</td>' +
-                                        '<td align="center">' + powerTools.adaTroubleshooter.reEnrollInfo[i].exitDate + '</td>'+
-                                        '<td>' + powerTools.adaTroubleshooter.reEnrollInfo[i].gradeLevel + '</td></tr>'
-                                );
-                            }
                         }
-
                     }
                 };
         $j(document).ready(function(){
@@ -182,7 +175,6 @@
             powerTools.adaTroubleshooter.currentDate.month = today.getMonth() +1;
             powerTools.adaTroubleshooter.currentDate.year = today.getFullYear();
             powerTools.adaTroubleshooter.retrieveStudent();
-            powerTools.adaTroubleshooter.retrieveFte();
             powerTools.adaTroubleshooter.buildCalendar();
             $j('#dateSelector').on('change', function () {
                 var selectedDate =[3];
