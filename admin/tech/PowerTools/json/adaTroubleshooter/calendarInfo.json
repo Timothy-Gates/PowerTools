@@ -13,7 +13,7 @@ LEFT JOIN ps.attendance d
 ON a.id = d.calendar_dayid AND d.studentid = ~(curstudid) AND d.att_mode_code='ATT_ModeDaily'
 LEFT JOIN ps.attendance_code e
 ON d.attendance_codeid = e.id
-WHERE a.date_value >= to_date('09/01/2015','MM/DD/YYYY') AND a.date_value <= to_date('09/30/2015','MM/DD/YYYY')AND a.schoolid='100'
+WHERE a.date_value >= to_date(~[gpv:startDate],'MM/DD/YYYY') AND a.date_value <= to_date(~[gpv:endDate],'MM/DD/YYYY')AND a.schoolid='100'
 ORDER BY a.date_value
 ]
 {

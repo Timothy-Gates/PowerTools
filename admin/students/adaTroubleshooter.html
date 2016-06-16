@@ -15,10 +15,9 @@
                         studentFrn: '~(frn)',
                         studentInfo: {},
                         fteInfo: {},
-                        dateInfo: {},
+                        dateInfo: [],
                         reEnrollInfo: {},
                         currentDate: {day: 0,month: 0, year: 0},
-                        daysObjects: [],
                         conversionInfo:{},
                         /* Retrieve Student info */
                         retrieveStudent: function(){
@@ -66,6 +65,8 @@
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?',function(result){
                                 result.pop();
                                 powerTools.adaTroubleshooter.dateInfo = result;
+                            }).done(function(){
+                                powerTools.adaTroubleshooter.buildCalendar();
                             });
                         },
                         <!--Build Calendar and set it to current Month -->
@@ -73,10 +74,36 @@
                             $j('#calendarData').empty();
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                            <!-- starDate is an object with the first day of the month for the calendar -->
                             var startDate = new Date(powerTools.adaTroubleshooter.currentDate.year,powerTools.adaTroubleshooter.currentDate.month-1, 1);
+                            <!-- inMonth 0 means the previous month, 1 means the current month, and 2 means the next month -->
                             var inMonth = 0;
+                            <!-- outMonth says which day of the week the last day of the previous month is on -->
                             var outMonth = startDate.getDay() -1;
+                            <!-- day shows current day that the calendar is pointing to, if greater than length of month will be reset to 1 -->
                             var day = getDaysInMonth(startDate.getMonth()-1)-outMonth;
+                            <!-- first day of the calendar -->
+                            var firstDay = new Date(powerTools.adaTroubleshooter.currentDate.month==1?powerTools.adaTroubleshooter.currentDate.year-1:powerTools.adaTroubleshooter.currentDate.year,
+                                                     outMonth==-1?powerTools.adaTroubleshooter.currentDate.month-1:powerTools.adaTroubleshooter.currentDate.month==1?11:powerTools.adaTroubleshooter.currentDate.month-2,
+                                                     day > getDaysInMonth(startDate.getMonth()-1)?1:day);
+                            firstDay = (firstDay.getMonth()+1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear();
+                            <!-- last day of the calendar -->
+                            var lastDay = new Date(powerTools.adaTroubleshooter.currentDate.month==12?powerTools.adaTroubleshooter.currentDate.year+1:powerTools.adaTroubleshooter.currentDate.year,
+                                                    powerTools.adaTroubleshooter.currentDate.month==12?0:powerTools.adaTroubleshooter.currentDate.month,
+                                                    17);
+                            lastDay = (lastDay.getMonth()+1) + '/' + lastDay.getDate() + '/' + lastDay.getFullYear();
+                            $j.ajaxSetup({
+                                async: false
+                            })
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?startDate=' + firstDay + '&EndDate=' + lastDay,function(result){
+                                result.pop();
+                                powerTools.adaTroubleshooter.dateInfo = result;
+                            }).done(function(){
+                                powerTools.adaTroubleshooter.buildCalendar();
+                            });
+                            $j.ajaxSetup({
+                                async: true
+                            });
                             $j('#calendarData').append(
                                   '<table class="grid" id="calendar" style="max-width:1200px"><th colspan="7" align=""center">' +
                                   months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
@@ -95,13 +122,19 @@
                                         day = 1;
                                         inMonth == 2;
                                     }
-                                    if(inMonth == 1) {
-                                        powerTools.adaTroubleshooter.daysObjects.push({day: day});
-                                    }
                                     $j('#calendar > tbody:last-child').append(
-                                            '<td class="square">' + day + '</td>'
+                                            '<td class="square">' + day + "  " + powerTools.adaTroubleshooter.dateInfo.membershipValue+ '</td>'
                                     );
                                     day++;
+                                }
+                            }
+                            for(var i=0, table = document.getElementById('calendar'), tbody = table.getElementsByTagName('tbody')[0], cells = tbody.getElementsByTagnName('td'); i<cells.length; i++)
+                            {
+                                if(powerTools.adaTroubleshooter.dateInfo[i].inSession == 1){
+                                    cells[i +7].style.backgroundColor='green';
+                                }
+                                else{
+                                    cells[i +7].style.backgroundColor='grey';
                                 }
                             }
                             $j('#calendarData > tbody:last-child').append(
