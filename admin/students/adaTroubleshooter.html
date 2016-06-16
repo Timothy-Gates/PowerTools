@@ -95,11 +95,9 @@
                             $j.ajaxSetup({
                                 async: false
                             })
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?startDate=' + firstDay + '&EndDate=' + lastDay,function(result){
+                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?startDate=' + firstDay + '&endDate=' + lastDay,function(result){
                                 result.pop();
                                 powerTools.adaTroubleshooter.dateInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.buildCalendar();
                             });
                             $j.ajaxSetup({
                                 async: true
