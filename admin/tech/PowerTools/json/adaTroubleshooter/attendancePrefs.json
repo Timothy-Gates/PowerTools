@@ -1,0 +1,17 @@
+[
+~[tlist_sql;
+SELECT name, schoolID, value, yearID
+FROM ps.prefs
+WHERE name IN (ATT_RecordModeMeeting, att_recordmodedaily, att_recordmodeTime, att_recordmodeInterval,
+ATT_RecordSectionDailySynchMode, ATT_InvtervalDuration, ATT_CalcCntAttOthSchEnrThisSch, ATT_CalcCntPresentsAbsences)
+AND schoolid=~(curschoolid)
+]
+{
+"name": "~(name)",
+"schoolID": "~(schoolID)",
+"value": "~(value)",
+"yearID": "~(yearID)"
+},
+[/tlist_sql]
+{}
+]
