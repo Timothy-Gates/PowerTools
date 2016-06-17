@@ -24,7 +24,6 @@
                                 powerTools.adaTroubleshooter.displayStudent();
                                 powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                 powerTools.adaTroubleshooter.retrieveConversion();
-                               /* powerTools.adaTroubleshooter.retrieveFte();*/
                             });
                         },
                         /* Retrieve Attendance Conversion information with FTE ID */
@@ -175,9 +174,17 @@
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(){
+                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum
+                            var attCode = powerTools.adaTroubleshooter.dateInfo[curRecord].attCode == ''?'Present': powerTools.adaTroubleshooter.dateInfo[curRecord].attCode;
+                            if(powerTools.adaTroubleshooter.dateInfo[curRecord].inSession== 0){
+                                attCode = 'Not in Session';
+                            }
                             $j('#dayInformation').empty();
                             $j('#dayInformation').append(
-                                    '<table class="grid"><th colspan=2>Ada/Adm information for: ' + powerTools.adaTroubleshooter.dateInfo[powerTools.adaTroubleshooter.dateEntered.recordNum].date + '</th></table>'
+                                    '<table class="grid" id="dayTable"><th colspan=2>Ada/Adm information for: ' + powerTools.adaTroubleshooter.dateInfo[curRecord].date + '</th>'
+                            );
+                            $j('#dayTable').append(
+                                    '<tr><td>Student AttendanceCode</td><td>' + attCode + '</td>'
                             );
                         },
                         displayPreviousEnrollments: function(){
