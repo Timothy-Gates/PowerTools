@@ -79,10 +79,19 @@
                                 };
                             };
                         },
+                        <!--Displays the Content of the Legend for reference -->
+                        buildLegend: function(){
+                            $j('#legend').append(
+                                    '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'
+                            );
+                        },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
                             $j('#calendarData').empty();
                             var curColor;
+                            <!-- record start stores the start of the records for the day recordCount tracks the last record for the day-->
+                            var recordStart;
+                            var recordCount = 0;
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                             <!-- starDate is an object with the first day of the month for the calendar -->
@@ -123,6 +132,13 @@
                                         '</tr><tr>'
                                 );
                                 for(var j=0;j<7;j++){
+                                    recordStart = recordCount;
+                                    <!-- finds all of the records for this day -->
+                                    for(recordCount; recordCount<powerTools.adaTroubleshooter.dateInfo.length; recordCount++){
+                                        if(powerTools.adaTroubleshooter.dateInfo[k].date.split('/')[1] != day) {
+                                            break;
+                                        }
+                                    }
                                     if(inMonth == 0 && day > getDaysInMonth(startDate.getMonth()-1)){
                                         day = 1;
                                         inMonth = 1;
@@ -145,7 +161,7 @@
                                         powerTools.adaTroubleshooter.displayDayInformation();
                                     }
                                     $j('#calendar > tbody:last-child').append(
-                                            '<td class="square" id ="'+(i*7+j)+'"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
+                                            '<td class="square" id ="'+recordStart+ '/' + recordCount + '"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
                                     );
                                     day++;
                                 }
@@ -172,7 +188,7 @@
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(){
-                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum
+                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('/')[0];
                             var attCode = powerTools.adaTroubleshooter.dateInfo[curRecord].attCode == ''?'Present': powerTools.adaTroubleshooter.dateInfo[curRecord].attCode;
                             if(powerTools.adaTroubleshooter.dateInfo[curRecord].inSession== 0){
                                 attCode = 'Not in Session';
@@ -219,6 +235,7 @@
             powerTools.adaTroubleshooter.currentDate.year = today.getFullYear();
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.buildCalendar();
+            powerTools.adaTroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
                 var selectedDate = $j('#dateSelector').val().split("/");
                 powerTools.adaTroubleshooter.currentDate.month = selectedDate[0];
@@ -241,6 +258,16 @@
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+    }
+    .box{
+        float: left;
+        width: 20px;
+        height: 20px;
+        margin: 5px;
+        border: 1px solid rgba(0,0,0,.2);
+    }
+    .yellow{
+        background: yellow;
     }
     .tooltip {
         position: relative;
@@ -306,7 +333,9 @@
             <td style="width:50%"><div id="studentData" ></div></td>
             <td style="width:50%"><div id="dayInformation" ></div></td>
         </table>
-        <table class="linkDescList"><th>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th></table>
+        <table class="linkDescList"><th colspn =3>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th>
+            <tr id="legend"></tr>
+        </table>
     </div>
     <div id="calendarData" align="center"></div>
     <div id="prevEnrollmentData"></div>
