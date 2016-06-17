@@ -70,7 +70,7 @@
                                /* powerTools.adaTroubleshooter.retrieveFte();*/
                             });
                         },
-                         /* Iterate through studentInfo to find FteID for enrollment based on dateEntered */
+                        /* Iterate through studentInfo to find FteID for enrollment based on dateEntered */
                         /*grabValidFTE: function(fteId){
                             for(var i=0; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
                                 if(powerTools.adaTroubleshooter.studentInfo[i].entryDate <= powerTools.adaTroubleshooter.dateEntered &&
@@ -116,6 +116,7 @@
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
                             $j('#calendarData').empty();
+                            var curColor;
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                             <!-- starDate is an object with the first day of the month for the calendar -->
@@ -147,7 +148,7 @@
                                 async: true
                             });
                             $j('#calendarData').append(
-                                  '<table class="grid" id="calendar" style="max-width:1200px"><th colspan="7" align=""center">' +
+                                  '<table class="grid" id="calendar" href="#" style="max-width:1200px"><th colspan="7" align=""center">' +
                                   months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
                                   '<tr><td>Sun</td><td>Mon</td><td>Tues</td><td>Wed</td><td>Thurs</td><td>Fri</td><td>Sat</td>'
                             );
@@ -164,19 +165,16 @@
                                         day = 1;
                                         inMonth == 2;
                                     }
+                                    if(powerTools.adaTroubleshooter.dateInfo[i*7+j].inSession ==1){
+                                        curColor = "green";
+                                    }
+                                    else{
+                                        curColor = "grey";
+                                    }
                                     $j('#calendar > tbody:last-child').append(
-                                            '<td class="square">' + day + "  " + powerTools.adaTroubleshooter.dateInfo.membershipValue+ '</td>'
+                                            '<td class="square" id ="'+(i*7+j)+'"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
                                     );
                                     day++;
-                                }
-                            }
-                            for(var i=0, table = document.getElementById('calendar'), tbody = table.getElementsByTagName('tbody')[0], cells = tbody.getElementsByTagName('td'); i<cells.length; i++)
-                            {
-                                if(powerTools.adaTroubleshooter.dateInfo[i].inSession == 1){
-                                    cells[i +7].style.backgroundColor='green';
-                                }
-                                else{
-                                    cells[i +7].style.backgroundColor='grey';
                                 }
                             }
                             $j('#calendarData > tbody:last-child').append(
