@@ -70,26 +70,6 @@
                                /* powerTools.adaTroubleshooter.retrieveFte();*/
                             });
                         },
-                        /* Iterate through studentInfo to find FteID for enrollment based on dateEntered */
-                        /*grabValidFTE: function(fteId){
-                            for(var i=0; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
-                                if(powerTools.adaTroubleshooter.studentInfo[i].entryDate <= powerTools.adaTroubleshooter.dateEntered &&
-                                powerTools.adaTroubleshooter.studentInfo[i].exitDate >= powerTools.adaTroubleshooter.dateEntered){
-                                    return(powerTools.adaTroubleshooter.studentInfo[i].fteID);
-                                }
-                            }
-                            return(false);
-                        },*/
-                        /* Retrieve FTE info for current enrollment*/
-                        /*retrieveFte: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/fteinfo.json?fteId=' +
-                                    powerTools.adaTroubleshooter.studentInfo[0].fteId, function(result){
-                                powerTools.adaTroubleshooter.fteInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.displayFte();
-                                powerTools.adaTroubleshooter.retrieveConversion();
-                            });
-                        },*/
                         /* Retrieve Attendance Conversion information with FTE ID */
                         retrieveConversion: function(){
                             var fteList = [];
@@ -230,23 +210,35 @@
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].gradeLevel + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].membershipShare + '</td>' +
                                             '<td><div class="tooltip">' + powerTools.adaTroubleshooter.studentInfo[i].fteName +
-                                            '<span class="tooltiptext"><table id="prevFTE' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
-                                            '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="prevFteBody' + i + '"></tbody></table></span></td>' +
+                                            '<span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
+                                            '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
                                     );
-                                }
+                                };
                             };
                         },
-                        displayConversionInfo: function(){
-                           for(var i=0; i<powerTools.adaTroubleshooter.conversionInfo.length; i++){
-                               if(powerTools.adaTroubleshooter.conversionInfo[i].fteId == powerTools.adaTroubleshooter.studentInfo[0].fteId && powerTools.adaTroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()){
-                                   $j('#currentFteBody').append(
-                                           '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel +
-                                           '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                   );
-                               };
-                           };
+                        displayConversionInfo: function() {
+                            /* Display Conversion Info in current enrollment tooltip */
+                            for (var i = 0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++) {
+                                if (powerTools.adaTroubleshooter.conversionInfo[i].fteId == powerTools.adaTroubleshooter.studentInfo[0].fteId && powerTools.adaTroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()) {
+                                    $j('#currentFteBody').append(
+                                            '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel +
+                                            '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                    );
+                                };
+                            };
+                            /* Display Conversion Info in previous enrollment tooltips */
+                            for(var i=1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                for(var j=0; j < powerTools.adaTroubleshooter.conversionInfo.length; j++){
+                                    if(powerTools.adaTroubleshooter.studentInfo[i].fteId == powerTools.adaTroubleshooter.conversionInfo[j].fteId && powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase()){
+                                        $j('#prevFteBody' + i).append(
+                                            '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodLabel +
+                                            '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                        );
+                                    };
+                                };
+                            };
                         },
                         /* Display School Info */
                         displayFte: function(){
@@ -259,19 +251,6 @@
                                     '</table>'
                             );
                         },
-                        /* Display Conversion Info */
-/*                        displayConversion: function(){
-                            $j('#conversionData').append(
-                                    '<table class="grid" id="conversionTable"><th colspan="2" align="center">Conversion Information</th>'+
-                                    '<tr><td align="center">Periods\\Intervals\\Time in Attendance</td><td align="center">Attendance Points Awarded</td></tr><tbody id="conversionBody"></tbody></table>'
-                            );
-                            for(var i=0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++){
-                                $j('#conversionBody').append(
-                                        '<tr><td align="center">' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel + '</td>' +
-                                        '<td align="center">' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                );
-                            }
-                        }*/
                     }
                 };
         $j(document).ready(function(){
