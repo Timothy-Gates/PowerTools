@@ -6,57 +6,13 @@
     ~[wc:commonscripts]
     <link href="/images/css/screen.css" rel="stylesheet" media="screen">
     <link href="/images/css/print.css" rel="stylesheet" media="print">
-    <style>
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px black;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #555;
-            color: #000;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            top: 125%;
-            left: 205%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 1s;
-        }
-
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-    </style>
     <script>
         var powerTools = powerTools || {
                     adaTroubleshooter: {
-                        studentCompletionCount: 0,
-                        dateEntered: '06/09/2016',
-                        studentId: '~(id)',
-                        studentFrn: '~(frn)',
+                        dateEntered: {recordNum:0,prevColor:'grey'},
                         studentInfo: {},
                         fteInfo: {},
                         dateInfo: [],
-                        reEnrollInfo: {},
                         currentDate: {day: 0,month: 0, year: 0},
                         conversionInfo:{},
                         /* Retrieve Student info */
@@ -66,6 +22,7 @@
                                     powerTools.adaTroubleshooter.studentInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayStudent();
+                                powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                 powerTools.adaTroubleshooter.retrieveConversion();
                                /* powerTools.adaTroubleshooter.retrieveFte();*/
                             });
@@ -82,16 +39,48 @@
                                 powerTools.adaTroubleshooter.conversionInfo = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayConversionInfo();
-                                powerTools.adaTroubleshooter.retrieveCalendar();
                             });
                         },
-                        retrieveCalendar: function(){
-                            $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/calendarinfo.json?',function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.dateInfo = result;
-                            }).done(function(){
-                                powerTools.adaTroubleshooter.buildCalendar();
-                            });
+                        /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
+                        displayStudent: function(){
+                            $j('#studentData').append(
+                                    '<table class="grid" id="studentTable"><th colspan="7" align="center">Current Enrollment</th>'+
+                                    '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Membership Share</td>'+
+                                    '<td>FTE Name</td><td>Attendance Mode</td><td>Attendance Conversion</td></tr>'+
+                                    '<tbody id="studentTableBody">'+
+                                    '<tr><td>' + powerTools.adaTroubleshooter.studentInfo[0].entryDate + '</td>'+
+                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].exitDate + '</td>'+
+                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td>'+
+                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td>'+
+                                    '<td><div class="tooltip">' + powerTools.adaTroubleshooter.studentInfo[0].fteName+
+                                    '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
+                                    '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td>'+
+                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td>'+
+                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'+
+                                    '</tbody></table>'
+                            );
+                        },
+                        /* Display Conversion Info in current enrollment tooltip */
+                        displayConversionInfo: function() {
+                            for (var i = 0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++) {
+                                if (powerTools.adaTroubleshooter.conversionInfo[i].fteId == powerTools.adaTroubleshooter.studentInfo[0].fteId && powerTools.adaTroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()) {
+                                    $j('#currentFteBody').append(
+                                            '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel +
+                                            '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                    );
+                                };
+                            };
+                            /* Display Conversion Info in previous enrollment tooltips */
+                            for(var i=1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                for(var j=0; j < powerTools.adaTroubleshooter.conversionInfo.length; j++){
+                                    if(powerTools.adaTroubleshooter.studentInfo[i].fteId == powerTools.adaTroubleshooter.conversionInfo[j].fteId && powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase()){
+                                        $j('#prevFteBody' + i).append(
+                                                '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodLabel +
+                                                '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                        );
+                                    };
+                                };
+                            };
                         },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
@@ -143,13 +132,20 @@
                                     }
                                     else if(inMonth == 1 && day > getDaysInMonth(startDate.getMonth())){
                                         day = 1;
-                                        inMonth == 2;
+                                        inMonth = 2;
                                     }
                                     if(powerTools.adaTroubleshooter.dateInfo[i*7+j].inSession ==1){
-                                        curColor = "green";
+                                        curColor = 'green';
                                     }
                                     else{
-                                        curColor = "grey";
+                                        curColor = 'grey';
+                                    }
+                                    if(inMonth == 1 && powerTools.adaTroubleshooter.currentDate.day == day)
+                                    {
+                                        powerTools.adaTroubleshooter.dateEntered.recordNum = i*7+j;
+                                        powerTools.adaTroubleshooter.dateEntered.prevColor = curColor;
+                                        curColor = 'yellow';
+                                        powerTools.adaTroubleshooter.displayDayInformation();
                                     }
                                     $j('#calendar > tbody:last-child').append(
                                             '<td class="square" id ="'+(i*7+j)+'"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
@@ -160,6 +156,7 @@
                             $j('#calendarData > tbody:last-child').append(
                                   '</tr></tbody></table>'
                             );
+                            <!-- Returns the days in the month, accounts for leap years and previous years if january -->
                             function getDaysInMonth(month)
                             {
                                 if(month == 1)
@@ -176,24 +173,14 @@
                             }
 
                         },
-                        /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
-                        displayStudent: function(){
-                            $j('#studentData').append(
-                                    '<table class="grid" id="studentTable"><th colspan="7" align="center">Current Enrollment</th>'+
-                                    '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Membership Share</td>'+
-                                    '<td>FTE Name</td><td>Attendance Mode</td><td>Attendance Conversion</td></tr>'+
-                                    '<tbody id="studentTableBody">'+
-                                    '<tr><td>' + powerTools.adaTroubleshooter.studentInfo[0].entryDate + '</td>'+
-                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].exitDate + '</td>'+
-                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td>'+
-                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td>'+
-                                    '<td><div class="tooltip">' + powerTools.adaTroubleshooter.studentInfo[0].fteName+
-                                    '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
-                                    '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td>'+
-                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td>'+
-                                    '<td>' + powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'+
-                                    '</tbody></table>'
+                        <!-- Display's the daily information for the student based on the date selected on the calendar -->
+                        displayDayInformation: function(){
+                            $j('#dayInformation').empty();
+                            $j('#dayInformation').append(
+                                    '<table class="grid"><th colspan=2>Ada/Adm information for: ' + powerTools.adaTroubleshooter.dateInfo[powerTools.adaTroubleshooter.dateEntered.recordNum].date + '</th></table>'
                             );
+                        },
+                        displayPreviousEnrollments: function(){
                             /* Display student previous enrollment data if it exists using index > 0*/
                             if(powerTools.adaTroubleshooter.studentInfo.length > 1) {
                                 $j('#prevEnrollmentData').append(
@@ -218,39 +205,6 @@
                                 };
                             };
                         },
-                        displayConversionInfo: function() {
-                            /* Display Conversion Info in current enrollment tooltip */
-                            for (var i = 0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++) {
-                                if (powerTools.adaTroubleshooter.conversionInfo[i].fteId == powerTools.adaTroubleshooter.studentInfo[0].fteId && powerTools.adaTroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()) {
-                                    $j('#currentFteBody').append(
-                                            '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodLabel +
-                                            '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                    );
-                                };
-                            };
-                            /* Display Conversion Info in previous enrollment tooltips */
-                            for(var i=1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
-                                for(var j=0; j < powerTools.adaTroubleshooter.conversionInfo.length; j++){
-                                    if(powerTools.adaTroubleshooter.studentInfo[i].fteId == powerTools.adaTroubleshooter.conversionInfo[j].fteId && powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.adaTroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase()){
-                                        $j('#prevFteBody' + i).append(
-                                            '<tr><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodLabel +
-                                            '</td><td>' + powerTools.adaTroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
-                                        );
-                                    };
-                                };
-                            };
-                        },
-                        /* Display School Info ! */
-                        displayFte: function(){
-                            $j('#fteData').append(
-                                    '<table class="grid" id="fteTable"><th colspan="2" align="center">FTE Information</th>'+
-                                    '<tr><td>FTE Name:</td><td>' + powerTools.adaTroubleshooter.fteInfo.name + '</td></tr>'+
-                                    '<tr><td>FTE Year ID:</td><td>' + powerTools.adaTroubleshooter.fteInfo.yearid + '</td></tr>'+
-                                    '<tr><td>Attendance Mode:</td><td>' + powerTools.adaTroubleshooter.fteInfo.attmodecode + '</td></tr>'+
-                                    '<tr><td>Attendance Conversion:</td><td>' + powerTools.adaTroubleshooter.fteInfo.conversionmodecode + '</td></tr>'+
-                                    '</table>'
-                            );
-                        },
                     }
                 };
         $j(document).ready(function(){
@@ -261,12 +215,19 @@
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.buildCalendar();
             $j('#dateSelector').on('change', function () {
-                var selectedDate =[3];
-                selectedDate = $j('#dateSelector').val().split("/");
+                var selectedDate = $j('#dateSelector').val().split("/");
                 powerTools.adaTroubleshooter.currentDate.month = selectedDate[0];
                 powerTools.adaTroubleshooter.currentDate.day = selectedDate[1];
                 powerTools.adaTroubleshooter.currentDate.year = selectedDate[2];
                 powerTools.adaTroubleshooter.buildCalendar();
+            });
+            $j(document).on('click', '.square', function(){
+                $j('#' + powerTools.adaTroubleshooter.dateEntered.recordNum).attr('style', 'background-color:' +
+                        powerTools.adaTroubleshooter.dateEntered.prevColor);
+                powerTools.adaTroubleshooter.dateEntered.recordNum = $j(this).attr('id');
+                powerTools.adaTroubleshooter.dateEntered.prevColor = $j(this).attr('style').split(':')[1];
+                $j(this).attr('style', 'background-color: yellow');
+                powerTools.adaTroubleshooter.displayDayInformation();
             });
         });
 
@@ -275,6 +236,44 @@
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+    }
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px black;
+    }
+
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #000;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        top: 125%;
+        left: 205%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
+
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
     }
 </style>
 </head>
