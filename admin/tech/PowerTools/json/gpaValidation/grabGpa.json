@@ -3,7 +3,7 @@
 ~[if.~[gpv:calcType]=cumulative]
 SELECT a.termid, a.storecode, a.grade_level, a.course_number, a.grade,
 a.gpa_points, a.percent, a.gpa_addedvalue, a.earnedcrhrs, a.potentialcrhrs,
-a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, b.section_number, c.credit_hours
+a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, a.dcid, b.section_number, c.credit_hours
 FROM ps.storedgrades a
 LEFT JOIN ps.sections b
 ON a.sectionid = b.id
@@ -14,8 +14,8 @@ WHERE studentid = ~(id)
 
 ~[if.~[gpv:calcType]=projected]
 SELECT a.termid, a.storecode, a.grade_level, a.course_number, a.grade,
-a.gpa_points, a.percent, a.gpa_addedvalue, earnedcrhrs, potentialcrhrs,
-a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, b.section_number, c.credit_hours
+a.gpa_points, a.percent, a.gpa_addedvalue, a.earnedcrhrs, a.potentialcrhrs,
+a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, a.dcid, b.section_number, c.credit_hours
 FROM ps.storedgrades a
 LEFT JOIN ps.sections b
 ON a.sectionID = b.id
@@ -27,7 +27,7 @@ WHERE studentid = ~(id)
 ~[if.~[gpv:calcType]=current]
 SELECT b.termid, a.finalgradename as storecode, b.grade_level, b.course_number, a.grade, a.points as gpa_points,
 a.percent, a.varcredit as gpa_addedvalue, c.credit_hours, c.maxcredit, c.credittype, b.excludefromgpa, b.excludefromclassrank,
-b.excludefromhonorroll, b.section_number, c.credit_hours
+b.excludefromhonorroll, a.dcid, b.section_number, c.credit_hours
 FROM ps.pgFinalGrades a
 LEFT JOIN ps.Sections b
 ON a.sectionid = b.id
@@ -39,7 +39,7 @@ WHERE a.studentid=~(id) AND a.finalgradename='~[displayprefschool;curfgname]'
 ~[if.~[gpv:calcType]=]
 SELECT a.termid, a.storecode, a.grade_level, a.course_number, a.grade,
 a.gpa_points, a.percent, a.gpa_addedvalue, a.earnedcrhrs, a.potentialcrhrs,
-a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, b.section_number, c.credit_hours
+a.credit_type, a.excludefromgpa, a.excludefromclassrank, a.excludefromhonorroll, a.dcid, b.section_number, c.credit_hours
 FROM ps.storedgrades a
 LEFT JOIN ps.sections b
 ON a.sectionid = b.id
@@ -63,6 +63,7 @@ WHERE studentid = ~(id)
   "querycountgpa" : "~(excludefromgpa)",
   "queryclassrank" : "~(excludefromclassrank)",
   "queryhonorroll" : "~(excludefromHonorRoll)",
+  "dcid": "~(a.dcid)",
   "sectionnumber" : "~(section_number)",
   "coursepotentialcrhrs" : "~(credit_hours)"
 },
