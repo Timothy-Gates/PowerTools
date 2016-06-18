@@ -110,10 +110,19 @@
                                 );
                             };
                         },
+                        <!--Displays the Content of the Legend for reference -->
+                        buildLegend: function(){
+                            $j('#legend').append(
+                                    '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'
+                            );
+                        },
                         <!--Build Calendar and set it to current Month -->
                         buildCalendar: function(){
                             $j('#calendarData').empty();
                             var curColor;
+                            <!-- record start stores the start of the records for the day recordCount tracks the last record for the day-->
+                            var recordStart;
+                            var recordCount = 0;
                             var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
                             var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
                             <!-- starDate is an object with the first day of the month for the calendar -->
@@ -126,13 +135,13 @@
                             var day = getDaysInMonth(startDate.getMonth()-1)-outMonth;
                             <!-- first day of the calendar -->
                             var firstDay = new Date(powerTools.adaTroubleshooter.currentDate.month==1?powerTools.adaTroubleshooter.currentDate.year-1:powerTools.adaTroubleshooter.currentDate.year,
-                                    outMonth==-1?powerTools.adaTroubleshooter.currentDate.month-1:powerTools.adaTroubleshooter.currentDate.month==1?11:powerTools.adaTroubleshooter.currentDate.month-2,
-                                    day > getDaysInMonth(startDate.getMonth()-1)?1:day);
+                                                     outMonth==-1?powerTools.adaTroubleshooter.currentDate.month-1:powerTools.adaTroubleshooter.currentDate.month==1?11:powerTools.adaTroubleshooter.currentDate.month-2,
+                                                     day > getDaysInMonth(startDate.getMonth()-1)?1:day);
                             firstDay = (firstDay.getMonth()+1) + '/' + firstDay.getDate() + '/' + firstDay.getFullYear();
                             <!-- last day of the calendar -->
                             var lastDay = new Date(powerTools.adaTroubleshooter.currentDate.month==12?powerTools.adaTroubleshooter.currentDate.year+1:powerTools.adaTroubleshooter.currentDate.year,
-                                    powerTools.adaTroubleshooter.currentDate.month==12?0:powerTools.adaTroubleshooter.currentDate.month,
-                                    17);
+                                                    powerTools.adaTroubleshooter.currentDate.month==12?0:powerTools.adaTroubleshooter.currentDate.month,
+                                                    17);
                             lastDay = (lastDay.getMonth()+1) + '/' + lastDay.getDate() + '/' + lastDay.getFullYear();
                             $j.ajaxSetup({
                                 async: false
@@ -145,15 +154,22 @@
                                 async: true
                             });
                             $j('#calendarData').append(
-                                    '<table class="grid" id="calendar" href="#" style="max-width:1200px"><th colspan="7" align=""center">' +
-                                    months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
-                                    '<tr><td>Sun</td><td>Mon</td><td>Tues</td><td>Wed</td><td>Thurs</td><td>Fri</td><td>Sat</td>'
+                                  '<table class="grid" id="calendar" href="#" style="max-width:1200px"><th colspan="7" align=""center">' +
+                                  months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
+                                  '<tr><td>Sun</td><td>Mon</td><td>Tues</td><td>Wed</td><td>Thurs</td><td>Fri</td><td>Sat</td>'
                             );
                             for(var i=0; i<6; i++){
                                 $j('#calendar > tbody:last-child').append(
                                         '</tr><tr>'
                                 );
                                 for(var j=0;j<7;j++){
+                                    recordStart = recordCount;
+                                    <!-- finds all of the records for this day -->
+                                    for(recordCount; recordCount<powerTools.adaTroubleshooter.dateInfo.length; recordCount++){
+                                        if(powerTools.adaTroubleshooter.dateInfo[k].date.split('/')[1] != day) {
+                                            break;
+                                        }
+                                    }
                                     if(inMonth == 0 && day > getDaysInMonth(startDate.getMonth()-1)){
                                         day = 1;
                                         inMonth = 1;
@@ -176,13 +192,13 @@
                                         powerTools.adaTroubleshooter.displayDayInformation();
                                     }
                                     $j('#calendar > tbody:last-child').append(
-                                            '<td class="square" id ="'+(i*7+j)+'"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
+                                            '<td class="square" id ="'+recordStart+ '/' + recordCount + '"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[i*7+j].membershipValue+ '</td>'
                                     );
                                     day++;
                                 }
                             }
                             $j('#calendarData > tbody:last-child').append(
-                                    '</tr></tbody></table>'
+                                  '</tr></tbody></table>'
                             );
                             <!-- Returns the days in the month, accounts for leap years and previous years if january -->
                             function getDaysInMonth(month)
@@ -203,7 +219,7 @@
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(){
-                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum
+                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('/')[0];
                             var attCode = powerTools.adaTroubleshooter.dateInfo[curRecord].attCode == ''?'Present': powerTools.adaTroubleshooter.dateInfo[curRecord].attCode;
                             if(powerTools.adaTroubleshooter.dateInfo[curRecord].inSession== 0){
                                 attCode = 'Not in Session';
@@ -253,6 +269,7 @@
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.retrieveAttendancePrefs();
             powerTools.adaTroubleshooter.buildCalendar();
+            powerTools.adaTroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
                 var selectedDate = $j('#dateSelector').val().split("/");
                 powerTools.adaTroubleshooter.currentDate.month = selectedDate[0];
@@ -281,6 +298,26 @@
             display: inline-block;
             border-bottom: 1px black;
         }
+<style>
+    .square {
+        width: 14.28%;
+        padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+    }
+    .box{
+        float: left;
+        width: 20px;
+        height: 20px;
+        margin: 5px;
+        border: 1px solid rgba(0,0,0,.2);
+    }
+    .yellow{
+        background: yellow;
+    }
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px black;
+    }
 
         .tooltip .tooltiptext {
             visibility: hidden;
@@ -329,8 +366,8 @@
     <div id="dateSelection">
         <table class="linkDescList">
             <tb><p><b>This utility will help to determine how Average Daily Attendance and Membership are calculated, should the attendance views
-                be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
-                    the Premier Attendance Views Data</a>.
+               be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
+               the Premier Attendance Views Data</a>.
             </b></p></tb>
         </table>
     </div>
@@ -339,6 +376,9 @@
         <table>
             <td style="width:50%"><div id="studentData" ></div></td>
             <td style="width:50%"><div id="dayInformation" ></div></td>
+        </table>
+        <table class="linkDescList"><th colspn =3>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th>
+            <tr id="legend"></tr>
         </table>
     </div>
     <div id="attPrefData"></div>
