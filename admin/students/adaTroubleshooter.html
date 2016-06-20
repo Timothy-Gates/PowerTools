@@ -11,10 +11,9 @@
                     adaTroubleshooter: {
                         dateEntered: {recordNum:0,prevColor:'grey'},
                         studentInfo: [],
-                        fteInfo: {},
                         dateInfo: [],
                         currentDate: {day: 0,month: 0, year: 0},
-                        conversionInfo:{},
+                        conversionInfo:[],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json', function(result){
@@ -153,12 +152,7 @@
                                             recordCount++;
                                         }
                                     }
-                                    if(powerTools.adaTroubleshooter.dateInfo[recordStart].inSession ==1){
-                                        curColor = 'green';
-                                    }
-                                    else{
-                                        curColor = 'grey';
-                                    }
+                                    curColor = setColor(powerTools.adaTroubleshooter.dateInfo[recordStart])
                                     if(inMonth == 1 && powerTools.adaTroubleshooter.currentDate.day == day)
                                     {
                                         powerTools.adaTroubleshooter.dateEntered.recordNum = recordStart+ 'record' + recordCount;
@@ -177,6 +171,19 @@
                             $j('#calendarData > tbody:last-child').append(
                                   '</tr></tbody></table>'
                             );
+                            <!-- Sets the color of the square for the day -->
+                            function setColor(record){
+                                if(record.inSession ==1){
+                                    if(record.attCode == '' || record.attCode =='present')
+                                    {
+                                        return 'green';
+                                    }
+                                    return 'lightGreen';
+                                }
+                                else{
+                                    return 'grey';
+                                }
+                            }
                             <!-- Returns the days in the month, accounts for leap years and previous years if january -->
                             function getDaysInMonth(month)
                             {
@@ -233,7 +240,7 @@
                                 );
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#meetingTable').append(
-                                            '<tr><td>Student AttendanceCode</td><td>' + attCode + '</td></tr>'
+                                            '<tr><td>Student AttendanceCode</td><td>' + powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1 + '</td></tr>'
                                     );
                                 }
                                 $j('#meetingTable').append(
@@ -324,6 +331,7 @@
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+        border: 5px solid rgba(0,0,0,.2);
     }
     .box{
         float: left;
