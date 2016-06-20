@@ -1,16 +1,16 @@
 [
-~[tlist_sql;
+  ~[tlist_sql;
 SELECT fteid, input_value, attendance_value, daypartid, conversion_mode_code
 FROM ps.attendance_conversion_items
 WHERE fteid IN (~[gpv:fteid])
 ORDER BY fteid, input_value
 ]
 {
-"fteId": "~(fteid)",
-"periodLabel" : "~(input_value)",
-"periodValue": "~(attendance_value)",
-"dayPartId": "~(daypartid)",
-"conversionModeCode": "~(conversion_mode_code)"
+  "fteId": "~(fteid)",
+  "periodLabel" : "~(input_value)",
+  "periodValue": "~(attendance_value)",
+  "dayPartId": "~(daypartid)",
+  "conversionModeCode": "~(conversion_mode_code)"
 },
 [/tlist_sql]
 {}
