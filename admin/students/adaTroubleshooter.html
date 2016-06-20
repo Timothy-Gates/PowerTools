@@ -22,7 +22,6 @@
                                 result.pop();
                                 powerTools.adaTroubleshooter.studentInfo = result;
                             }).done(function(){
-                                powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                 powerTools.adaTroubleshooter.retrieveConversion();
                                 powerTools.adaTroubleshooter.buildCalendar();
                             });
@@ -63,9 +62,7 @@
                                     '<tr><td>Grade Level</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
                                     '<tr><td>Membership Share</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td></tr>'+
                                     '<tr><td>FTE Name</td><td><div class="tooltip">'+
-                                    '<a href="/admin/attendance/conversions/'+ powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
-                                    powerTools.adaTroubleshooter.dateInfo[powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]].attConversionID +
-                                    '&fte=' + powerTools.adaTroubleshooter.studentInfo[0].fteId + '">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
+                                    '<a id="currentFteLink">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
                                     '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
                                     '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
                                     '<tr><td>Attendance Mode</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
@@ -193,6 +190,8 @@
                                         curColor = 'yellow';
                                         powerTools.adaTroubleshooter.displayDayInformation();
                                         powerTools.adaTroubleshooter.displayStudent();
+                                        powerTools.adaTroubleshooter.displayPreviousEnrollments();
+                                        powerTools.adaTroubleshooter.populateEnrollmentLinks();
                                     }
                                     $j('#calendar > tbody:last-child').append(
                                             '<td class="square" id ="'+recordStart+ 'record' + recordCount + '"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[recordStart].membershipValue+ '</td>'
@@ -296,6 +295,7 @@
                             }
                         },
                         displayPreviousEnrollments: function(){
+                            $j('#prevEnrollmentData').empty();
                             /* Display student previous enrollment data if it exists using index > 0*/
                             if(powerTools.adaTroubleshooter.studentInfo.length > 1) {
                                 $j('#prevEnrollmentData').append(
@@ -313,13 +313,22 @@
                                                 powerTools.adaTroubleshooter.studentInfo[i].exitDate + '</a></td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].gradeLevel + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].membershipShare + '</td>' +
-                                            '<td><div class="tooltip">' + powerTools.adaTroubleshooter.studentInfo[i].fteName +
-                                            '<span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
+                                            '<td><div class="tooltip"><a id="prevFteLink' + i + '">' + powerTools.adaTroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
                                             '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
                                     );
                                 };
+                            };
+                        },
+                        populateEnrollmentLinks: function(){
+                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
+                            if(powerTools.adaTroubleshooter.dateInfo[curRecord].date >= powerTools.adaTroubleshooter.studentInfo[0].entryDate &&
+                                powerTools.adaTroubleshooter.dateInfo[curRecord].date <= powerTools.adaTroubleshooter.studentInfo[0].exitDate){
+                                $j('#currentFteLink').attr('href');
+                            }else {
+                                alert(powerTools.adaTroubleshooter.dateInfo[curRecord].date);
+                                alert(powerTools.adaTroubleshooter.studentInfo[0].entryDate);
                             };
                         },
                     }
@@ -348,6 +357,8 @@
                 $j(this).attr('style', 'background-color: yellow');
                 powerTools.adaTroubleshooter.displayDayInformation();
                 powerTools.adaTroubleshooter.displayStudent();
+                powerTools.adaTroubleshooter.displayPreviousEnrollments();
+                powerTools.adaTroubleshooter.populateEnrollmentLinks();
             });
         });
 

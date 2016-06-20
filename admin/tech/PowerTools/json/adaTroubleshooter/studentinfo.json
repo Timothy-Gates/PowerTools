@@ -1,7 +1,7 @@
 [
-~[tlist_sql;
+        ~[tlist_sql;
 SELECT to_char(a.entrydate, '~[datetext:mmddyyyy]'), to_char(a.exitdate, '~[datetext:mmddyyyy]'), a.membershipshare, a.track, a.grade_level, a.fteid, a.schoolid, a.dcid,
-        b.name, b.yearid, b.dflt_att_mode_code, b.dflt_conversion_mode_code
+b.name, b.yearid, b.dflt_att_mode_code, b.dflt_conversion_mode_code
 FROM (
 SELECT entrydate, exitdate, membershipshare, track, grade_level, fteid, schoolid, dcid
 FROM ps.students
@@ -16,18 +16,18 @@ ON b.id = a.fteid
 ORDER BY entrydate DESC
 ]
 {
-"entryDate": "~(a.entrydate)",
-"exitDate": "~(a.exitdate)",
-"membershipShare": "~(a.membershipshare)",
-"track": "~(a.track)",
-"gradeLevel": "~(a.grade_level)",
-"fteId": "~(a.fteid)",
-"schoolid": "~(a.schoolid)",
-"dcid": "~(a.dcid)",
-"fteName" : "~(b.name)",
-"yearid" : "~(b.yearid)",
-"attModeCode" : "~(b.dflt_att_mode_code)",
-"conversionModeCode" : "~(b.dflt_conversion_mode_code)"
+        "entryDate": "~(a.entrydate)",
+        "exitDate": "~(a.exitdate)",
+        "membershipShare": "~(a.membershipshare)",
+        "track": "~(a.track)",
+        "gradeLevel": "~(a.grade_level)",
+        "fteId": "~(a.fteid)",
+        "schoolid": "~(a.schoolid)",
+        "dcid": "~(a.dcid)",
+        "fteName" : "~(b.name)",
+        "yearid" : "~(b.yearid)",
+        "attModeCode" : "~(b.dflt_att_mode_code)",
+        "conversionModeCode" : "~(b.dflt_conversion_mode_code)"
 },
 [/tlist_sql]
 {}
