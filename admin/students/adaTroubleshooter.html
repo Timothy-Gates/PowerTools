@@ -183,7 +183,7 @@
                                             recordCount++;
                                         }
                                     }
-                                    curColor = setColor(powerTools.adaTroubleshooter.dateInfo[recordStart])
+                                    curColor = setColor(recordStart);
                                     if(inMonth == 1 && powerTools.adaTroubleshooter.currentDate.day == day)
                                     {
                                         powerTools.adaTroubleshooter.dateEntered.recordNum = recordStart+ 'record' + recordCount;
@@ -204,15 +204,29 @@
                             );
                             <!-- Sets the color of the square for the day -->
                             function setColor(record){
+                                var inEnrollment = false;
+                                if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) ||
+                                       new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate)){
+                                    for(var i = 1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                        if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
+                                                new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
+                                            inEnrollment = true;
+                                        }
+                                    }
+                                    if(inEnrollment == true) {
+                                        return 'lightGrey';
+                                    }
+                                    return 'grey';
+                                }
                                 if(record.inSession ==1){
                                     if(record.attCode == '' || record.attCode =='present')
                                     {
-                                        return 'green';
+                                        return 'lightGreen';
                                     }
-                                    return 'lightGreen';
+                                    return 'lightRed';
                                 }
                                 else{
-                                    return 'grey';
+                                    return 'lightBlue';
                                 }
                             }
                             <!-- Returns the days in the month, accounts for leap years and previous years if january -->
