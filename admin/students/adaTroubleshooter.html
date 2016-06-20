@@ -198,32 +198,49 @@
                             $j('#calendarData > tbody:last-child').append(
                                   '</tr></tbody></table>'
                             );
-                            <!-- Sets the color of the square for the day -->
+                            <!-- Sets the color of the square for the day inEnrollment: 0=current 1=previous 2=never -->
                             function setColor(record){
-                                var inEnrollment = false;
+                                var inEnrollment = 0;
+                                var cellColor;
                                 if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) ||
                                        new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate)){
                                     for(var i = 1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
-                                        if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
-                                                new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
-                                            inEnrollment = true;
+                                        if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
+                                                new Date(powerTools.adaTroubleshooter.dateInfo[record].date) <= new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
+                                            inEnrollment = 1;
                                         }
                                     }
-                                    if(inEnrollment == true) {
-                                        return 'lightGrey';
+                                    if(inEnrollment == 1) {
+                                        cellColor = 'lightGrey';
                                     }
-                                    return 'grey';
+                                    else {
+                                        cellColor = 'grey';
+                                        inEnrollment = 2;
+                                    }
                                 }
-                                if(record.inSession ==1){
-                                    if(record.attCode == '' || record.attCode =='present')
+                                if(powerTools.adaTroubleshooter.dateInfo[record].inSession == 1 && inEnrollment !=2){
+                                    if(powerTools.adaTroubleshooter.dateInfo[record].attCode == '' || powerTools.adaTroubleshooter.dateInfo[record].attCode =='present')
                                     {
-                                        return 'lightGreen';
+                                        if(inEnrollment == 0){
+                                            cellColor = 'green';
+                                        }
+                                        else {
+                                            cellColor = 'lightGreen';
+                                        }
                                     }
-                                    return 'lightRed';
+                                    else {
+                                        if(inEnrollment == 0){
+                                            cellColor = 'red';
+                                        }
+                                        else {
+                                            cellColor = 'pink';
+                                        }
+                                    }
                                 }
                                 else{
-                                    return 'lightBlue';
+                                    cellColor = 'lightBlue';
                                 }
+                                return cellColor;
                             }
                             <!-- Returns the days in the month, accounts for leap years and previous years if january -->
                             function getDaysInMonth(month)
