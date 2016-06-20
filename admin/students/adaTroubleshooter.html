@@ -355,16 +355,6 @@
 
     </script>
     <style>
-        .square {
-            width: 14.28%;
-            padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            border-bottom: 1px black;
-        }
-<style>
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
@@ -385,38 +375,38 @@
         border-bottom: 1px black;
     }
 
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #555;
-            color: #000;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px 0;
-            position: absolute;
-            z-index: 1;
-            top: 1%;
-            left: 225%;
-            margin-left: -60px;
-            opacity: 0;
-            transition: opacity 1s;
-        }
+    .tooltip .tooltiptext {
+        visibility: hidden;
+        width: 200px;
+        background-color: #555;
+        color: #000;
+        text-align: center;
+        border-radius: 6px;
+        padding: 5px 0;
+        position: absolute;
+        z-index: 1;
+        top: 1%;
+        left: 225%;
+        margin-left: -60px;
+        opacity: 0;
+        transition: opacity 1s;
+    }
 
-        .tooltip .tooltiptext::after {
-            content: "";
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            margin-left: -5px;
-            border-width: 5px;
-            border-style: solid;
-            border-color: #555 transparent transparent transparent;
-        }
+    .tooltip .tooltiptext::after {
+        content: "";
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        margin-left: -5px;
+        border-width: 5px;
+        border-style: solid;
+        border-color: #555 transparent transparent transparent;
+    }
 
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
+    .tooltip:hover .tooltiptext {
+        visibility: visible;
+        opacity: 1;
+    }
     </style>
 </head>
 <body>
@@ -443,15 +433,15 @@
             <td style="width:50%"><div id="studentData" ></div></td>
             <td style="width:50%"><div id="dayInformation" ></div></td>
         </table>
+    </div>
+    <div id="attPrefData"></div>
+    <div id="calendarData" align="center"></div>
+    <div id="prevEnrollmentData"></div>
+    <div id="calendarLegend">
         <table class="linkDescList"><th colspn =3>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th>
             <tr id="legend"></tr>
         </table>
     </div>
-    <div id="attPrefData"></div>
-    <table class="linkDescList"><th>Pick A Date<input id="dateSelector" type="text" class="psDateWidget" /></th></table>
-    <div id="calendarData" align="center"></div>
-    <div id="prevEnrollmentData"></div>
-    <div id="calendarLegend"></div>
 </div>
 <!-- end of content of bounding box -->
 ~[wc:admin_footer_frame_css]
