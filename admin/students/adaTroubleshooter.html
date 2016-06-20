@@ -22,9 +22,9 @@
                                 result.pop();
                                 powerTools.adaTroubleshooter.studentInfo = result;
                             }).done(function(){
-                                powerTools.adaTroubleshooter.displayStudent();
                                 powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                 powerTools.adaTroubleshooter.retrieveConversion();
+                                powerTools.adaTroubleshooter.buildCalendar();
                             });
                         },
                         /* Retrieve Attendance Conversion information with FTE ID */
@@ -52,6 +52,7 @@
                         },
                         /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
+                            $j('#studentData').empty();
                             $j('#studentData').append(
                                     '<table class="grid" id="studentTable" style="width:100%"><th colspan="7" align="center">Current Enrollment</th>'+
                                     '<tbody id="studentTableBody">'+
@@ -61,22 +62,17 @@
                                         powerTools.adaTroubleshooter.studentInfo[0].exitDate + '</a></td></tr>' +
                                     '<tr><td>Grade Level</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
                                     '<tr><td>Membership Share</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td></tr>'+
-                                    '<tr><td>FTE Name</td><td><div class="tooltip">' + powerTools.adaTroubleshooter.studentInfo[0].fteName +
-                                        '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
-                                            '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
+                                    '<tr><td>FTE Name</td><td><div class="tooltip">'+
+                                    '<a href="/admin/attendance/conversions/'+ powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
+                                    powerTools.adaTroubleshooter.dateInfo[powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]].attConversionID +
+                                    '&fte=' + powerTools.adaTroubleshooter.studentInfo[0].fteId + '">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
+                                    '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
+                                    '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
                                     '<tr><td>Attendance Mode</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
                                     '<tr><td>Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'+
                                     '</tbody></table>'
                             );
                         },
-                        /* LINK INFO TO BE ANCHORED TO FTE NAMES
-                         '<tr><td>FTE Name</td><td><div class="tooltip"><a href="/admin/attendance/conversions/'+
-                         powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
-                         powerTools.adaTroubleshooter.calendarInfo[powerTools.adaTroubleshooter.dateInfo.recordNum].attConversionID +
-                         '&fteid=' + powerTools.adaTroubleshooter.studentInfo[0].fteID + '">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
-                         '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
-                         '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
-                         */
                         /* Display Conversion Info in current enrollment tooltip */
                         displayConversionInfo: function() {
                             for (var i = 0; i < powerTools.adaTroubleshooter.conversionInfo.length; i++) {
@@ -196,6 +192,7 @@
                                         powerTools.adaTroubleshooter.dateEntered.prevColor = curColor;
                                         curColor = 'yellow';
                                         powerTools.adaTroubleshooter.displayDayInformation();
+                                        powerTools.adaTroubleshooter.displayStudent();
                                     }
                                     $j('#calendar > tbody:last-child').append(
                                             '<td class="square" id ="'+recordStart+ 'record' + recordCount + '"  style="background-color:'+ curColor +'">' + day + "  " + powerTools.adaTroubleshooter.dateInfo[recordStart].membershipValue+ '</td>'
@@ -334,7 +331,6 @@
             powerTools.adaTroubleshooter.currentDate.year = today.getFullYear();
             powerTools.adaTroubleshooter.retrieveStudent();
             powerTools.adaTroubleshooter.retrieveAttendancePrefs();
-            powerTools.adaTroubleshooter.buildCalendar();
             powerTools.adaTroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
                 var selectedDate = $j('#dateSelector').val().split("/");
@@ -347,9 +343,11 @@
                 $j('#' + powerTools.adaTroubleshooter.dateEntered.recordNum).attr('style', 'background-color:' +
                         powerTools.adaTroubleshooter.dateEntered.prevColor);
                 powerTools.adaTroubleshooter.dateEntered.recordNum = $j(this).attr('id');
+                console.log($j(this).attr('id') + powerTools.adaTroubleshooter.dateInfo[powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]].attConversionID);
                 powerTools.adaTroubleshooter.dateEntered.prevColor = $j(this).attr('style').split(':')[1];
                 $j(this).attr('style', 'background-color: yellow');
                 powerTools.adaTroubleshooter.displayDayInformation();
+                powerTools.adaTroubleshooter.displayStudent();
             });
         });
 
