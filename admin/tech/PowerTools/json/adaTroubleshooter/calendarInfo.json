@@ -2,7 +2,7 @@
   ~[tlist_sql;
 SELECT to_char(a.date_value, '~[datetext:mmddyyyy]'), a.insession, a.membershipvalue,
 a.a, a.b, a.c, a.d, a.e, a.f,
-b.name, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, d.total_minutes, d.att_interval, d.att_mode_code,
+b.name, b.attendance_conversion_id, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, d.total_minutes, d.att_interval, d.att_mode_code,
 e.att_code, e.calculate_ada_yn, e.calculate_adm_yn, e.description, e.presence_status_cd, f.expression
 FROM ps.calendar_day a
 LEFT JOIN ps.bell_schedule b
@@ -24,6 +24,7 @@ ORDER BY a.date_value
   "membershipValue": "~(a.membershipvalue)",
   "tracks": ["~(a.a)", "~(a.b)", "~(a.c)", "~(a.d)", "~(a.e)", "~(a.f)"],
   "bellScheduleName": "~(b.name)",
+  "attConversionID": "~(b.attendance_conversion_id)",
   "cycleDayName": "~(c.day_name)",
   "adaValueCode": "~(d.ada_value_code)",
   "adaValueTime": "~(d.ada_value_time)",
