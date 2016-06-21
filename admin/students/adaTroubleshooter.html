@@ -204,6 +204,7 @@
                                 var cellColor;
                                 if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) ||
                                        new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate)){
+                                    alert("works");
                                     for(var i = 1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
                                         if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
                                                 new Date(powerTools.adaTroubleshooter.dateInfo[record].date) <= new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
@@ -237,7 +238,7 @@
                                         }
                                     }
                                 }
-                                else{
+                                else if(powerTools.adaTroubleshooter.dateInfo[record].inSession == 0 && inEnrollment !=2){
                                     cellColor = 'lightBlue';
                                 }
                                 return cellColor;
