@@ -11,11 +11,10 @@
                     adaTroubleshooter: {
                         dateEntered: {recordNum:0,prevColor:'grey'},
                         studentInfo: [],
-                        fteInfo: {},
                         dateInfo: [],
                         attPrefs: [],
                         currentDate: {day: 0,month: 0, year: 0},
-                        conversionInfo:{},
+                        conversionInfo:[],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json', function(result){
@@ -177,12 +176,7 @@
                                             recordCount++;
                                         }
                                     }
-                                    if(powerTools.adaTroubleshooter.dateInfo[recordStart].inSession ==1){
-                                        curColor = 'green';
-                                    }
-                                    else{
-                                        curColor = 'grey';
-                                    }
+                                    curColor = setColor(recordStart);
                                     if(inMonth == 1 && powerTools.adaTroubleshooter.currentDate.day == day)
                                     {
                                         powerTools.adaTroubleshooter.dateEntered.recordNum = recordStart+ 'record' + recordCount;
@@ -204,6 +198,50 @@
                             $j('#calendarData > tbody:last-child').append(
                                   '</tr></tbody></table>'
                             );
+                            <!-- Sets the color of the square for the day inEnrollment: 0=current 1=previous 2=never -->
+                            function setColor(record){
+                                var inEnrollment = 0;
+                                var cellColor;
+                                if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) ||
+                                       new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate)){
+                                    for(var i = 1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                        if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
+                                                new Date(powerTools.adaTroubleshooter.dateInfo[record].date) <= new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
+                                            inEnrollment = 1;
+                                        }
+                                    }
+                                    if(inEnrollment == 1) {
+                                        cellColor = 'lightGrey';
+                                    }
+                                    else {
+                                        cellColor = 'grey';
+                                        inEnrollment = 2;
+                                    }
+                                }
+                                if(powerTools.adaTroubleshooter.dateInfo[record].inSession == 1 && inEnrollment !=2){
+                                    if(powerTools.adaTroubleshooter.dateInfo[record].attCode == '' || powerTools.adaTroubleshooter.dateInfo[record].attCode =='present')
+                                    {
+                                        if(inEnrollment == 0){
+                                            cellColor = 'green';
+                                        }
+                                        else {
+                                            cellColor = 'lightGreen';
+                                        }
+                                    }
+                                    else {
+                                        if(inEnrollment == 0){
+                                            cellColor = 'red';
+                                        }
+                                        else {
+                                            cellColor = 'pink';
+                                        }
+                                    }
+                                }
+                                else{
+                                    cellColor = 'lightBlue';
+                                }
+                                return cellColor;
+                            }
                             <!-- Returns the days in the month, accounts for leap years and previous years if january -->
                             function getDaysInMonth(month)
                             {
@@ -260,7 +298,7 @@
                                 );
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#meetingTable').append(
-                                            '<tr><td>Student AttendanceCode</td><td>' + attCode + '</td></tr>'
+                                            '<tr><td>Student AttendanceCode</td><td>' + powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1 + '</td></tr>'
                                     );
                                 }
                                 $j('#meetingTable').append(
@@ -368,6 +406,7 @@
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
+        border: 5px solid rgba(0,0,0,.2);
     }
     .box{
         float: left;
