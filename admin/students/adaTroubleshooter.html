@@ -23,6 +23,8 @@
                             }).done(function(){
                                 powerTools.adaTroubleshooter.retrieveConversion();
                                 powerTools.adaTroubleshooter.buildCalendar();
+                                <!-- Validates the data that has been brought in and will display any errors in Error Div -->
+                                powerTools.adaTroubleshooter.validateAdaAdm();
                             });
                         },
                         /* Retrieve Attendance Conversion information with FTE ID */
@@ -108,7 +110,8 @@
                                     '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'
                             );
                         },
-                        <!--Build Calendar and set it to current Month -->
+                        <!--Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
+                         are no overlapping daily records, and then display all of the information on the calendar with links to daily information-->
                         buildCalendar: function(){
                             $j('#calendarData').empty();
                             var curColor;
@@ -146,8 +149,6 @@
                             $j.ajaxSetup({
                                 async: true
                             });
-                            <!-- Validates the data that has been brought in and will display any errors in Error Div -->
-                            powerTools.adaTroubleshooter.validateAdaAdm();
                             $j('#calendarData').append(
                                   '<table class="grid" id="calendar" href="#" style="max-width:1200px"><th colspan="7" align=""center">' +
                                   months[powerTools.adaTroubleshooter.currentDate.month -1] + "     " + powerTools.adaTroubleshooter.currentDate.year + '</div></th><tbody>'+
@@ -170,12 +171,20 @@
                                     <!-- finds all of the records for this day -->
                                     for(var k = recordCount; k<powerTools.adaTroubleshooter.dateInfo.length; k++){
                                         if(powerTools.adaTroubleshooter.dateInfo[k].date.split('/')[1] != day) {
-                                            console.log("invalid calendar");
+                                            powerTools.adaTroubleshooter.displayError('invalid calendar, record missing for day: ' +
+                                                    powerTools.adaTroubleshooter.dateInfo[k].date.split('/')[0]+
+                                                    '/' + day + '/' +
+                                                    powerTools.adaTroubleshooter.dateInfo[k].date.split('/')[2]);
+                                            day++;
+                                            break;
                                         }
                                         if(powerTools.adaTroubleshooter.dateInfo[k+1].date.split('/')[1] != day) {
                                             break;
                                         }
                                         else{
+                                            if(powerTools.adaTroubleshooter.dateInfo[k+1].attModeCode == 'daily'){
+                                                powerTools.adaTroubleshooter.displayError('Duplicate daily attendance for:' + powerTools.adaTroubleshooter.dateInfo[k+1].date);
+                                            }
                                             recordCount++;
                                         }
                                     }
@@ -220,7 +229,6 @@
                                 var cellColor;
                                 if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) < new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) ||
                                        new Date(powerTools.adaTroubleshooter.dateInfo[record].date) > new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate)){
-                                    alert("works");
                                     for(var i = 1; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
                                         if(new Date(powerTools.adaTroubleshooter.dateInfo[record].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate) &&
                                                 new Date(powerTools.adaTroubleshooter.dateInfo[record].date) <= new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate)){
@@ -379,17 +387,47 @@
                         populateEnrollmentLinks: function(){
                             var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
                             if(powerTools.adaTroubleshooter.dateInfo[curRecord].date >= powerTools.adaTroubleshooter.studentInfo[0].entryDate &&
-                                powerTools.adaTroubleshooter.dateInfo[curRecord].date <= powerTools.adaTroubleshooter.studentInfo[0].exitDate){
+                                powerTools.adaTroubleshooter.dateInfo[curRecord].date <= powerTools.adaTroubleshooter.studentInfo[0].exitDate) {
                                 $j('#currentFteLink').attr('href');
-                            }else {
-                                alert(powerTools.adaTroubleshooter.dateInfo[curRecord].date);
-                                alert(powerTools.adaTroubleshooter.studentInfo[0].entryDate);
-                            };
+                            }
                         },
                         validateAdaAdm: function(){
-                            <!-- Check that there are all of the calendar days -->
                             <!-- Check that there are no overlapping enrollments -->
+                            var dateArr = [];
+                            var dateObj = {date:0, record:0}
+                            var temp;
+                            for(var i = 0; i < powerTools.adaTroubleshooter.studentInfo.length; i++){
+                                dateObj.date = new Date(powerTools.adaTroubleshooter.studentInfo[i].entryDate);
+                                dateObj.record = i;
+                                dateArr.push(dateObj);
+                                dateObj.date = new Date(powerTools.adaTroubleshooter.studentInfo[i].exitDate);
+                                dateObj.record +=.5;
+                                dateArr.push(dateObj);
+                            }
+                                <!-- Insertion sort -->
+                            for(var i = 0; i < dateArr.length; i++){
+                                temp = dateArr[i];
+                                for(var j = i-1; j >=0 && (dateArr[j].date.getTime() < temp.date.getTime()); j--){
+                                    dateArr[j+1] = dateArr[j];
+                                }
+                                dateArr[j+1] = temp;
+                            }
+                            for(var i = 1; i < dateArr.length; i++){
+                                if(dateArr[i-1].record > dateArr[i].record){
+                                    if(Math.floor(dateArr[i-1].record) == Math.floor(dateArr[i].record)){
+                                        powerTools.adaTroubleshooter.displayError('Entry Date is after the Exit date for: ' + dateArr[i].date);
+                                    }
+                                    else{
+                                        powerTools.adaTroubleshooter.displayError('Overlapping enrollments for: ' + dateArr[i].date + ' and ' + dateArr[i-1]);
+                                    }
+                                }
+                            }
                             <!-- Replace all blanks with appropriate value -->
+                        },
+                        displayError: function(error){
+                            $j('#error').append(
+                              '<table class="linkDescList"><tbody><th style="color:red">' + error + '</th></tbody></table>'
+                            );
                         },
                     }
                 };
@@ -427,7 +465,6 @@
     .square {
         width: 14.28%;
         padding-bottom: 8.03%; /* = width for a 1:1 aspect ratio */
-        border: 5px solid rgba(0,0,0,.2);
     }
     .box{
         float: left;
