@@ -392,7 +392,7 @@
                         },
                         displayPreviousEnrollments: function(){
                             $j('#prevEnrollmentData').empty();
-                            /* Display student previous enrollment data if it exists using index > 0*/
+                            /* Display student previous enrollment data if it exists using index > '0'*/
                             if(powerTools.adaTroubleshooter.studentInfo.length > 1) {
                                 $j('#prevEnrollmentData').append(
 
@@ -419,6 +419,14 @@
                         },
                         populateEnrollmentLinks: function(){
                             var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
+                            if(new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date)){
+                                alert('in if');
+                                /* create anchor href for editing current FTE */
+                            }else {
+                                /* no current enrollments, create default anchor href for editing fte */
+                                console.log('date:' + powerTools.adaTroubleshooter.dateInfo[curRecord].date);
+                                console.log(new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date));
+                            };
                             if(powerTools.adaTroubleshooter.dateInfo[curRecord].date >= powerTools.adaTroubleshooter.studentInfo[0].entryDate &&
                                     powerTools.adaTroubleshooter.dateInfo[curRecord].date <= powerTools.adaTroubleshooter.studentInfo[0].exitDate) {
                                 $j('#currentFteLink').attr('href');
