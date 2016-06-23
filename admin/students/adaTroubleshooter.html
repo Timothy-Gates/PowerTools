@@ -42,7 +42,9 @@
                                 powerTools.adaTroubleshooter.displayConversionInfo();
                             });
                         },
-                        /* Retrieve attendance preferences from current school */
+                        /* Retrieve attendance preferences from current school in the following indexes:
+                        *  0: Count other schools, 1: Present or Absences Counted, 2: Interval Duration
+                        *  3: Record Daily? 4: Record Interval? 5: Record Meeting? 6: Record Time? 7: Bridge Direction */
                         retrieveAttendancePrefs: function(){
                             $j.getJSON('/admin/tech/powerTools/json/adaTroubleshooter/attendancePrefs.json', function(result){
                                 result.pop();
