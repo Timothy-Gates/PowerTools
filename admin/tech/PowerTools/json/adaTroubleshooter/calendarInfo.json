@@ -10,7 +10,7 @@ ON a.bell_schedule_id = b.id
 LEFT JOIN ps.cycle_day c
 ON a.cycle_day_id = c.id
 LEFT JOIN ps.attendance d
-ON a.id = d.calendar_dayid AND d.studentid = ~(curstudid)
+ON a.id = d.calendar_dayid AND d.studentid = ~(curstudid) AND d.att_mode_code='ATT_ModeDaily'
 LEFT JOIN ps.attendance_code e
 ON d.attendance_codeid = e.id
 LEFT JOIN ps.cc f

@@ -15,6 +15,7 @@
                         attPrefs: [],
                         currentDate: {day: 0,month: 0, year: 0},
                         conversionInfo:[],
+                        todayInfo:[],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
                             $j.getJSON('/admin/tech/PowerTools/json/adaTroubleshooter/studentinfo.json', function(result){
@@ -48,6 +49,16 @@
                                 powerTools.adaTroubleshooter.attPrefs = result;
                             }).done(function(){
                                 powerTools.adaTroubleshooter.displayAttendancePrefs();
+                            });
+                        },
+                        /* TESTING, trying to pull meeting, time, interval attendance records for current
+                            Date attendance display.  This will require a rewrite of your calendar code most likely */
+                        /* Retrieve attendance codes for current date being looked at */
+                        retrieveAttendance: function(){
+                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
+                            $j.getJSON('/admin/tech/powerTools/json/adaTroubleshooter/todayInfo.json?dateEntered='+ powerTools.adaTroubleshooter.dateInfo[curRecord].date, function(result){
+                                result.pop();
+                                powerTools.adaTroubleshooter.todayInfo = result;
                             });
                         },
                         /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
@@ -98,11 +109,18 @@
                                     '<table id="attPrefTable" class="grid"><th colspan="2">Attendance Preferences</th>'+
                                     '<tr><td>Pref Name</td><td>Value</td></tr><tbody id="attPrefBody"></tbody></table>'
                             );
-                            for(var i=0; i < powerTools.adaTroubleshooter.attPrefs.length; i++){
-                                $j('#attPrefBody').append(
-                                        '<tr><td>' + powerTools.adaTroubleshooter.attPrefs[i].name+'</td><td>' + powerTools.adaTroubleshooter.attPrefs[i].value + '</td></tr>'
-                                );
-                            };
+
+                            $j('#attPrefBody').append(
+                                '<tr><td>Record Meeting Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[5].value) + '</td></tr>'+
+                                '<tr><td>Record Daily Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[3].value) + '</td></tr>'+
+                                '<tr><td>Record Time Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[6].value) + '</td></tr>'+
+                                '<tr><td>Record Interval Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[4].value) + '</td></tr>'+
+                                '<tr><td>Interval Duration</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'+
+                                '<tr><td>Daily Attendance Bridge Direction</td><td>' + powerTools.adaTroubleshooter.attPrefs[7].value + '</td></tr>'+
+                                '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[0].value) + '</td></tr>'+
+                                '<tr><td>Count Presents or Absences for Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'
+                            );
+
                         },
                         <!--Displays the Content of the Legend for reference -->
                         buildLegend: function(){
@@ -197,6 +215,7 @@
                                         powerTools.adaTroubleshooter.displayStudent();
                                         powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                         powerTools.adaTroubleshooter.populateEnrollmentLinks();
+                                        powerTools.adaTroubleshooter.retrieveAttendance();
                                     }
                                     tracks= function() {
                                         var trackString = '';
@@ -303,7 +322,7 @@
                             );
                             if(daily){
                                 $j('#dayInformation').append(
-                                        '<table class="grid" id="dailyTable" style="width:100%"><th colspan=2>Daily Record Information</th><tbody>'
+                                        '<table class="grid" id="dailyTable" style="width:100%"><th colspan=3>Daily Record Information</th><tbody>'
                                 );
                                 $j('#dailyTable').append(
                                         '<th>Code</th><th>Counts Ada</th><th>Counts Adm</th>' +
@@ -464,6 +483,7 @@
                 powerTools.adaTroubleshooter.displayStudent();
                 powerTools.adaTroubleshooter.displayPreviousEnrollments();
                 powerTools.adaTroubleshooter.populateEnrollmentLinks();
+                powerTools.adaTroubleshooter.retrieveAttendance();
             });
         });
 
