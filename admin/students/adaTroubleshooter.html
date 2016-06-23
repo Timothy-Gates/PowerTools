@@ -51,16 +51,6 @@
                                 powerTools.adaTroubleshooter.displayAttendancePrefs();
                             });
                         },
-                        /* TESTING, trying to pull meeting, time, interval attendance records for current
-                            Date attendance display.  This will require a rewrite of your calendar code most likely */
-                        /* Retrieve attendance codes for current date being looked at */
-                        retrieveAttendance: function(){
-                            var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
-                            $j.getJSON('/admin/tech/powerTools/json/adaTroubleshooter/todayInfo.json?dateEntered='+ powerTools.adaTroubleshooter.dateInfo[curRecord].date, function(result){
-                                result.pop();
-                                powerTools.adaTroubleshooter.todayInfo = result;
-                            });
-                        },
                         /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
                             $j('#studentData').empty();
@@ -230,7 +220,6 @@
                                         powerTools.adaTroubleshooter.displayStudent();
                                         powerTools.adaTroubleshooter.displayPreviousEnrollments();
                                         powerTools.adaTroubleshooter.populateEnrollmentLinks();
-                                        powerTools.adaTroubleshooter.retrieveAttendance();
                                     }
                                     for(var k = 0, tracksString ='', len = powerTools.adaTroubleshooter.dateInfo[recordStart].tracks.length; k < len; k++){
                                         tracksString = tracksString.concat(powerTools.adaTroubleshooter.dateInfo[recordStart].tracks[k])
@@ -520,7 +509,6 @@
                 powerTools.adaTroubleshooter.displayStudent();
                 powerTools.adaTroubleshooter.displayPreviousEnrollments();
                 powerTools.adaTroubleshooter.populateEnrollmentLinks();
-                powerTools.adaTroubleshooter.retrieveAttendance();
             });
         });
 
