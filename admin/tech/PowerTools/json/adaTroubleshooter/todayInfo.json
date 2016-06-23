@@ -1,0 +1,28 @@
+
+[
+  ~[tlist_sql;
+SELECT a.att_date, a.att_mode_code, b.att_code, b.description, b.presence_status_cd, b.calculate_ada_yn, b.calculate_adm_yn
+c.expression, c.course_number, c.sectionid, c.section_number
+FROM ps.attendance a
+LEFT JOIN ps.attendance_code b
+ON a.attendance_codeid = b.id
+LEFT JOIN ps.cc c
+ON a.ccid = c.id
+WHERE a.studentid="34"
+]
+{
+  "date": "~(a.att_date)",
+  "attModeCode": "~(a.att_mode_code)",
+  "attCode": "~(a.att_code)",
+  "attCodeName": "~(b.description)",
+  "presenceStatus": "~(b.presence_status_cd)",
+  "calculateAda": "~(b.calcualte_ada_yn)",
+  "calculateAdm": "~(b.calculate_adm_yn)",
+  "expression": "~(c.expression)",
+  "course_number": "~(c.course_number)",
+  "sectionId": "~(c.sectionid)",
+  "section_number": "~(c.section_number)"
+},
+[/tlist_sql]
+{}
+]
