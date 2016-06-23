@@ -63,7 +63,7 @@
                                     '<tr><td>Grade Level</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
                                     '<tr><td>Membership Share</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td></tr>'+
                                     '<tr><td>FTE Name</td><td><div class="tooltip">'+
-                                    '<a id="currentFteLink">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
+                                    '<a id="currentFteLink" target="_parent">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
                                     '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
                                     '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
                                     '<tr><td>Attendance Mode</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
@@ -110,8 +110,7 @@
                                     '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'
                             );
                         },
-                        <!--Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
-                         are no overlapping daily records, and then display all of the information on the calendar with links to daily information-->
+                        <!-- Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there are no overlapping daily records, and then display all of the information on the calendar with links to daily information -->
                         buildCalendar: function(){
                             $j('#calendarData').empty();
                             var curColor;
@@ -308,7 +307,7 @@
                                 );
                                 $j('#dailyTable').append(
                                         '<th>Code</th><th>Counts Ada</th><th>Counts Adm</th>' +
-                                        '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[curRecord].countsInAda + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[curRecord].countsInAdm + '</td></tr>'
+                                        '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[curRecord].countsInAda + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[curRecord].countsInAdm + '</td></tr>'
                                 );
                                 $j('#dailyTable').append(
                                         '</tbody</table>'
@@ -376,7 +375,7 @@
                                                 powerTools.adaTroubleshooter.studentInfo[i].exitDate + '</a></td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].gradeLevel + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].membershipShare + '</td>' +
-                                            '<td><div class="tooltip"><a id="prevFteLink' + i + '">' + powerTools.adaTroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
+                                            '<td><div class="tooltip"><a id="prevFteLink' + i + '" target="_parent" href="/admin/attendance/conversions/home.html">' + powerTools.adaTroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
                                             '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.adaTroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
@@ -385,19 +384,19 @@
                             };
                         },
                         populateEnrollmentLinks: function(){
+                            /* Create Anchor href for current enrollment */
                             var curRecord = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0];
                             if(new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date)){
-                                alert('in if');
-                                /* create anchor href for editing current FTE */
+                                /* dateEntered within Current Enrollment, create anchor href for editing current FTE */
+                                $j('#currentFteLink').attr('href','/admin/attendance/conversions/'+
+                                    powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
+                                        powerTools.adaTroubleshooter.dateInfo[curRecord].attConversionId+
+                                            '&fte=' + powerTools.adaTroubleshooter.studentInfo[0].fteId
+                                );
                             }else {
                                 /* no current enrollments, create default anchor href for editing fte */
-                                console.log('date:' + powerTools.adaTroubleshooter.dateInfo[curRecord].date);
-                                console.log(new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date));
+                                $j('#currentFteLink').attr('href', '/admin/attendance/conversions/home.html');
                             };
-                            if(powerTools.adaTroubleshooter.dateInfo[curRecord].date >= powerTools.adaTroubleshooter.studentInfo[0].entryDate &&
-                                powerTools.adaTroubleshooter.dateInfo[curRecord].date <= powerTools.adaTroubleshooter.studentInfo[0].exitDate) {
-                                $j('#currentFteLink').attr('href');
-                            }
                         },
                         validateAdaAdm: function(){
                             <!-- Check that there are no overlapping enrollments -->
