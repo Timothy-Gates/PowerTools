@@ -16,7 +16,7 @@ ON d.attendance_codeid = e.id
 LEFT JOIN ps.cc f
 ON d.ccid = f.id
 WHERE a.date_value >= to_date('~[gpv:startDate]','MM/DD/YYYY') AND a.date_value <= to_date('~[gpv:endDate]','MM/DD/YYYY')AND a.schoolid='100'
-ORDER BY a.date_value
+ORDER BY a.date_value, d.att_mode_code
 ]
 {
   "date": "~(a.date_value)",
