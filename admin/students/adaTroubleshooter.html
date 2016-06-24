@@ -56,7 +56,6 @@
                         /* Display student enrollment data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
                             $j('#studentData').empty();
-                            alert(powerTools.adaTroubleshooter.studentInfo[0].fteId);
                             $j('#studentData').append(
                                     '<table class="grid" id="studentTable" style="width:100%"><th colspan="7" align="center">Current Enrollment</th>'+
                                     '<tbody id="studentTableBody">'+
@@ -142,7 +141,6 @@
                         },
                         /*Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
                          are no overlapping daily records, and then display all of the information on the calendar with links to daily information*/
-
                         buildCalendar: function(){
                             $j('#calendarData').empty();
                             var curColor;
