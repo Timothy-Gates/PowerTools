@@ -56,6 +56,7 @@
                         /* Display student enrollment data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
                             $j('#studentData').empty();
+                            alert(powerTools.adaTroubleshooter.studentInfo[0].fteId);
                             $j('#studentData').append(
                                     '<table class="grid" id="studentTable" style="width:100%"><th colspan="7" align="center">Current Enrollment</th>'+
                                     '<tbody id="studentTableBody">'+
@@ -64,13 +65,23 @@
                                     '<tr><td>Exit Date:</td><td><a href="/admin/students/edittransfer1.html?frn=001' + powerTools.adaTroubleshooter.studentInfo[0].dcid + '">'+
                                     powerTools.adaTroubleshooter.studentInfo[0].exitDate + '</a></td></tr>' +
                                     '<tr><td>Grade Level</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
-                                    '<tr><td>Membership Share</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td></tr>'+
-                                    '<tr><td>FTE Name</td><td><div class="tooltip">'+
-                                    '<a id="currentFteLink" target="_parent">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>'+
-                                    '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
-                                    '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>'+
-                                    '<tr><td>Attendance Mode</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
-                                    '<tr><td>Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'+
+                                    '<tr><td>Membership Share</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].membershipShare + '</td></tr>'
+                            );
+                            if(powerTools.adaTroubleshooter.studentInfo[0].fteId > 0){
+                                $j('#studentTableBody').append(
+                                        '<tr><td>FTE Name</td><td><div class="tooltip"><a id="currentFteLink" target="_parent">' + powerTools.adaTroubleshooter.studentInfo[0].fteName + '</a>' +
+                                        '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>' +
+                                        '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
+                                        '<tr><td>Attendance Mode</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
+                                        '<tr><td>Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'
+                                );
+                            }else{
+                                $j('#studentTableBody').append(
+                                        '<tr><td>FTE Name</td><td><a href="/admin/students/edittransfer1.html?frn=" + "001" + powerTools.adaTroubleshooter.studentInfo>Click here to set FTE</a>'
+                                );
+                                powerTools.adaTroubleshooter.displayError("No FTE selected for current enrollment");
+                            };
+                            $j('#studentTableBody').append(
                                     '</tbody></table>'
                             );
                         },
@@ -99,7 +110,7 @@
                         displayAttendancePrefs: function(){
                             $j('#attPrefData').append(
                                     '<table id="attPrefTable" class="grid"><th colspan="2">Attendance Preferences</th>'+
-                                    '<tr><td>Pref Name</td><td>Value</td></tr><tbody id="attPrefBody"></tbody></table>'
+                                    '<tbody id="attPrefBody"></tbody></table>'
                             );
 
                             $j('#attPrefBody').append(
@@ -365,7 +376,7 @@
                             }
                             if(meeting){
                                 $j('#dayInformation').append(
-                                        '<table class="grid" id="meetingTable" style="width:100%"><th colspan=2>Meeting Attendance Records</th><tbody>'
+                                        '<table class="grid" id="meetingTable" style="width:100%"><th colspan=3>Meeting Attendance Records</th><tbody>'
                                 );
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#meetingTable').append(
@@ -379,7 +390,7 @@
                             }
                             if(time){
                                 $j('#dayInformation').append(
-                                        '<table class="grid" id="timeTable" style="width:100%"><th colspan=2>Time Attendance Records</th><tbody>'
+                                        '<table class="grid" id="timeTable" style="width:100%"><th colspan=3>Time Attendance Records</th><tbody>'
                                 );
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#timeTable').append(
@@ -393,7 +404,7 @@
                             }
                             if(interval){
                                 $j('#dayInformation').append(
-                                        '<table class="grid" id="intervalTable" style="width:100%"><th colspan=2>Interval Attendance Records</th><tbody>'
+                                        '<table class="grid" id="intervalTable" style="width:100%"><th colspan=3>Interval Attendance Records</th><tbody>'
                                 );
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#intervalTable').append(
