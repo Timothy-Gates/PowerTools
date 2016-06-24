@@ -136,7 +136,11 @@
                         <!--Displays the Content of the Legend for reference -->
                         buildLegend: function(){
                             $j('#legend').append(
-                                    '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'
+                                    '<td>Legend:</td><td>Current Day <div class="box yellow" align="center"></div></td>'+
+                                    '<td>In Session<div class="box green" align="center"></div></td>'+
+                                    '<td>Absent<div class="box red" align="center"></div></td>'+
+                                    '<td>Weekend<div class="box blue" align="center"></div></td>'+
+                                    '<td>Out of Session<div class="box grey" align="center"></div></td>'
                             );
                         },
                         /*Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
@@ -547,6 +551,18 @@
         }
         .yellow{
             background: yellow;
+        }
+        .green{
+            background: green;
+        }
+        .red{
+            background: red;
+        }
+        .blue{
+            background: lightblue;
+        }
+        .grey{
+            background: grey;
         }
         .tooltip {
             position: relative;
