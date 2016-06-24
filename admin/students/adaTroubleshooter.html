@@ -112,7 +112,6 @@
                                     '<table id="attPrefTable" class="grid"><th colspan="2">Attendance Preferences</th>'+
                                     '<tbody id="attPrefBody"></tbody></table>'
                             );
-
                             $j('#attPrefBody').append(
                                     '<tr><td>Record Meeting Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[5].value) + '</td></tr>'+
                                     '<tr><td>Record Daily Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[3].value) + '</td></tr>'+
@@ -126,10 +125,14 @@
                             };
                             $j('#attPrefBody').append(
                                     '<tr><td>Daily Attendance Bridge Direction</td><td>' + powerTools.adaTroubleshooter.attPrefs[7].value + '</td></tr>'+
-                                    '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[0].value) + '</td></tr>'+
-                                    '<tr><td>Count Presents or Absences for Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'
+                                    '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[0].value) + '</td></tr>'
                             );
-
+                            /* if attPrefs[2] == 0, display present, else display absences */
+                            if(powerTools.adaTroubleshooter.attPrefs[1].value == 0){
+                                $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Present</td></tr>');
+                            }else{
+                                $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Absences</td></tr>');
+                            };
                         },
                         <!--Displays the Content of the Legend for reference -->
                         buildLegend: function(){
