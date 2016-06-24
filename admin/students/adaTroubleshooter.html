@@ -43,8 +43,8 @@
                             });
                         },
                         /* Retrieve attendance preferences from current school in the following indexes:
-                        *  0: Count other schools, 1: Present or Absences Counted, 2: Interval Duration
-                        *  3: Record Daily? 4: Record Interval? 5: Record Meeting? 6: Record Time? 7: Bridge Direction */
+                         *  0: Count other schools, 1: Present or Absences Counted, 2: Interval Duration
+                         *  3: Record Daily? 4: Record Interval? 5: Record Meeting? 6: Record Time? 7: Bridge Direction */
                         retrieveAttendancePrefs: function(){
                             $j.getJSON('/admin/tech/powerTools/json/adaTroubleshooter/attendancePrefs.json', function(result){
                                 result.pop();
@@ -53,7 +53,7 @@
                                 powerTools.adaTroubleshooter.displayAttendancePrefs();
                             });
                         },
-                        /* Display student enrollmnet data from studentInfo.json using index[0] for current enrollment */
+                        /* Display student enrollment data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
                             $j('#studentData').empty();
                             $j('#studentData').append(
@@ -103,14 +103,20 @@
                             );
 
                             $j('#attPrefBody').append(
-                                '<tr><td>Record Meeting Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[5].value) + '</td></tr>'+
-                                '<tr><td>Record Daily Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[3].value) + '</td></tr>'+
-                                '<tr><td>Record Time Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[6].value) + '</td></tr>'+
-                                '<tr><td>Record Interval Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[4].value) + '</td></tr>'+
-                                '<tr><td>Interval Duration</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'+
-                                '<tr><td>Daily Attendance Bridge Direction</td><td>' + powerTools.adaTroubleshooter.attPrefs[7].value + '</td></tr>'+
-                                '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[0].value) + '</td></tr>'+
-                                '<tr><td>Count Presents or Absences for Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'
+                                    '<tr><td>Record Meeting Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[5].value) + '</td></tr>'+
+                                    '<tr><td>Record Daily Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[3].value) + '</td></tr>'+
+                                    '<tr><td>Record Time Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[6].value) + '</td></tr>'+
+                                    '<tr><td>Record Interval Attendance</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[4].value) + '</td></tr>'                            );
+                            /*If record interval attendance exists, display interval duration */
+                            if(powerTools.adaTroubleshooter.attPrefs[4].value == 1  ){
+                                $j('#attPrefBody').append(
+                                        '<tr><td>Interval Duration</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'
+                                );
+                            };
+                            $j('#attPrefBody').append(
+                                    '<tr><td>Daily Attendance Bridge Direction</td><td>' + powerTools.adaTroubleshooter.attPrefs[7].value + '</td></tr>'+
+                                    '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.adaTroubleshooter.attPrefs[0].value) + '</td></tr>'+
+                                    '<tr><td>Count Presents or Absences for Attendance Conversion</td><td>' + powerTools.adaTroubleshooter.attPrefs[2].value + '</td></tr>'
                             );
 
                         },
@@ -364,7 +370,7 @@
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#meetingTable').append(
                                             '<th>Code</th><th>Counts Ada</th><th>Counts Adm</th>' +
-                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAdm + '</td></tr>'
+                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAdm + '</td></tr>'
                                     );
                                 }
                                 $j('#meetingTable').append(
@@ -378,7 +384,7 @@
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#timeTable').append(
                                             '<th>Code</th><th>Counts Ada</th><th>Counts Adm</th>' +
-                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAdm + '</td></tr>'
+                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAdm + '</td></tr>'
                                     );
                                 }
                                 $j('#timeTable').append(
@@ -392,7 +398,7 @@
                                 for(var i = powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0]+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
                                     $j('#intervalTable').append(
                                             '<th>Code</th><th>Counts Ada</th><th>Counts Adm</th>' +
-                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubhtshooter.dateInfo[i].countsInAdm + '</td></tr>'
+                                            '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAdm + '</td></tr>'
                                     );
                                 }
                                 $j('#intervalTable').append(
@@ -433,9 +439,9 @@
                             if(new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.adaTroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.adaTroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.adaTroubleshooter.dateInfo[curRecord].date)){
                                 /* dateEntered within Current Enrollment, create anchor href for editing current FTE */
                                 $j('#currentFteLink').attr('href','/admin/attendance/conversions/'+
-                                    powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
+                                        powerTools.adaTroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
                                         powerTools.adaTroubleshooter.dateInfo[curRecord].attConversionId+
-                                            '&fte=' + powerTools.adaTroubleshooter.studentInfo[0].fteId
+                                        '&fte=' + powerTools.adaTroubleshooter.studentInfo[0].fteId
                                 );
                             }else {
                                 /* no current enrollments, create default anchor href for editing fte */

@@ -13,7 +13,7 @@ WHERE studentid=~(curstudid) AND schoolid=~(curschoolid)
 ) a
 LEFT JOIN ps.fte b
 ON b.id = a.fteid
-ORDER BY entrydate DESC
+ORDER BY b.yearid DESC
 ]
 {
         "entryDate": "~(a.entrydate)",
