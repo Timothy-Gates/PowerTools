@@ -222,7 +222,7 @@
                                             break;
                                         }
                                         else{
-                                            if(powerTools.ADATroubleshooter.dateInfo[k+1].attModeCode == 'daily'){
+                                            if(powerTools.ADATroubleshooter.dateInfo[k+1].attModeCode == 'ATT_ModeDaily'){
                                                 powerTools.ADATroubleshooter.displayError('Duplicate daily attendance for:' + powerTools.ADATroubleshooter.dateInfo[k+1].date);
                                             }
                                             for(var l = 0; l < meetingArr.length; l++){
@@ -237,7 +237,7 @@
                                             recordCount++;
                                         }
                                     }
-                                    if(powerTools.ADATroubleshooter.dateInfo[recordStart].attModeCode != daily){
+                                    if(powerTools.ADATroubleshooter.dateInfo[recordStart].attModeCode != 'ATT_ModeDaily' && powerTools.ADATroubleshooter.dateInfo[recordStart].attModeCode != ''){
                                     	notADay = 1;
                                     }
                                     if(notADay==0) {
@@ -278,10 +278,13 @@
                                         recordCount++;
                                     } 
                                     else if(notADay==1){
+                                    	var temp = powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus;
+                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus = 'Present';
                                     	replaceEmptyStrings(powerTools.ADATroubleshooter.dateInfo[recordStart]);
                                     	curColor = setColor(recordStart);
-                                    	monthADA += 1
-                                    	monthADM +=1
+                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus = temp;
+                                    	monthADA +=1;
+                                    	monthADM +=1;
                                         if(inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day)
                                         {
                                             powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
@@ -305,8 +308,8 @@
 
                                         $j('#calendar > tbody:last-child').append(
                                                 '<td class="square" id ="'+recordStart+ 'record' + recordCount + '"  style="background-color:'+ curColor +'">' +
-                                                '<div style="width:50%; float:left">' + day + '</div><div style="width:50%; float:left" align="right">' + powerTools.ADATroubleshooter.dateInfo[recordStart].attCode+ '</div>' +
-                                                '<div style="width:50%; float:left; padding-top: 10px">ADA: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].adaCode + '</div><div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
+                                                '<div style="width:50%; float:left">' + day + '</div><div style="width:50%; float:left" align="right">(Present)</div>' +
+                                                '<div style="width:50%; float:left; padding-top: 10px">ADA: ' + 1 + '</div><div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
                                                 '<div style="width:100%; float:left">Bell: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].bellScheduleName + '</div>' +
                                                 '<div style="width:100%; float:left; padding-top:10px">Track: ' + tracks + '</div>' +
                                                 '</td>'
@@ -348,13 +351,13 @@
                                     else {
                                         cellColor = 'grey';
                                         inEnrollment = 2;
-                                        record.attCode ='(N/A)';
-                                        record.adaCode = 0;
-                                        record.membershipValue = 0;
-                                        record.presenceStatus = 'Absent';
-                                        record.countsInAda = 1;
-                                        record.countsInAdm = 1;
-                                        record.attModeCode = "ATT_ModeDaily"
+                                        powerTools.ADATroubleshooter.dateInfo[record].attCode ='(N/A)';
+                                        powerTools.ADATroubleshooter.dateInfo[record].adaCode = 0;
+                                        powerTools.ADATroubleshooter.dateInfo[record].membershipValue = 0;
+                                        powerTools.ADATroubleshooter.dateInfo[record].presenceStatus = 'Absent';
+                                        powerTools.ADATroubleshooter.dateInfo[record].countsInAda = 1;
+                                        powerTools.ADATroubleshooter.dateInfo[record].countsInAdm = 1;
+                                        powerTools.ADATroubleshooter.dateInfo[record].attModeCode = "ATT_ModeDaily"
                                     }
                                 }
                                 if(powerTools.ADATroubleshooter.dateInfo[record].inSession == 1 && inEnrollment !=2){                                	
