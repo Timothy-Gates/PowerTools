@@ -388,6 +388,8 @@
                                         '<tr><td>Code</td><td>Counts Ada</td><td>Counts Adm</td></tr>'
                                 );
                                 for(var i = parseInt(powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[0])+1; i <= powerTools.adaTroubleshooter.dateEntered.recordNum.split('record')[1]; i++) {
+                                    alert(powerTools.adaTroubleshooter.dateInfo[i].countsinAda);
+                                    alert(powerTools.adaTroubleshooter.dateInfo[i].countsinAdm);
                                     $j('#meetingTable > tbody:last-child').append(
                                             '<tr><td>' + powerTools.adaTroubleshooter.dateInfo[i].attCode + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAda + '</td><td>' + powerTools.adaTroubleshooter.dateInfo[i].countsInAdm + '</td></tr>'
                                     );
