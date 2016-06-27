@@ -171,7 +171,7 @@
                                     powerTools.ADATroubleshooter.currentDate.month==12?0:powerTools.ADATroubleshooter.currentDate.month,
                                     17);
                             var meetingArr = [];
-                            <!-- flag for if the calendar is missing a day -->
+                            <!-- flag for if the calendar is missing a day 0= day exists 1= no daily record 2= no day in calendar-->
                             var notADay;
                             var monthADA = 0;
                             var monthADM = 0;
@@ -215,7 +215,7 @@
                                                     powerTools.ADATroubleshooter.dateInfo[k].date.split('/')[0]+
                                                     '/' + day + '/' +
                                                     powerTools.ADATroubleshooter.dateInfo[k].date.split('/')[2]);
-                                            notADay = 3;
+                                            notADay = 2;
                                             break;
                                         }
                                         if(powerTools.ADATroubleshooter.dateInfo[k+1].date.split('/')[1] != day) {
@@ -236,7 +236,7 @@
                                             }
                                             recordCount++;
                                         }
-                                    }
+                                    }                                   
                                     if(powerTools.ADATroubleshooter.dateInfo[recordStart].attModeCode != 'ATT_ModeDaily' && powerTools.ADATroubleshooter.dateInfo[recordStart].attModeCode != ''){
                                     	notADay = 1;
                                     }
@@ -278,11 +278,11 @@
                                         recordCount++;
                                     } 
                                     else if(notADay==1){
-                                    	var temp = powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus;
-                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus = 'Present';
+                                    	var temp = powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus;
+                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus = 'Present';
                                     	replaceEmptyStrings(powerTools.ADATroubleshooter.dateInfo[recordStart]);
                                     	curColor = setColor(recordStart);
-                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].pressenceStatus = temp;
+                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus = temp;
                                     	monthADA +=1;
                                     	monthADM +=1;
                                         if(inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day)
@@ -449,12 +449,11 @@
                                 return;
                             }                            
                             if(daily){
-                            	if(powerTools.ADATroubleshooter.dateInfo[curRecord].attModeCode != 'ATT_ModeDaily'){
-                            		noDailyRecord = true;
+                            	if(powerTools.ADATroubleshooter.dateInfo[curRecord].attModeCode != 'ATT_ModeDaily'){                            		
                             		$j('#dayInformation').append(
 	                                        '<table class="grid" id="dailyTable"><th colspan=3>Daily Record Information</th><tbody>' +
 	                                        '<td>Code</td><td>Counts ADA</td><td>Counts ADM</td>' +
-	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm + '</td></tr>' +
+	                                        '<tr><td>(present)</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
                             	}   
