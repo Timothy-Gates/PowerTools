@@ -130,7 +130,7 @@
                                     '<tr><td>Count Meeting Attendance from Other Schools</td><td>' + Boolean(powerTools.ADATroubleshooter.attPrefs[0].value) + '</td></tr>'
                             );
                             /* if attPrefs[2] == 0, display present, else display absences */
-                            if(powerTools.ADATroubleshooter.attPrefs[1].value == 0){
+                            if(powerTools.ADATroubleshooter.attPrefs[1].value == "P"){
                                 $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Present</td></tr>');
                             }else{
                                 $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Absences</td></tr>');
@@ -451,17 +451,19 @@
                             if(daily){
                             	if(powerTools.ADATroubleshooter.dateInfo[curRecord].attModeCode != 'ATT_ModeDaily'){
                             		$j('#dayInformation').append(
-	                                        '<table class="grid" id="dailyTable"><th colspan=3>Daily Record Information</th><tbody>' +
-	                                        '<td>Code</td><td>Daily Attendance</td><td>Daily Membership</td>' +
-	                                        '<tr><td>(present)</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].admValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td></tr>' +
+	                                        '<table class="grid" id="dailyTable"><th colspan=5>Daily Record Information</th><tbody>' +
+	                                        '<td>Date</td><td>Code</td><td>Presence Status</td><td>Daily Attendance</td><td>Daily Membership</td>' +
+	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + '</td><td>(present)</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].admValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
                             	}
                             	else{
+                                    var test = '(*DA' + ';' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + ';' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + ')';
+                                    console.log("Daily Attendance:"+ test);
 	                                $j('#dayInformation').append(
-	                                        '<table class="grid" id="dailyTable"><th colspan=4>Daily Record Information</th><tbody>' +
-	                                        '<td>Date</td><td>Code</td><td>Daily Attendance</td><td>Daily Membership</td>' +
-	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + '</td><td>'+ powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].admValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td></tr>' +
+	                                        '<table class="grid" id="dailyTable"><th colspan=5>Daily Record Information</th><tbody>' +
+	                                        '<td>Date</td><td>Code</td><td>Presence Status</td><td>Daily Attendance</td><td>Daily Membership</td>' +
+	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + '</td><td>'+ powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].presenceStatus + '</td><td>' + test + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
                             	}
