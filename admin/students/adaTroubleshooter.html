@@ -208,6 +208,7 @@
                                         day = 1;
                                         inMonth = 2;
                                     }
+                                    console.log(monthADA);
                                     <!-- finds all of the records for this day and checks for duplicate calendar days and duplicate attendance records-->
                                     for(var k = recordCount; k<powerTools.ADATroubleshooter.dateInfo.length; k++){
                                         if(powerTools.ADATroubleshooter.dateInfo[k].date.split('/')[1] != day) {
@@ -243,8 +244,8 @@
                                     if(notADay==0) {
                                     	replaceEmptyStrings(recordStart, recordCount);
                                     	curColor = setColor(recordStart);
-                                    	monthADA +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAda == 1? powerTools.ADATroubleshooter.dateInfo[recordStart].adaCode:0));
-                                    	monthADM +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAdm == 1? powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue:0));
+                                    	monthADA +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAda == 'true'? powerTools.ADATroubleshooter.dateInfo[recordStart].adaCode:0));
+                                    	monthADM +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAdm == 'true'? powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue:0));
                                         if(inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day)
                                         {
                                             powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
@@ -437,6 +438,17 @@
                             var time = Boolean(powerTools.ADATroubleshooter.attPrefs[6].value);
                             var interval = Boolean(powerTools.ADATroubleshooter.attPrefs[4].value);
                             var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];
+                            var calculatedADA; 
+                            var studentfrn = '~(frn)';
+                            $j.ajaxSetup({
+                                async: false
+                            })
+                            $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn' + studentfrn + '&startDate=' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + '&endDate=' + powerTools.ADATroubleshooter.dateInfo[curRecord].date,function(result){
+                                calculatedADA = result;
+                            });
+                            $j.ajaxSetup({
+                                async: true
+                            });
                             $j('#dayInformation').empty();
                             if(curRecord == 'NAD') {
                                 $j('#dayInformation').append(
@@ -460,20 +472,17 @@
 	                                );
                             	}
                             	else{
-                                    var test = '(*DA' + ';' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + ';' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + ')';
-                                    console.log("Daily Attendance:"+ test);
 	                                $j('#dayInformation').append(
 	                                        '<table class="grid" id="dailyTable"><th colspan=7>Daily Record Information</th><tbody>' +
 	                                        '<td>Code</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td>' +
 	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + 
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda + 
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].presenceStatus +
-	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td><td>' + test + '</td></tr>' +
+	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td><td>' + calculatedADA.ada + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
                             	}                            
                             }   
-                            jsLazyLoader();
                             if(meeting){                        
                                 $j('#dayInformation').append(
                                         '<table class="grid" id="meetingTable"><th colspan=4>Meeting Attendance Records</th><tbody>'                    
