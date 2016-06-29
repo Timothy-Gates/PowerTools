@@ -86,7 +86,7 @@
                             $j('#studentTableBody').append(
                                     '</tbody></table>'
                             );
-                            powerTools.ADATroubleshooter.displayDayInformation();
+                            powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
                         },
                         /* Display Conversion Info in current enrollment tooltip */
                         displayConversionInfo: function() {
@@ -450,22 +450,19 @@
                             }
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
-                        displayDayInformation: function(){
+                        displayDayInformation: function(_callback){
                             /* Should check against student Attendance Mode and Conversion to determine which of 3 options to display
                             * Daily Attendance can convert from code/time to day
                             * Meeting Attendance can convert from period/time to day
                             * Time/Interval Attendance can convert from time to day
                             * If multiple attendance options are selected, we only need to pull records that apply to student FTE
                             * Still looking into getting data with interval and time attendance setup */
-                            var fteElements = {mode:0,conversion:0};
                             var daily = Boolean(powerTools.ADATroubleshooter.attPrefs[3].value);
                             var meeting = Boolean(powerTools.ADATroubleshooter.attPrefs[5].value);
                             var time = Boolean(powerTools.ADATroubleshooter.attPrefs[6].value);
                             var interval = Boolean(powerTools.ADATroubleshooter.attPrefs[4].value);
                             var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];
-                            $j('#dayInformation').empty();
-                            fteElements.mode = 'meeting';
-                            fteElements.conversion = 'period';
+                            $j('#dayInformation').empty();       
                             if(curRecord == 'NAD') {
                                 $j('#dayInformation').append(
                                        '<table class="grid"><th>Day Is Not In The Calendar</th></table>'
@@ -586,10 +583,26 @@
                                         '</tbody</table>'
                                 );                               
                             }                            
-                            <!-- returns the fte information for the selected day -->
-                            function getCurrentFTE(date){
-                            	
-                            }
+                            _callback();
+                        },
+                        changeFTECells: function(){
+                            var fteElements = {mode:0,conversion:0};                            
+                            for(var i = 0; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
+                            	if(new Date(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date) >= new Date(powerTools.ADATroubleshooter.studentInfo[i].entryDate) && 
+                            			new Date(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date) <= new Date(powerTools.ADATroubleshooter.studentInfo[i].exitDate)){
+                            		fteElements.mode = powerTools.ADATroubleshooter.studentInfo[i].attModeCode.toLowerCase();
+                            		fteElements.conversion = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length-3)).toLowerCase();
+                            	}
+                            } 
+                            if(fteElements.mode !=0){     
+                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:green; font-weight:bold')});
+                        		if(fteElements.mode != 'daily'){
+                        			if(fteElements.conversion == 'period'){
+                        				fteElements.conversion = 'code';
+                        			}
+                        			$j('.daily' + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:green; font-weight:bold')});
+                        		}
+                        	}
                         },
                         displayPreviousEnrollments: function(){
                             $j('#prevEnrollmentData').empty();
@@ -700,7 +713,7 @@
                 powerTools.ADATroubleshooter.currentDate.recordNum = $j(this).attr('id');
                 powerTools.ADATroubleshooter.currentDate.prevColor = $j(this).attr('style').split(':')[1];
                 $j(this).attr('style', 'background-color: yellow');
-                powerTools.ADATroubleshooter.displayDayInformation();
+                powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
             });
         });
 
