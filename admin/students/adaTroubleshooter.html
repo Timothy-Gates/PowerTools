@@ -12,9 +12,9 @@
                         studentInfo: [],
                         dateInfo: [],
                         attPrefs: [],
-                        currentDate: {day: 0,month: 0, year: 0,recordNum:0,prevColor:'grey',monthlyADA:0,monthlyADM:0},
+                        currentDate: {day: 0,month: 0, year: 0,recordNum:0,prevColor:'grey'},
                         conversionInfo:[],
-                        todayInfo:[],
+                        monthlyAttendance: 0,
                         errors:[],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
@@ -146,6 +146,7 @@
                          are no overlapping daily records, and then display all of the information on the calendar with links to daily information*/
                         buildCalendar: function(){
                             $j('#calendarData').empty();
+                            powerTools.ADATroubleshooter.monthlyAttendance = 0;
                             var curColor;
                             var tracks;
                             <!-- record start stores the start of the records for the day recordCount tracks the last record for the day-->
@@ -173,7 +174,6 @@
                             var meetingArr = [];
                             <!-- flag for if the calendar is missing a day 0= day exists 1= no daily record 2= no day in calendar-->
                             var notADay;
-                            var monthADA = 0;
                             var monthADM = 0;
                             lastDay = (lastDay.getMonth()+1) + '/' + lastDay.getDate() + '/' + lastDay.getFullYear();
                             $j.ajaxSetup({
@@ -207,8 +207,7 @@
                                     else if(inMonth == 1 && day > getDaysInMonth(startDate.getMonth())){
                                         day = 1;
                                         inMonth = 2;
-                                    }
-                                    console.log(monthADA);
+                                    }                                    
                                     <!-- finds all of the records for this day and checks for duplicate calendar days and duplicate attendance records-->
                                     for(var k = recordCount; k<powerTools.ADATroubleshooter.dateInfo.length; k++){
                                         if(powerTools.ADATroubleshooter.dateInfo[k].date.split('/')[1] != day) {
@@ -244,7 +243,6 @@
                                     if(notADay==0) {
                                     	replaceEmptyStrings(recordStart, recordCount);
                                     	curColor = setColor(recordStart);
-                                    	monthADA +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAda == 'true'? powerTools.ADATroubleshooter.dateInfo[recordStart].adaCode:0));
                                     	monthADM +=Number((powerTools.ADATroubleshooter.dateInfo[recordStart].countsInAdm == 'true'? powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue:0));
                                         if(inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day)
                                         {
@@ -270,7 +268,7 @@
                                         $j('#calendar > tbody:last-child').append(
                                                 '<td class="square" id ="'+recordStart+ 'record' + recordCount + '"  style="background-color:'+ curColor +'">' +
                                                 '<div style="width:50%; float:left">' + day + '</div><div style="width:50%; float:left" align="right">' + powerTools.ADATroubleshooter.dateInfo[recordStart].attCode+ '</div>' +
-                                                '<div style="width:50%; float:left; padding-top: 10px">ADA: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].adaCode + '</div><div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
+                                                '<div id="' + recordStart + '" style="width:50%; float:left; padding-top: 10px"></div><div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
                                                 '<div style="width:100%; float:left">Bell: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].bellScheduleName + '</div>' +
                                                 '<div style="width:100%; float:left; padding-top:10px">Track: ' + tracks + '</div>' +
                                                 '</td>'
@@ -283,8 +281,7 @@
                                     	powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus = 'Present';
                                     	replaceEmptyStrings(recordStart, recordCount);
                                     	curColor = setColor(recordStart);
-                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus = temp;
-                                    	monthADA +=1;
+                                    	powerTools.ADATroubleshooter.dateInfo[recordStart].presenceStatus = temp;                                    	
                                     	monthADM +=1;
                                         if(inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day)
                                         {
@@ -310,7 +307,8 @@
                                         $j('#calendar > tbody:last-child').append(
                                                 '<td class="square" id ="'+recordStart+ 'record' + recordCount + '"  style="background-color:'+ curColor +'">' +
                                                 '<div style="width:50%; float:left">' + day + '</div><div style="width:50%; float:left" align="right">(Present)</div>' +
-                                                '<div style="width:50%; float:left; padding-top: 10px">ADA: ' + 1 + '</div><div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
+                                                '<div id="' + recordStart + '" style="width:50%; float:left; padding-top: 10px"></div>' +
+                                                '<div style="width:50%; float:left; padding-top: 10px">ADM: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].membershipValue + '</div>' +
                                                 '<div style="width:100%; float:left">Bell: ' + powerTools.ADATroubleshooter.dateInfo[recordStart].bellScheduleName + '</div>' +
                                                 '<div style="width:100%; float:left; padding-top:10px">Track: ' + tracks + '</div>' +
                                                 '</td>'
@@ -332,7 +330,7 @@
                             <!-- Collects the monthly information and displays it at the top of the calendar -->
                             $j('#monthInformation').empty();
                             $j('#monthInformation').append(
-                              '<td align="center">Monthly Attendance: ' + monthADA + '</td><td align="center">Monthly Membership: ' + monthADM + '</td>'      
+                              '<td id="monthlyAttendance" align="center"></td><td align="center">Monthly Membership: ' + monthADM + '</td>'      
                             );
                             <!-- Sets the color of the square for the day inEnrollment: 0=current 1=previous 2=never -->
                             function setColor(record){
@@ -405,7 +403,6 @@
 	                                if(powerTools.ADATroubleshooter.dateInfo[i].inSession == 1) {	                                	
 	                                    if (powerTools.ADATroubleshooter.dateInfo[i].attCode == '') {
 	                                        powerTools.ADATroubleshooter.dateInfo[i].attCode ='(Present)';
-	                                        powerTools.ADATroubleshooter.dateInfo[i].adaCode = 1;
 	                                        powerTools.ADATroubleshooter.dateInfo[i].presenceStatus = 'Present';
 	                                        powerTools.ADATroubleshooter.dateInfo[i].countsInAda = 1;
 	                                        powerTools.ADATroubleshooter.dateInfo[i].countsInAdm = 1;
@@ -414,14 +411,8 @@
 	                                        }
 	                                        
 	                                    }
-	                                    if (powerTools.ADATroubleshooter.dateInfo[i].adaCode == '') {
-	                                        if(powerTools.ADATroubleshooter.dateInfo[i].presenceStatus = 'Absent'){
-	                                        	powerTools.ADATroubleshooter.dateInfo[i].adaCode = 0;                                                                                                                 
-	                                        }
-	                                    }
 	                                 }
 	                                else{
-	                                	powerTools.ADATroubleshooter.dateInfo[i].adaCode = 0;
 	                                	powerTools.ADATroubleshooter.dateInfo[i].attCode = '(NIS)';
 	                                	powerTools.ADATroubleshooter.dateInfo[i].attModeCode = 'NotInSession';
 	                                }
@@ -429,6 +420,25 @@
 	                                powerTools.ADATroubleshooter.dateInfo[i].countsInAdm = (powerTools.ADATroubleshooter.dateInfo[i].countsInAdm==1?'true':'false');
 	                                powerTools.ADATroubleshooter.dateInfo[i].dailyAttendanceCode = (powerTools.ADATroubleshooter.dateInfo[i].dailyAttendanceCode==1?'true':'false');
                             	}
+                                $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn=' + '~(frn)' + 
+                                		'&startDate=' + powerTools.ADATroubleshooter.dateInfo[startRecord].date + 
+                                		'&endDate=' + powerTools.ADATroubleshooter.dateInfo[startRecord].date,function(result){
+                                    powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode = result.ada;
+                                    $j('#'+ startRecord).append(
+                                    	'ADA: ' + powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode
+                                    );
+                                    powerTools.ADATroubleshooter.monthlyAttendance += Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode);
+                                    $j('#monthlyAttendance').empty();
+                                    $j('#monthlyAttendance').append(
+                                        	'Monthly Attendance: ' + powerTools.ADATroubleshooter.monthlyAttendance
+                                        );
+                                    if(startRecord == powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]){
+                                    	$j('#dayInformationADA').empty();
+                                    	$j('#dayInformationADA').append(
+                                    		powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode	
+                                    	);
+                                    }                                    
+                                });
                             }
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
@@ -437,18 +447,7 @@
                             var meeting = Boolean(powerTools.ADATroubleshooter.attPrefs[5].value);
                             var time = Boolean(powerTools.ADATroubleshooter.attPrefs[6].value);
                             var interval = Boolean(powerTools.ADATroubleshooter.attPrefs[4].value);
-                            var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];
-                            var calculatedADA; 
-                            var studentfrn = '~(frn)';
-                            $j.ajaxSetup({
-                                async: false
-                            })
-                            $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn' + studentfrn + '&startDate=' + powerTools.ADATroubleshooter.dateInfo[curRecord].date + '&endDate=' + powerTools.ADATroubleshooter.dateInfo[curRecord].date,function(result){
-                                calculatedADA = result;
-                            });
-                            $j.ajaxSetup({
-                                async: true
-                            });
+                            var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];                           
                             $j('#dayInformation').empty();
                             if(curRecord == 'NAD') {
                                 $j('#dayInformation').append(
@@ -466,7 +465,7 @@
                             		$j('#dayInformation').append(
                             				'<table class="grid" id="dailyTable"><th colspan=7>Daily Record Information</th><tbody>' +
 	                                        '<td>Code</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td>' +
-	                                        '<tr><td>(present)</td><td>1</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda) + 
+	                                        '<tr><td>(present)</td><td id="dayInformationADA">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda) + 
 	                                        	'</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm) + '</td><td>Present</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
@@ -475,10 +474,10 @@
 	                                $j('#dayInformation').append(
 	                                        '<table class="grid" id="dailyTable"><th colspan=7>Daily Record Information</th><tbody>' +
 	                                        '<td>Code</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td>' +
-	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + 
+	                                        '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td id="dayInformationADA">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + 
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda + 
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].presenceStatus +
-	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td><td>' + calculatedADA.ada + '</td></tr>' +
+	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
                             	}                            
@@ -644,7 +643,7 @@
             powerTools.ADATroubleshooter.retrieveStudent();
             powerTools.ADATroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
-                var selectedDate = $j('#dateSelector').val().split("/");
+                var selectedDate = $j('#dateSelector').val().split('/');
                 powerTools.ADATroubleshooter.currentDate.month = selectedDate[0];
                 powerTools.ADATroubleshooter.currentDate.day = selectedDate[1];
                 powerTools.ADATroubleshooter.currentDate.year = selectedDate[2];
@@ -657,9 +656,6 @@
                 powerTools.ADATroubleshooter.currentDate.prevColor = $j(this).attr('style').split(':')[1];
                 $j(this).attr('style', 'background-color: yellow');
                 powerTools.ADATroubleshooter.displayDayInformation();
-/*                powerTools.ADATroubleshooter.displayStudent();
-                powerTools.ADATroubleshooter.displayPreviousEnrollments();
-                powerTools.ADATroubleshooter.populateEnrollmentLinks();*/
             });
         });
 
