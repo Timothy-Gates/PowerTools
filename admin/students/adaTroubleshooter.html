@@ -93,7 +93,6 @@
                         displayConversionInfo: function() {
                             for (var i = 0; i < powerTools.ADATroubleshooter.conversionInfo.length; i++) {
                                 if (powerTools.ADATroubleshooter.conversionInfo[i].fteId == powerTools.ADATroubleshooter.studentInfo[0].fteId && powerTools.ADATroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()) {
-                                    alert(powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode);
                                     if(powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode == "CodeDay"){
                                         $j('#currentFteBody').append(
                                                 '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].codeLabel +
@@ -153,12 +152,6 @@
                             }else{
                                 $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Absences</td></tr>');
                             };
-                        },
-
-                        buildLegend: function(){
-                            $j('#legend').append(
-
-                            );
                         },
                         /*Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
                          are no overlapping daily records, and then display all of the information on the calendar with links to daily information*/
@@ -464,15 +457,7 @@
                             }
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
-                        displayDayInformation: function(){
-                            var fteElements = {mode:0,conversion:0};
                         displayDayInformation: function(_callback){
-                            /* Should check against student Attendance Mode and Conversion to determine which of 3 options to display
-                            * Daily Attendance can convert from code/time to day
-                            * Meeting Attendance can convert from period/time to day
-                            * Time/Interval Attendance can convert from time to day
-                            * If multiple attendance options are selected, we only need to pull records that apply to student FTE
-                            * Still looking into getting data with interval and time attendance setup */
                             var daily = Boolean(powerTools.ADATroubleshooter.attPrefs[3].value);
                             var meeting = Boolean(powerTools.ADATroubleshooter.attPrefs[5].value);
                             var time = Boolean(powerTools.ADATroubleshooter.attPrefs[6].value);
@@ -715,7 +700,6 @@
             powerTools.ADATroubleshooter.currentDate.month = today.getMonth() +1;
             powerTools.ADATroubleshooter.currentDate.year = today.getFullYear();
             powerTools.ADATroubleshooter.retrieveStudent();
-            powerTools.ADATroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
                 var selectedDate = $j('#dateSelector').val().split('/');
                 powerTools.ADATroubleshooter.currentDate.month = selectedDate[0];

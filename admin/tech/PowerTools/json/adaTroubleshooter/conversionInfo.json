@@ -1,5 +1,5 @@
 [
-  ~[tlist_sql;
+~[tlist_sql;
 SELECT a.fteid, a.input_value, a.attendance_value, a.daypartid, a.conversion_mode_code, b.att_code
 FROM ps.attendance_conversion_items a
 LEFT JOIN ps.attendance_code b
@@ -8,12 +8,12 @@ WHERE fteid IN (~[gpv:fteid])
 ORDER BY fteid, input_value
 ]
 {
-  "fteId": "~(a.fteid)",
-  "periodLabel" : "~(a.input_value)",
-  "periodValue": "~(a.attendance_value)",
-  "dayPartId": "~(a.daypartid)",
-  "conversionModeCode": "~(a.conversion_mode_code)",
-  "codeLabel": "~(b.att_code)"
+"fteId": "~(a.fteid)",
+"periodLabel" : "~(a.input_value)",
+"periodValue": "~(a.attendance_value)",
+"dayPartId": "~(a.daypartid)",
+"conversionModeCode": "~(a.conversion_mode_code)",
+"codeLabel": "~(b.att_code)"
 },
 [/tlist_sql]
 {}
