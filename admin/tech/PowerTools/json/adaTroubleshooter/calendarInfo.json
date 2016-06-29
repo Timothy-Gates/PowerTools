@@ -18,7 +18,7 @@ LEFT JOIN ps.cc f
 ON d.ccid = f.id
 LEFT JOIN ps.bell_schedule_items g
 ON d.periodid = g.period_id AND a.bell_schedule_id = g.bell_schedule_id
-WHERE a.date_value >= to_date('~[gpv:startDate]','MM/DD/YYYY') AND a.date_value <= to_date('~[gpv:endDate]','MM/DD/YYYY')AND a.schoolid='100'
+WHERE a.date_value >= to_date('~[gpv:startDate]','MM/DD/YYYY') AND a.date_value <= to_date('~[gpv:endDate]','MM/DD/YYYY')AND a.schoolid=~(curschoolid)
 ORDER BY a.date_value, d.att_mode_code, f.expression
 ]
 {
