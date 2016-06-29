@@ -4,8 +4,8 @@ SELECT to_char(a.date_value, '~[datetext:mmddyyyy]'), a.insession, a.membershipv
 a.a, a.b, a.c, a.d, a.e, a.f,
 b.name, b.attendance_conversion_id, c.day_name, d.ada_value_code, d.ada_value_time, d.adm_value, d.total_minutes, d.att_interval, d.att_mode_code,
 e.att_code, e.calculate_ada_yn, e.calculate_adm_yn, e.description, e.presence_status_cd, f.expression, g.daily_attendance_code,
-g.ada_code, g.minutes_attended
-FROM ps.calendar_day a
+g.ada_code, g.minutes_attended, h.name
+FROM ps.calendar_day a 
 LEFT JOIN ps.bell_schedule b
 ON a.bell_schedule_id = b.id
 LEFT JOIN ps.cycle_day c
@@ -18,7 +18,12 @@ LEFT JOIN ps.cc f
 ON d.ccid = f.id
 LEFT JOIN ps.bell_schedule_items g
 ON d.periodid = g.period_id AND a.bell_schedule_id = g.bell_schedule_id
-WHERE a.date_value >= to_date('~[gpv:startDate]','MM/DD/YYYY') AND a.date_value <= to_date('~[gpv:endDate]','MM/DD/YYYY')AND a.schoolid=~(curschoolid)
+LEFT JOIN ps.schools h
+ON d.schoolid = h.school_number
+WHERE a.schoolid=~(curschoolid) AND a.date_value >= to_date('~[gpv:startDate]','MM/DD/YYYY') AND a.date_value <= to_date('~[gpv:endDate]','MM/DD/YYYY')
+	~[if.~[gpv:otherSchools]=0]
+		AND a.schoolid=~(curschoolid)
+	[/if]
 ORDER BY a.date_value, d.att_mode_code, f.expression
 ]
 {
@@ -43,7 +48,8 @@ ORDER BY a.date_value, d.att_mode_code, f.expression
   "expression": "~(f.expression)",
   "dailyAttendanceCode": "~(g.daily_attendance_code)",
   "adaCode": "~(g.adaCode)",
-  "minutesAttended": "~(g.minutes_attended)"
+  "minutesAttended": "~(g.minutes_attended)",
+  "schoolName": "~(h.name)"
 },
 [/tlist_sql]
 {}
