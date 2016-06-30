@@ -8,7 +8,7 @@
     <link href="/images/css/print.css" rel="stylesheet" media="print">
     <script>
         var powerTools = powerTools || {
-                    ADATroubleshooter: {
+                    ADATroubleshooter: {                    	                   
                         studentInfo: [],
                         dateInfo: [],
                         attPrefs: [],
@@ -31,7 +31,6 @@
                             for(var i=0; i <powerTools.ADATroubleshooter.studentInfo.length; i++){
                                 fteList[i] = powerTools.ADATroubleshooter.studentInfo[i].fteId;
                             }
-                            console.log("FTE List = " + fteList);
                             $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/conversionInfo.json?fteID=' +
                                     fteList, function(result){
                                 result.pop();
@@ -259,7 +258,6 @@
                                         {
                                             powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
                                             powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                                            curColor = 'yellow';
                                             powerTools.ADATroubleshooter.displayStudent();
                                             powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                             powerTools.ADATroubleshooter.populateEnrollmentLinks();
@@ -299,7 +297,6 @@
                                         {
                                             powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
                                             powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                                            curColor = 'yellow';
                                             powerTools.ADATroubleshooter.displayStudent();
                                             powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                             powerTools.ADATroubleshooter.populateEnrollmentLinks();
@@ -373,23 +370,12 @@
                                     }
                                 }
                                 if(powerTools.ADATroubleshooter.dateInfo[record].inSession == 1 && inEnrollment !=2){
-                                    if(powerTools.ADATroubleshooter.dateInfo[record].presenceStatus =='Present')
-                                    {
                                         if(inEnrollment == 0){
                                             cellColor = 'green';
                                         }
                                         else {
                                             cellColor = 'lightGreen';
                                         }
-                                    }
-                                    else {
-                                        if(inEnrollment == 0){
-                                            cellColor = 'red';
-                                        }
-                                        else {
-                                            cellColor = 'pink';
-                                        }
-                                    }
                                 }
                                 else if(powerTools.ADATroubleshooter.dateInfo[record].inSession == 0 && inEnrollment !=2){
                                     cellColor = 'lightBlue';
@@ -412,8 +398,9 @@
                                 return daysInMonth[month];
                             }
                             function replaceEmptyStrings(startRecord, endRecord){
+                            	var ADAColor;
                             	for(var i = startRecord; i <= endRecord; i++){
-	                                if(powerTools.ADATroubleshooter.dateInfo[i].inSession == 1) {
+	                                if(powerTools.ADATroubleshooter.dateInfo[i].inSession == 1) {	                                	
 	                                    if (powerTools.ADATroubleshooter.dateInfo[i].attCode == '' && (powerTools.ADATroubleshooter.dateInfo[i].attModeCode != 'ATT_ModeTime' || powerTools.ADATroubleshooter.dateInfo[i].attModeCode != 'ATT_ModeInterval')) {
 	                                        powerTools.ADATroubleshooter.dateInfo[i].attCode ='(Present)';
 	                                        powerTools.ADATroubleshooter.dateInfo[i].presenceStatus = 'Present';
@@ -444,12 +431,33 @@
                                     $j('#'+ startRecord).append(
                                     	'ADA: ' + powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode
                                     );
+                                    if($j('#'+ startRecord + 'record' + endRecord).attr('style') == 'background-color:green'){
+                                     	if(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode >=1){
+                                    		ADAColor = 'green';
+                                    	}
+                                    	else{
+                                    		ADAColor = 'rgb('+ Math.floor(255 - (Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode)*111)) + ',' + Math.floor(0 + (Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode)*128)) + ',0)';
+                                    	}
+                                    }
+                                    else if($j('#'+ startRecord + 'record' + endRecord).attr('style') == 'background-color:lightGreen'){
+                                    	if(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode >=1){
+                                    		ADAColor = 'lightGreen';
+                                    	}
+                                    	else{
+                                    		ADAColor = 'rgb('+ Math.floor(255 - (Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode)*111)) + ',' + Math.floor(192 + (Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode)*46)) + ',' + Math.floor(203 - (Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode)*59)) + ')';
+                                    	}
+                                    }
+                                    if($j('#'+ startRecord + 'record' + endRecord).attr('style') == 'background-color:lightGreen' || $j('#'+ startRecord + 'record' + endRecord).attr('style') == 'background-color:green'){
+                                    	$j('#'+ startRecord + 'record' + endRecord).attr('style','background-color:'+ ADAColor);
+                                    }
                                     powerTools.ADATroubleshooter.monthlyAttendance += Number(powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode);
                                     $j('#monthlyAttendance').empty();
                                     $j('#monthlyAttendance').append(
                                         	'Monthly Attendance: ' + powerTools.ADATroubleshooter.monthlyAttendance
                                         );
                                     if(startRecord == powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]){
+                                    	powerTools.ADATroubleshooter.currentDate.prevColor = $j('#'+ startRecord + 'record' + endRecord).attr('style').substring(17);
+                                    	$j('#'+ startRecord + 'record' + endRecord).attr('style','background:yellow');
                                     	$j('#dayInformationADA').empty();
                                     	$j('#dayInformationADA').append(
                                     		powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode
@@ -482,7 +490,7 @@
                             		$j('#dayInformation').append(
                             				'<table class="grid" id="dailyTable"><th colspan=9>Daily Record Information</th><tbody>' +
 	                                        '<td class="daily code">Code</td><td class="daily time">Minutes Attended</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td><td>School Name</td>' +
-	                                        '<tr><td class="daily code">(present)</td><td>(Full Time)<td id="dayInformationADA">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda) +
+	                                        '<tr><td class="daily code">(present)</td><td>(Full Time)<td id="dayInformationADA" style="font-weight:bold">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda) +
 	                                        	'</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm) + '</td><td>Present</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].schoolName + '</td></tr>' +
 	                                        '</tbody></table>'
 	                                );
@@ -491,7 +499,7 @@
 	                                $j('#dayInformation').append(
 	                                        '<table class="grid" id="dailyTable"><th colspan=9>Daily Record Information</th><tbody>' +
 	                                        '<td class="daily code">Code</td><td class="daily time">Minutes Attended</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td><td>School Name</td>' +
-	                                        '<tr><td class="daily code">' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td class="daily time">' + powerTools.ADATroubleshooter.dateInfo[curRecord].totalMinutes + '<td id="dayInformationADA">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode +
+	                                        '<tr><td class="daily code">' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode + '</td><td class="daily time">' + powerTools.ADATroubleshooter.dateInfo[curRecord].totalMinutes + '<td id="dayInformationADA" style="font-weight:bold">' + powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode +
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].membershipValue + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda +
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAdm + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].presenceStatus +
 	                                        	'</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].cycleDayName + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[curRecord].schoolName + '</td></tr>' +
@@ -596,14 +604,19 @@
                             		fteElements.mode = powerTools.ADATroubleshooter.studentInfo[i].attModeCode.toLowerCase();
                             		fteElements.conversion = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length-3)).toLowerCase();
                             	}
+<<<<<<< HEAD
                             }
                             if(fteElements.mode !=0){
-                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:#c6b806; font-weight:bold')});
+                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:yellow; font-weight:bold')});
+=======
+                            }
+                            if(fteElements.mode !=0){
+                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:green; font-weight:bold')});
+>>>>>>> bd89fd390fd6c5efb0a39167c2b67294bcf7315b
                         		if(fteElements.mode != 'daily'){
                         			if(fteElements.conversion == 'period'){
                         				fteElements.conversion = 'code';
                         			}
-                        			$j('.daily' + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:#c6b806; font-weight:bold')});
                         		}
                         	}
                         },
