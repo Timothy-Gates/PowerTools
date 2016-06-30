@@ -191,7 +191,6 @@
                                            powerTools.ADATroubleshooter.displayAttendancePrefs();
                							   powerTools.ADATroubleshooter.displayStudent();
                                            powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
-               							   powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                        }
                                        for(var k = 0, tracksString ='', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length, trackType; k < len; k++){
                                            if(powerTools.ADATroubleshooter.dateInfo[recordStart].tracks[k] == 1){
@@ -230,7 +229,6 @@
                                            powerTools.ADATroubleshooter.displayAttendancePrefs();
                							   powerTools.ADATroubleshooter.displayStudent();
                                            powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
-               							   powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                        }
                                        for(var k = 0, tracksString ='', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length, trackType; k < len; k++){
                                            if(powerTools.ADATroubleshooter.dateInfo[recordStart].tracks[k] == 1){
@@ -409,7 +407,6 @@
                                 powerTools.ADATroubleshooter.displayAttendancePrefs();
     							powerTools.ADATroubleshooter.displayStudent();
                                 powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
-    							powerTools.ADATroubleshooter.displayPreviousEnrollments();
                             });
                         },
                         displayAttendancePrefs: function(){
@@ -481,7 +478,7 @@
                             $j('#studentTableBody').append(
                                     '</tbody></table>'
                             );
-                            powerTools.ADATroubleshooter.displayConversionInfo();
+                            powerTools.ADATroubleshooter.displayPreviousEnrollments();
                         },
                         /* Display Conversion Info in current enrollment tooltip */
                         displayConversionInfo: function() {
@@ -703,6 +700,7 @@
                                 }
                             }
                             powerTools.ADATroubleshooter.populateEnrollmentLinks();
+                            powerTools.ADATroubleshooter.displayConversionInfo();
                         },
                         populateEnrollmentLinks: function(){
                             /* Create Anchor href for current enrollment */
