@@ -45,7 +45,8 @@
 
                         /*Need to add a check for attendance prefs that haven't been setup yet */
                         retrieveAttendancePrefs: function(){
-                            $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json', function(result){
+                            console.log(powerTools.ADATroubleshooter.currentDate.year);
+                            $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter.currentDate.year, function(result){
                                 result.pop();
                                 powerTools.ADATroubleshooter.attPrefs = result;
                             }).done(function(){
@@ -66,14 +67,23 @@
                                     '<tr><td>Exit Date:</td><td><a href="/admin/students/edittransfer1.html?frn=~(frn)">'+
                                     powerTools.ADATroubleshooter.studentInfo[0].exitDate + '</a></td></tr>' +
                                     '<tr><td>Grade Level</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
+                                    '<tr><td>Track</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].track + '</td></tr>' +
                                     '<tr><td>Membership Share</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].membershipShare + '</td></tr>'
                             );
                             if(powerTools.ADATroubleshooter.studentInfo[0].fteId > 0){
                                 var attMode = powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.substring(0,powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.length - 3);
+                                /* If attendance mode is period to day, check to see if attendance pref counts presents or absences */
+                                if(attMode == "Period"){
+                                    if(powerTools.ADATroubleshooter.attPrefs[1].value == "P"){
+                                        attMode = "Periods Present";
+                                    }else {
+                                        attMode = "Periods Absent";
+                                    };
+                                };
                                 $j('#studentTableBody').append(
                                         '<tr><td>FTE Name (Hover for Conversion Info)</td><td><div class="tooltip"><a id="currentFteLink" target="_parent">' + powerTools.ADATroubleshooter.studentInfo[0].fteName + '</a>' +
                                         '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
-                                        '<tr><td>'+ attMode + '</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
+                                        '<tr><td>'+ attMode + '</td><td>ADA Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
                                         '<tr><td>Attendance Mode</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
                                         '<tr><td>Attendance Conversion</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'
                                 );
@@ -125,6 +135,7 @@
                             };
                         },
                         displayAttendancePrefs: function(){
+                            $j('#attPrefData').empty();
                             $j('#attPrefData').append(
                                     '<table id="attPrefTable" class="grid" style="width:100%"><th colspan="2">Attendance Preferences</th>'+
                                     '<tbody id="attPrefBody"></tbody></table>'
@@ -604,15 +615,9 @@
                             		fteElements.mode = powerTools.ADATroubleshooter.studentInfo[i].attModeCode.toLowerCase();
                             		fteElements.conversion = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length-3)).toLowerCase();
                             	}
-<<<<<<< HEAD
-                            }
-                            if(fteElements.mode !=0){
-                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:yellow; font-weight:bold')});
-=======
                             }
                             if(fteElements.mode !=0){
                         		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:green; font-weight:bold')});
->>>>>>> bd89fd390fd6c5efb0a39167c2b67294bcf7315b
                         		if(fteElements.mode != 'daily'){
                         			if(fteElements.conversion == 'period'){
                         				fteElements.conversion = 'code';
@@ -626,21 +631,30 @@
                             if(powerTools.ADATroubleshooter.studentInfo.length > 1) {
                                 $j('#prevEnrollmentData').append(
                                         '<table class="grid" id="studentPrevTable"><th colspan="7" align="center">Previous Enrollments</th>' +
-                                        '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Membership Share</td>' +
+                                        '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Track</td><td>Membership Share</td>' +
                                         '<td>FTE Name</td><td>Attendance Mode</td><td>Attendance Conversion</td></tr>' +
                                         '<tbody id="studentPrevTableBody"></tbody></table>'
                                 );
                                 for (var i = 1; i < powerTools.ADATroubleshooter.studentInfo.length; i++) {
                                     var attMode = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length - 3);
+                                    /* If attendance mode is period to day, check to see if attendance pref counts presents or absences */
+                                    if(attMode == "Period"){
+                                        if(powerTools.ADATroubleshooter.attPrefs[1].value == "P"){
+                                            attMode = "Periods Present";
+                                        }else {
+                                            attMode = "Periods Absent";
+                                        };
+                                    };
                                     $j('#studentPrevTableBody').append(
                                             '<tr><td><a href="/admin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
                                             powerTools.ADATroubleshooter.studentInfo[i].entryDate + '</a></td>' +
                                             '<td><a href="/admin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
                                             powerTools.ADATroubleshooter.studentInfo[i].exitDate + '</a></td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].gradeLevel + '</td>' +
+                                            '<td>' + powerTools.ADATroubleshooter.studentInfo[i].track + '</td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].membershipShare + '</td>' +
                                             '<td><div class="tooltip"><a id="prevFteLink' + i + '" target="_parent" href="/admin/attendance/conversions/home.html">' + powerTools.ADATroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
-                                            '<tr><td>' + attMode + '</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
+                                            '<tr><td>' + attMode + '</td><td>ADA Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
                                     );
@@ -721,6 +735,7 @@
                 powerTools.ADATroubleshooter.currentDate.day = selectedDate[1];
                 powerTools.ADATroubleshooter.currentDate.year = selectedDate[2];
                 powerTools.ADATroubleshooter.buildCalendar();
+                powerTools.ADATroubleshooter.retrieveAttendancePrefs();
             });
             $j(document).on('click', '.square', function(){
                 $j('#' + powerTools.ADATroubleshooter.currentDate.recordNum).attr('style', 'background-color:' +
