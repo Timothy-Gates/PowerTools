@@ -130,7 +130,6 @@
                                 }
                                 <!-- if current grade is selected this block will trigger -->
                                 else {
-                                    alert("hello");
                                     for (var i = 0; i < result.length; i++) {
                                         if (validGradeScale(result[i])) {
                                             powerTools.gpaValidation.includedGrades.push(result[i]);
@@ -297,6 +296,7 @@
                                     '<tr><td> Count of Grades in GPA Calculation:</td><td>' + calcRecords.countOfGrades + '</td></tr>'+
                                     '<tr><td> Number of Years:</td><td>' + calcRecords.numOfYears + '</td></tr>'+
                                     '<tr><td> Sum of GPA Points:</td><td>' + calcRecords.pointSum.toFixed(2) + '</td></tr>'+
+                                    '<tr><td> Sum of GPA Percent:</td><td>' + calcRecords.percentSum.toFixed(2) + '</td></tr>'+
                                     '<tr><td> Sum of GPA Added Value Points:</td><td>' + calcRecords.addedValueSum.toFixed(2) + '</td></tr>'+
                                     '<tr><td> Sum of GPA Earned Credits:</td><td>' + calcRecords.earned.toFixed(2) + '</td></tr>'+
                                     '<tr><td> Sum of GPA Potential Credits:</td><td>' + calcRecords.potential.toFixed(2) + '</td></tr>'
