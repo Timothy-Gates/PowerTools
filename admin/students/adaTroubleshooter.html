@@ -18,7 +18,7 @@
                         errors:[],
                         /* Retrieve Student info */
                         retrieveStudent: function(){
-                            $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/studentinfo.json', function(result){
+                            $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/studentinfo.json', function(result){
                                 result.pop();
                                 powerTools.ADATroubleshooter.studentInfo = result;
                             }).done(function(){
@@ -32,7 +32,7 @@
                             for(var i=0; i <powerTools.ADATroubleshooter.studentInfo.length; i++){
                                 fteList[i] = powerTools.ADATroubleshooter.studentInfo[i].fteId;
                             }
-                            $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/conversionInfo.json?fteID=' +
+                            $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/conversionInfo.json?fteID=' +
                                     fteList, function(result){
                                 result.pop();
                                 powerTools.ADATroubleshooter.conversionInfo = result;
@@ -46,7 +46,7 @@
 
                         /*Need to add a check for attendance prefs that haven't been setup yet */
                         retrieveAttendancePrefs: function(){
-                            $j.getJSON('/ADMin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json', function(result){
+                            $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json', function(result){
                                 result.pop();
                                 powerTools.ADATroubleshooter.attPrefs = result;
                             }).done(function(){
@@ -62,24 +62,25 @@
                             $j('#studentData').append(
                                     '<table class="grid" id="studentTable" style="width:100%"><th colspan="7" align="center">Current Enrollment</th>'+
                                     '<tbody id="studentTableBody">'+
-                                    '<tr><td>Entry Date:</td><td><a href="/ADMin/students/edittransfer1.html?frn=001' + powerTools.ADATroubleshooter.studentInfo[0].dcid + '">'+
+                                    '<tr><td>Entry Date:</td><td><a href="/admin/students/edittransfer1.html?frn=~(frn)">'+
                                     powerTools.ADATroubleshooter.studentInfo[0].entryDate + '</a></td></tr>' +
-                                    '<tr><td>Exit Date:</td><td><a href="/ADMin/students/edittransfer1.html?frn=001' + powerTools.ADATroubleshooter.studentInfo[0].dcid + '">'+
+                                    '<tr><td>Exit Date:</td><td><a href="/admin/students/edittransfer1.html?frn=~(frn)">'+
                                     powerTools.ADATroubleshooter.studentInfo[0].exitDate + '</a></td></tr>' +
                                     '<tr><td>Grade Level</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].gradeLevel + '</td></tr>' +
                                     '<tr><td>Membership Share</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].membershipShare + '</td></tr>'
                             );
                             if(powerTools.ADATroubleshooter.studentInfo[0].fteId > 0){
+                                var attMode = powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.substring(0,powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.length - 3);
                                 $j('#studentTableBody').append(
                                         '<tr><td>FTE Name</td><td><div class="tooltip"><a id="currentFteLink" target="_parent">' + powerTools.ADATroubleshooter.studentInfo[0].fteName + '</a>' +
-                                        '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>' +
-                                        '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
+                                        '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>'+
+                                        '<tr><td>'+ attMode + '</td><td>Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
                                         '<tr><td>Attendance Mode</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
                                         '<tr><td>Attendance Conversion</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'
                                 );
                             }else{
                                 $j('#studentTableBody').append(
-                                        '<tr><td>FTE Name</td><td><a href="/ADMin/students/edittransfer1.html?frn=" + "001" + powerTools.ADATroubleshooter.studentInfo>Click here to set FTE</a>'
+                                        '<tr><td>FTE Name</td><td><a href="/admin/students/edittransfer1.html?frn=~(frn)">Click here to set FTE</a>'
                                 );
                                 powerTools.ADATroubleshooter.displayError("No FTE selected for current enrollment");
                             };
@@ -92,20 +93,34 @@
                         displayConversionInfo: function() {
                             for (var i = 0; i < powerTools.ADATroubleshooter.conversionInfo.length; i++) {
                                 if (powerTools.ADATroubleshooter.conversionInfo[i].fteId == powerTools.ADATroubleshooter.studentInfo[0].fteId && powerTools.ADATroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.toLowerCase()) {
-                                    $j('#currentFteBody').append(
-                                            '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodLabel +
-                                            '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                    );
+                                    if(powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode == "CodeDay"){
+                                        $j('#currentFteBody').append(
+                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].codeLabel +
+                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                        );
+                                    }else {
+                                        $j('#currentFteBody').append(
+                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodLabel +
+                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                        );
+                                    };
                                 };
                             };
                             /* Display Conversion Info in previous enrollment tooltips */
                             for(var i=1; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
                                 for(var j=0; j < powerTools.ADATroubleshooter.conversionInfo.length; j++){
                                     if(powerTools.ADATroubleshooter.studentInfo[i].fteId == powerTools.ADATroubleshooter.conversionInfo[j].fteId && powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase()){
-                                        $j('#prevFteBody' + i).append(
-                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodLabel +
-                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
-                                        );
+                                        if(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode == "CodeDay"){
+                                            $j('#prevFteBody' + i).append(
+                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].codeLabel +
+                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                            );
+                                        }else {
+                                            $j('#prevFteBody' + i).append(
+                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodLabel +
+                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                            );
+                                        };
                                     };
                                 };
                             };
@@ -137,12 +152,6 @@
                             }else{
                                 $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Absences</td></tr>');
                             };
-                        },
-
-                        buildLegend: function(){
-                            $j('#legend').append(
-
-                            );
                         },
                         /*Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
                          are no overlapping daily records, and then display all of the information on the calendar with links to daily information*/
@@ -181,9 +190,7 @@
                             $j.ajaxSetup({
                                 async: false
                             })
-                            /* Need to pass the attendance from other schools pref to limit search to current school or all schools
-                            * Will need to also add IF statement to check the pref in JSON*/
-                            $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/calendarinfo.json?startDate=' + firstDay + '&endDate=' + lastDay + '&otherSchools=' + powerTools.ADATroubleshooter.attPrefs[0].value,function(result){
+                            $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/calendarinfo.json?startDate=' + firstDay + '&endDate=' + lastDay + '&otherSchools=' + powerTools.ADATroubleshooter.attPrefs[0].value,function(result){
                                 result.pop();
                                 powerTools.ADATroubleshooter.dateInfo = result;
                             });
@@ -416,7 +423,7 @@
 	                                	powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = (powerTools.ADATroubleshooter.dateInfo[i].presenceStatus =='Present'?'(Full Time)': 0);	
 	                                }	                                
                             	}
-                                $j.getJSON('/ADMin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn=' + '~(frn)' +
+                                $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn=' + '~(frn)' +
                                 		'&startDate=' + powerTools.ADATroubleshooter.dateInfo[startRecord].date +
                                 		'&endDate=' + powerTools.ADATroubleshooter.dateInfo[startRecord].date,function(result){
                                     powerTools.ADATroubleshooter.dateInfo[startRecord].adaCode = result.ada;
@@ -460,18 +467,12 @@
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(_callback){
-                            /* Should check against student Attendance Mode and Conversion to determine which of 3 options to display
-                            * Daily Attendance can convert from code/time to day
-                            * Meeting Attendance can convert from period/time to day
-                            * Time/Interval Attendance can convert from time to day
-                            * If multiple attendance options are selected, we only need to pull records that apply to student FTE
-                            * Still looking into getting data with interval and time attendance setup */
                             var daily = Boolean(powerTools.ADATroubleshooter.attPrefs[3].value);
                             var meeting = Boolean(powerTools.ADATroubleshooter.attPrefs[5].value);
                             var time = Boolean(powerTools.ADATroubleshooter.attPrefs[6].value);
                             var interval = Boolean(powerTools.ADATroubleshooter.attPrefs[4].value);
                             var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];
-                            $j('#dayInformation').empty();       
+                            $j('#dayInformation').empty();
                             if(curRecord == 'NAD') {
                                 $j('#dayInformation').append(
                                        '<table class="grid"><th>Day Is Not In The Calendar</th></table>'
@@ -595,16 +596,22 @@
                             _callback();
                         },
                         changeFTECells: function(){
-                            var fteElements = {mode:0,conversion:0};                            
+                            var fteElements = {mode:0,conversion:0};
                             for(var i = 0; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
-                            	if(new Date(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date) >= new Date(powerTools.ADATroubleshooter.studentInfo[i].entryDate) && 
+                            	if(new Date(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date) >= new Date(powerTools.ADATroubleshooter.studentInfo[i].entryDate) &&
                             			new Date(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date) <= new Date(powerTools.ADATroubleshooter.studentInfo[i].exitDate)){
                             		fteElements.mode = powerTools.ADATroubleshooter.studentInfo[i].attModeCode.toLowerCase();
                             		fteElements.conversion = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length-3)).toLowerCase();
                             	}
+<<<<<<< HEAD
                             } 
                             if(fteElements.mode !=0){     
                         		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:yellow; font-weight:bold')});
+=======
+                            }
+                            if(fteElements.mode !=0){
+                        		$j('.' + fteElements.mode + '.' + fteElements.conversion).each(function(){$j(this).attr('style','color:green; font-weight:bold')});
+>>>>>>> bd89fd390fd6c5efb0a39167c2b67294bcf7315b
                         		if(fteElements.mode != 'daily'){
                         			if(fteElements.conversion == 'period'){
                         				fteElements.conversion = 'code';
@@ -617,22 +624,22 @@
                             /* Display student previous enrollment data if it exists using index > '0'*/
                             if(powerTools.ADATroubleshooter.studentInfo.length > 1) {
                                 $j('#prevEnrollmentData').append(
-
                                         '<table class="grid" id="studentPrevTable"><th colspan="7" align="center">Previous Enrollments</th>' +
                                         '<tr><td>Entry Date:</td><td>Exit Date:</td><td>Grade Level</td><td>Membership Share</td>' +
                                         '<td>FTE Name</td><td>Attendance Mode</td><td>Attendance Conversion</td></tr>' +
                                         '<tbody id="studentPrevTableBody"></tbody></table>'
                                 );
                                 for (var i = 1; i < powerTools.ADATroubleshooter.studentInfo.length; i++) {
+                                    var attMode = powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.substring(0,powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.length - 3);
                                     $j('#studentPrevTableBody').append(
-                                            '<tr><td><a href="/ADMin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
+                                            '<tr><td><a href="/admin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
                                             powerTools.ADATroubleshooter.studentInfo[i].entryDate + '</a></td>' +
-                                            '<td><a href="/ADMin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
+                                            '<td><a href="/admin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
                                             powerTools.ADATroubleshooter.studentInfo[i].exitDate + '</a></td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].gradeLevel + '</td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].membershipShare + '</td>' +
-                                            '<td><div class="tooltip"><a id="prevFteLink' + i + '" target="_parent" href="/ADMin/attendance/conversions/home.html">' + powerTools.ADATroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
-                                            '<tr><td>Period\\Interval\\Code</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
+                                            '<td><div class="tooltip"><a id="prevFteLink' + i + '" target="_parent" href="/admin/attendance/conversions/home.html">' + powerTools.ADATroubleshooter.studentInfo[i].fteName + '</a><span class="tooltiptext"><table id="prevFte' + i + '" class="grid"><th colspan="2">Conversion Info</th>'+
+                                            '<tr><td>' + attMode + '</td><td>Value</td></tr><tbody id="prevFteBody' + i + '" </tbody></table></span></div></td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
                                     );
@@ -644,14 +651,14 @@
                             var curRecord = powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0];
                             if(new Date(powerTools.ADATroubleshooter.dateInfo[curRecord].date) >= new Date(powerTools.ADATroubleshooter.studentInfo[0].entryDate) && new Date(powerTools.ADATroubleshooter.studentInfo[0].exitDate) >= new Date(powerTools.ADATroubleshooter.dateInfo[curRecord].date)){
                                 /* currentDate within Current Enrollment, create anchor href for editing current FTE */
-                                $j('#currentFteLink').attr('href','/ADMin/attendance/conversions/'+
+                                $j('#currentFteLink').attr('href','/admin/attendance/conversions/'+
                                         powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode + '/home.html?id='+
                                         powerTools.ADATroubleshooter.dateInfo[curRecord].attConversionId+
                                         '&fte=' + powerTools.ADATroubleshooter.studentInfo[0].fteId
                                 );
                             }else {
                                 /* no current enrollments, create default anchor href for editing fte */
-                                $j('#currentFteLink').attr('href', '/ADMin/attendance/conversions/home.html');
+                                $j('#currentFteLink').attr('href', '/admin/attendance/conversions/home.html');
                             }
                         },
                         validateADAADM: function(){
@@ -707,7 +714,6 @@
             powerTools.ADATroubleshooter.currentDate.month = today.getMonth() +1;
             powerTools.ADATroubleshooter.currentDate.year = today.getFullYear();
             powerTools.ADATroubleshooter.retrieveStudent();
-            powerTools.ADATroubleshooter.buildLegend();
             $j('#dateSelector').on('change', function () {
                 var selectedDate = $j('#dateSelector').val().split('/');
                 powerTools.ADATroubleshooter.currentDate.month = selectedDate[0];
@@ -770,19 +776,19 @@
     </style>
 </head>
 <body>
-~[wc:ADMin_header_frame_css]
+~[wc:admin_header_frame_css]
 <!-- breadcrumb start -->
-<a href="/ADMin/home.html" target="_top">~[text:psx.html.ADMin_students.honorroll.start_page]</a>
-&gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.ADMin_students.honorroll.student_selection]</a>
-&gt;~[text:psx.html.ADMin_students.honorroll.honor_roll1]
+<a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.honorroll.start_page]</a>
+&gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.honorroll.student_selection]</a>
+&gt;~[text:psx.html.admin_students.honorroll.honor_roll1]
 <!-- breadcrumb end -->
-~[wc:ADMin_navigation_frame_css] ~[wc:title_student_begin_css]ADA Troubleshooter~[wc:title_student_end_css]
+~[wc:admin_navigation_frame_css] ~[wc:title_student_begin_css]ADA Troubleshooter~[wc:title_student_end_css]
 <!-- start of content and bounding box -->
 <div class="box-round">
     <div id="dateSelection">
         <table class="linkDescList">
             <tb><p><b>This utility will help to determine how Average Daily Attendance and Membership are calculated, should the attendance views
-                be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/ADMin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
+                be updated. If the data your are displaying on this page does not match the ADA/ADM reports, try <a href="/admin/reports_engine/report_w_param.html?ac=reports_get_using_ID;repo_ID=ATT_RefreshPremierMembrDefaults">refreshing
                     the Premier Attendance Views Data</a>.
             </b></p></tb>
         </table>
@@ -821,7 +827,7 @@
     <div id="prevEnrollmentData"></div>
 </div>
 <!-- end of content of bounding box -->
-~[wc:ADMin_footer_frame_css]
+~[wc:admin_footer_frame_css]
 </body>
 </html>
 <!-- end right frame -->
