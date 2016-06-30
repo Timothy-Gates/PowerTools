@@ -103,20 +103,14 @@
                                     for (var i = 0; i < result.length; i++) {
                                         gradePushed = 0;
                                         if ((isIn(powerTools.gpaValidation.methodInfo.queryTerms, result[i].storecode)) && (thisYearFlag == null || Math.floor(result[i].termid / 100) == currentYear)) {
-                                            //alert("1");
                                             if (isIn(powerTools.gpaValidation.methodInfo.queryGrades, result[i].grade_level)) {
-                                                //alert("2 ");
-                                                if (isIn(powerTools.gpaValidation.methodInfo.queryYears, (Math.floor(result[i].termid / 100) + 1990))) {
-                                                    // alert("3 "  );
+                                                if (isIn(powerTools.gpaValidation.methodInfo.queryYears, (Math.floor(result[i].termid / 100) + 1990))) {                                                    
                                                     if (isIn(powerTools.gpaValidation.methodInfo.queryCreditTypes, result[i].credittype)) {
-                                                        //alert("4");
                                                         if ((!powerTools.gpaValidation.methodInfo.queryCountGpa || result[i].querycountgpa == 0) &&
                                                                 (!powerTools.gpaValidation.methodInfo.queryClassRank || result[i].queryclassrank == 0) &&
                                                                 (!powerTools.gpaValidation.methodInfo.queryHonorRoll || result[i].queryhonorroll == 0) &&
                                                                 (!powerTools.gpaValidation.methodInfo.queryPotential || result[i].potentialcrhrs > 0)) {
-                                                            //alert("5");
                                                             if (validGradeScale(result[i])) {
-                                                                //alert("6");
                                                                 gradePushed = 1;
                                                                 powerTools.gpaValidation.includedGrades.push(result[i]);
                                                             }
@@ -141,21 +135,17 @@
                                 }
                                 <!-- if projected is selected this block will trigger as well -->
                                 if(powerTools.gpaValidation.methodInfo.calcType == "projected"){
-                                    //alert("a");
                                     if(powerTools.gpaValidation.methodInfo.projectType == "historical"){
-                                        //alert("b");
                                         var temp;
                                         for(var j = 0; j < powerTools.gpaValidation.includedGrades.length; j ++) {
                                             if(powerTools.gpaValidation.includedGrades[j].storecode == powerTools.gpaValidation.methodInfo.projectStoreCode &&
                                                 Math.floor(powerTools.gpaValidation.includedGrades[j].termid/ 100) == currentYear){
-                                                //alert("c");
                                                 if(checkForCurrent(powerTools.gpaValidation.includedGrades[j])){
-                                                    //alert("d");
                                                     temp = JSON.parse(JSON.stringify(powerTools.gpaValidation.includedGrades[j]));
                                                     temp.storecode = 'Proj';
                                                     if(powerTools.gpaValidation.methodInfo.projectCreditOption == 'course')
                                                     {
-                                                        temp.potentialcrhrs = temp.coursepotentialcrhrs; //Change this to the course potential credit
+                                                        temp.potentialcrhrs = temp.coursepotentialcrhrs;
                                                     }
                                                     powerTools.gpaValidation.projectedGrades.push(temp);
                                                 }
@@ -520,7 +510,7 @@
 <!-- breadcrumb start -->
 <a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.honorroll.start_page]</a>
 &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.honorroll.student_selection]</a>
-&gt;~[text:psx.html.admin_students.honorroll.honor_roll1]
+&gt; Gpa Validation
 <!-- breadcrumb end -->
 ~[wc:admin_navigation_frame_css] ~[wc:title_student_begin_css]Gpa Validation~[wc:title_student_end_css]
 <div class="box-round">
