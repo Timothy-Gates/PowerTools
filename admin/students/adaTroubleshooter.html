@@ -396,7 +396,6 @@
                                 powerTools.ADATroubleshooter.attPrefs = result;
                             }).done(function(){
                                 powerTools.ADATroubleshooter.displayAttendancePrefs();
-                                powerTools.ADATroubleshooter.displayConversionInfo();
     							powerTools.ADATroubleshooter.displayStudent();
                                 powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
     							powerTools.ADATroubleshooter.displayPreviousEnrollments();
@@ -507,6 +506,7 @@
                             $j('#studentTableBody').append(
                                     '</tbody></table>'
                             );
+                            powerTools.ADATroubleshooter.displayConversionInfo();
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(_callback){
@@ -674,8 +674,8 @@
                                             attMode = "Periods Present";
                                         }else {
                                             attMode = "Periods Absent";
-                                        };
-                                    };
+                                        }
+                                    }
                                     $j('#studentPrevTableBody').append(
                                             '<tr><td><a href="/admin/students/edittransfer2.html?frn=018' + powerTools.ADATroubleshooter.studentInfo[i].dcid + '">'+
                                             powerTools.ADATroubleshooter.studentInfo[i].entryDate + '</a></td>' +
@@ -689,8 +689,9 @@
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].attModeCode + '</td>' +
                                             '<td>' + powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode + '</td></tr>'
                                     );
-                                };
-                            };
+                                }
+                            }
+                            powerTools.ADATroubleshooter.populateEnrollmentLinks();
                         },
                         populateEnrollmentLinks: function(){
                             /* Create Anchor href for current enrollment */
