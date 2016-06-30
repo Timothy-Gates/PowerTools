@@ -71,6 +71,11 @@
                                 }
                             }
                             <!-- Replace all blanks with appropriate value -->
+                            for(var i = 0; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
+                            	if(powerTools.ADATroubleshooter.studentInfo[i].track == ''){
+                            		powerTools.ADATroubleshooter.studentInfo[i].track = '(None)';
+                            	}
+                            }                            
 							powerTools.ADATroubleshooter.buildCalendar();
                         },
                         /*Build Calendar and set it to current Month, it will pull the attendance and calendar information for the month, validate that all days exist and that there
@@ -183,7 +188,10 @@
                                        {
                                            powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
                                            powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                                           powerTools.ADATroubleshooter.retrieveAttendancePrefs();
+                                           powerTools.ADATroubleshooter.displayAttendancePrefs();
+               							   powerTools.ADATroubleshooter.displayStudent();
+                                           powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
+               							   powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                        }
                                        for(var k = 0, tracksString ='', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length, trackType; k < len; k++){
                                            if(powerTools.ADATroubleshooter.dateInfo[recordStart].tracks[k] == 1){
@@ -219,7 +227,10 @@
                                        {
                                            powerTools.ADATroubleshooter.currentDate.recordNum = recordStart+ 'record' + recordCount;
                                            powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                                           powerTools.ADATroubleshooter.retrieveAttendancePrefs();
+                                           powerTools.ADATroubleshooter.displayAttendancePrefs();
+               							   powerTools.ADATroubleshooter.displayStudent();
+                                           powerTools.ADATroubleshooter.displayDayInformation(function(){powerTools.ADATroubleshooter.changeFTECells();});
+               							   powerTools.ADATroubleshooter.displayPreviousEnrollments();
                                        }
                                        for(var k = 0, tracksString ='', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length, trackType; k < len; k++){
                                            if(powerTools.ADATroubleshooter.dateInfo[recordStart].tracks[k] == 1){
@@ -430,42 +441,6 @@
                                 $j('#attPrefBody').append('<tr><td>Count Presents or Absences for Attendance Conversion</td><td>Absences</td></tr>');
                             };
                         },
-                        /* Display Conversion Info in current enrollment tooltip */
-                        displayConversionInfo: function() {
-                            for (var i = 0; i < powerTools.ADATroubleshooter.conversionInfo.length; i++) {
-                                if (powerTools.ADATroubleshooter.conversionInfo[i].fteId == powerTools.ADATroubleshooter.studentInfo[0].fteId && powerTools.ADATroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.toLowerCase() && powerTools.ADATroubleshooter.conversionInfo[i].conversionId == powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].attConversionId) {
-                                    if(powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode == "CodeDay"){
-                                        $j('#currentFteBody').append(
-                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].codeLabel +
-                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                        );
-                                    }else {
-                                        $j('#currentFteBody').append(
-                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodLabel +
-                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
-                                        );
-                                    };
-                                };
-                            };
-                            /* Display Conversion Info in previous enrollment tooltips */
-                            for(var i=1; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
-                                for(var j=0; j < powerTools.ADATroubleshooter.conversionInfo.length; j++){
-                                    if(powerTools.ADATroubleshooter.studentInfo[i].fteId == powerTools.ADATroubleshooter.conversionInfo[j].fteId && powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase() && powerTools.ADATroubleshooter.conversionInfo[j].conversionId == powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].attConversionId){
-                                        if(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode == "CodeDay"){
-                                            $j('#prevFteBody' + i).append(
-                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].codeLabel +
-                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
-                                            );
-                                        }else {
-                                            $j('#prevFteBody' + i).append(
-                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodLabel +
-                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
-                                            );
-                                        };
-                                    };
-                                };
-                            };
-                        },
                         /* Display student enrollment data from studentInfo.json using index[0] for current enrollment */
                         displayStudent: function(){
                             $j('#studentData').empty();
@@ -507,6 +482,42 @@
                                     '</tbody></table>'
                             );
                             powerTools.ADATroubleshooter.displayConversionInfo();
+                        },
+                        /* Display Conversion Info in current enrollment tooltip */
+                        displayConversionInfo: function() {
+                            for (var i = 0; i < powerTools.ADATroubleshooter.conversionInfo.length; i++) {
+                                if (powerTools.ADATroubleshooter.conversionInfo[i].fteId == powerTools.ADATroubleshooter.studentInfo[0].fteId && powerTools.ADATroubleshooter.conversionInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode.toLowerCase() && powerTools.ADATroubleshooter.conversionInfo[i].conversionId == powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].attConversionId) {
+                                    if(powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode == "CodeDay"){
+                                        $j('#currentFteBody').append(
+                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].codeLabel +
+                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                        );
+                                    }else {
+                                        $j('#currentFteBody').append(
+                                                '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodLabel +
+                                                '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[i].periodValue + '</td></tr>'
+                                        );
+                                    };
+                                };
+                            };
+                            /* Display Conversion Info in previous enrollment tooltips */
+                            for(var i=1; i < powerTools.ADATroubleshooter.studentInfo.length; i++){
+                                for(var j=0; j < powerTools.ADATroubleshooter.conversionInfo.length; j++){
+                                    if(powerTools.ADATroubleshooter.studentInfo[i].fteId == powerTools.ADATroubleshooter.conversionInfo[j].fteId && powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode.toLowerCase() == powerTools.ADATroubleshooter.conversionInfo[j].conversionModeCode.toLowerCase() && powerTools.ADATroubleshooter.conversionInfo[j].conversionId == powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].attConversionId){
+                                        if(powerTools.ADATroubleshooter.studentInfo[i].conversionModeCode == "CodeDay"){
+                                            $j('#prevFteBody' + i).append(
+                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].codeLabel +
+                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                            );
+                                        }else {
+                                            $j('#prevFteBody' + i).append(
+                                                    '<tr><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodLabel +
+                                                    '</td><td>' + powerTools.ADATroubleshooter.conversionInfo[j].periodValue + '</td></tr>'
+                                            );
+                                        };
+                                    };
+                                };
+                            };
                         },
                         <!-- Display's the daily information for the student based on the date selected on the calendar -->
                         displayDayInformation: function(_callback){
