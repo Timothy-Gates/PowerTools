@@ -61,6 +61,7 @@
           powerTools.gpaValidation.check = 0;
           powerTools.gpaValidation.includedGrades = [];
           powerTools.gpaValidation.excludedGrades = [];
+          powerTools.gpaValidation.excludedTriggers = [];
           powerTools.gpaValidation.projectedGrades = [];
           powerTools.gpaValidation.retrieveMethodData();
         },
@@ -182,7 +183,6 @@
                   else{
                 	  powerTools.gpaValidation.excludedGrades.push(result[i]);
                 	  powerTools.gpaValidation.excludedTriggers.push(JSON.parse(JSON.stringify(triggers)));
-                	  console.log(JSON.stringify(powerTools.gpaValidation.excludedTriggers[powerTools.gpaValidation.excludedTriggers.length-1]));
                 	  triggers = {queryTerms:0,queryGrades:0,queryYears:0,queryCreditTypes:0,countgpa:0,classrank:0,honorroll:0,potentialcrhrs:0};                	  
                   }
                 }
@@ -408,9 +408,9 @@
               '<td>' + powerTools.gpaValidation.includedGrades[i].termid + '</td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].storecode + '</td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].grade_level + '</td>' +
-              '<td id="record' + i'">' + powerTools.gpaValidation.includedGrades[i].course_number + '</td>' +
+              '<td>' + powerTools.gpaValidation.includedGrades[i].course_number + '</td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].sectionnumber + '</td>' +
-              '<td>' + powerTools.gpaValidation.includedGrades[i].grade + '</td>' +
+              '<td style="font-weight:bold"><a id="inRecord'+ i +'" target="_parent">' + powerTools.gpaValidation.includedGrades[i].grade + '</a></td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].gpa_points + '</td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].percent + '</td>' +
               '<td>' + powerTools.gpaValidation.includedGrades[i].gpa_addedvalue + '</td>' +
@@ -474,21 +474,21 @@
             for (var i = 0; i < powerTools.gpaValidation.excludedGrades.length; i++) {
               $j('#tbody3').append(
                 '<tr>' +
-                '<td id="queryYears' + i'">' + powerTools.gpaValidation.excludedGrades[i].termid + '</td>' +
-                '<td id="queryTerms' + i'">' + powerTools.gpaValidation.excludedGrades[i].storecode + '</td>' +
-                '<td id="queryGrades' + i'">' + powerTools.gpaValidation.excludedGrades[i].grade_level + '</td>' +
-                '<td id="record'+ (i + 0.5)'">' + powerTools.gpaValidation.excludedGrades[i].course_number + '</td>' +
+                '<td id="queryYears' + i +'">' + powerTools.gpaValidation.excludedGrades[i].termid + '</td>' +
+                '<td id="queryTerms' + i +'">' + powerTools.gpaValidation.excludedGrades[i].storecode + '</td>' +
+                '<td id="queryGrades' + i +'">' + powerTools.gpaValidation.excludedGrades[i].grade_level + '</td>' +
+                '<td>' + powerTools.gpaValidation.excludedGrades[i].course_number + '</td>' +
                 '<td>' + powerTools.gpaValidation.excludedGrades[i].sectionnumber + '</td>' +
-                '<td>' + powerTools.gpaValidation.excludedGrades[i].grade + '</td>' +
+                '<td style="font-weight:bold"><a id="exRecord'+ i +'" target="_parent">' + powerTools.gpaValidation.excludedGrades[i].grade + '</a></td>' +
                 '<td>' + powerTools.gpaValidation.excludedGrades[i].gpa_points + '</td>' +
                 '<td>' + powerTools.gpaValidation.excludedGrades[i].percent + '</td>' +
                 '<td>' + powerTools.gpaValidation.excludedGrades[i].gpa_addedvalue + '</td>' +
                 '<td>' + powerTools.gpaValidation.excludedGrades[i].earnedcrhrs + '</td>' +
-                '<td id="potentialcrhrs' + i'">' + powerTools.gpaValidation.excludedGrades[i].potentialcrhrs + '</td>' +
-                '<td id="queryCreditTypes' + i'">' + powerTools.gpaValidation.excludedGrades[i].credittype + '</td>' +
-                '<td id="countgpa' + i'">' + powerTools.gpaValidation.excludedGrades[i].querycountgpa + '</td>' +
-                '<td id="classrank' + i'">' + powerTools.gpaValidation.excludedGrades[i].queryclassrank + '</td>' +
-                '<td id="honorroll' + i'">' + powerTools.gpaValidation.excludedGrades[i].queryhonorroll + '</td>' +
+                '<td id="potentialcrhrs' + i +'">' + powerTools.gpaValidation.excludedGrades[i].potentialcrhrs + '</td>' +
+                '<td id="queryCreditTypes' + i +'">' + powerTools.gpaValidation.excludedGrades[i].credittype + '</td>' +
+                '<td id="countgpa' + i +'">' + powerTools.gpaValidation.excludedGrades[i].querycountgpa + '</td>' +
+                '<td id="classrank' + i +'">' + powerTools.gpaValidation.excludedGrades[i].queryclassrank + '</td>' +
+                '<td id="honorroll' + i +'">' + powerTools.gpaValidation.excludedGrades[i].queryhonorroll + '</td>' +
                 '</tr>'
               );
             }
@@ -575,35 +575,48 @@
             }
           }
           powerTools.gpaValidation.showExcludedCause();
+          powerTools.gpaValidation.addGradeLinks();
         },
         showExcludedCause: function(){
         	for(var i = 0; i < powerTools.gpaValidation.excludedGrades.length; i ++){
         		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
         			$j('#queryTerms' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].queryGrades == 1){
+        			$j('#queryGrades' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].queryYears == 1){
+        			$j('#queryYears' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].queryCreditTypes == 1){
+        			$j('#queryCreditTypes' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].countgpa == 1){
+        			$j('#countgpa' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].classrank == 1){
+        			$j('#classrank' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].honorroll == 1){
+        			$j('#honorroll' + i).attr('style','color:red');
         		}
-        		if(powerTools.gpaValidation.excludedTriggers[i].queryTerms == 1){
-        			$j('#queryTerms' + i).attr('style','color:red');
+        		if(powerTools.gpaValidation.excludedTriggers[i].potentialcrhrs == 1){
+        			$j('#potentialcrhrs' + i).attr('style','color:red');
         		}
         	}        	
-        }
+        },
+        addGradeLinks: function(){
+        	if(powerTools.gpaValidation.methodInfo.calcType != 'current'){
+	        	for(var i = 0; i < powerTools.gpaValidation.includedGrades.length; i ++){
+	        		 $j('#inRecord' + i).attr('href', '/admin/students/previousgrades.html?frn=' + '~(frn)'
+	                    );
+	        	}
+	        	for(var i = 0; i < powerTools.gpaValidation.excludedGrades.length; i ++){
+	        		 $j('#exRecord' + i).attr('href', '/admin/students/previousgrades.html?frn=' + '~(frn)'
+	                    )
+	        	}
+        	}
+        },
         displayError: function(error) {
             for (var i = 0; i < powerTools.gpaValidation.errors.length; i++) {
               if (error == powerTools.gpaValidation.errors[i]) {
