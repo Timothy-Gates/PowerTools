@@ -553,11 +553,14 @@
                       };
                     };
                     $j('#studentTableBody').append(
-                            '<tr><td>FTE Name (Hover for Conversion Info)</td><td><div class="tooltip"><a id="currentFteLink" target="_parent">' + powerTools.ADATroubleshooter.studentInfo[0].fteName + '</a>' +
+                            '<tr><td>FTE Name (Hover for Conversion Info)</td><td><div class="tooltip"><a id="currentFteLink" target="_parent">' +
+                            powerTools.ADATroubleshooter.studentInfo[0].fteName + '</a>' +
                             '<span class="tooltiptext"><table id="currentFte" class="grid"><th colspan="2">Conversion Info</th>' +
-                            '<tr><td>' + attMode + '</td><td>ADA Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
+                            '<tr><td>' + attMode +
+                            '</td><td>ADA Value</td></tr><tbody id="currentFteBody"></tbody></table></span></div></td></tr>+' +
                             '<tr><td>Attendance Mode</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].attModeCode + '</td></tr>' +
-                            '<tr><td>Attendance Conversion</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode + '</td></tr>'
+                            '<tr><td>Attendance Conversion</td><td>' + powerTools.ADATroubleshooter.studentInfo[0].conversionModeCode +
+                            '</td></tr>'
                     );
                   } else {
                     $j('#studentTableBody').append(
@@ -636,7 +639,14 @@
                     } else if (powerTools.ADATroubleshooter.dateInfo[curRecord].attModeCode != 'ATT_ModeDaily') {
                       $j('#dayInformation').append(
                               '<table class="grid" id="dailyTable"><th colspan=9>Daily Record Information</th><tbody>' +
-                              '<td class="daily code">Code</td><td class="daily time">Minutes Attended</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td><td>School Name</td>' +
+                              '<td class="daily code">Code</td>' +
+                              '<td class="daily time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table class="grid"><th>Minutes Attended</th><tr><td>Total number of minutes in attendance</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">ADA Value<span class="tooltiptext"><table class="grid"><th>ADA Value</th><tr><td>Daily attendance value awarded for the selected date</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">ADM Value<span class="tooltiptext"><table class="grid"><th>ADM Value</th><tr><td>Daily membership value awarded for the selected date</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Counts ADA<span class="tooltiptext"><table class="grid"><th>Counts ADA</th><tr><td>Record counted in Attendance calculations</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Counts ADM<span class="tooltiptext"><table class="grid"><th>Counts ADM</th><tr><td>Record counted in Membership calculations</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+                              '<td>Cycle Day Name</td><td>School Name</td>' +
                               '<tr><td class="daily code">(present)</td><td>(Full Time)<td id="dayInformationADA" style="font-weight:bold">' +
                               powerTools.ADATroubleshooter.dateInfo[curRecord].adaCode + '</td><td>' + powerTools.ADATroubleshooter.dateInfo[
                                       curRecord].membershipValue + '</td><td>' + Boolean(powerTools.ADATroubleshooter.dateInfo[curRecord].countsInAda) +
@@ -648,7 +658,14 @@
                     } else {
                       $j('#dayInformation').append(
                               '<table class="grid" id="dailyTable"><th colspan=9>Daily Record Information</th><tbody>' +
-                              '<td class="daily code">Code</td><td class="daily time">Minutes Attended</td><td>ADA Value</td><td>ADM Value</td><td>Counts ADA</td><td>Counts ADM</td><td>Presence Status</td><td>Cycle Day Name</td><td>School Name</td>' +
+                              '<td class="daily code">Code</td>' +
+                              '<td class="daily time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table class="grid"><th>Minutes Attended</th><tr><td>Total number of minutes in attendance</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">ADA Value<span class="tooltiptext"><table class="grid"><th>ADA Value</th><tr><td>Daily attendance value awarded for the selected date</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">ADM Value<span class="tooltiptext"><table class="grid"><th>ADM Value</th><tr><td>Daily membership value awarded for the selected date</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Counts ADA<span class="tooltiptext"><table class="grid"><th>Counts ADA</th><tr><td>Record counted in Attendance calculations</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Counts ADM<span class="tooltiptext"><table class="grid"><th>Counts ADM</th><tr><td>Record counted in Membership calculations</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+                              '<td>Cycle Day Name</td><td>School Name</td>' +
                               '<tr><td class="daily code">' + powerTools.ADATroubleshooter.dateInfo[curRecord].attCode +
                               '</td><td class="daily time">' + powerTools.ADATroubleshooter.dateInfo[curRecord].totalMinutes +
                               '<td id="dayInformationADA" style="font-weight:bold">' + powerTools.ADATroubleshooter.dateInfo[
@@ -671,7 +688,12 @@
                                     .currentDate.recordNum.split('record')[1] > powerTools.ADATroubleshooter.currentDate.recordNum.split(
                                     'record')[0]) {
                       $j('#meetingTable > tbody:last-child').append(
-                              '<td>Expression</td><td class="meeting period">Code</td><td class="meeting time">Minutes Attended</td><td>Minutes in Period</td><td>Presence Status</td><td>Bridge Period</td>'
+                              '<td>Expression</td>' +
+                              '<td class="meeting period">Code</td>' +
+                              '<td class="meeting time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
+                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
                       );
                     }
                     if (powerTools.ADATroubleshooter.dateInfo[curRecord].attModeCode == 'ATT_ModeMeeting') {
@@ -900,6 +922,7 @@
         powerTools.ADATroubleshooter.currentDate.prevColor = $j(this).attr('style').split(':')[1];
         $j(this).attr('style', 'background-color: yellow');
         powerTools.ADATroubleshooter.retrieveAttendancePrefs();
+        $j('#dateSelector').val(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date);
       });
     });
   </script>
@@ -957,7 +980,7 @@
       position: absolute;
       z-index: 1;
       top: 0%;
-      left: 200%;
+      left: 0%;
       opacity: 0;
       transition: opacity 1s;
     }
