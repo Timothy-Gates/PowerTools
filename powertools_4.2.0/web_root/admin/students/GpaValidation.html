@@ -608,11 +608,11 @@
         addGradeLinks: function(){
         	if(powerTools.gpaValidation.methodInfo.calcType != 'current'){
 	        	for(var i = 0; i < powerTools.gpaValidation.includedGrades.length; i ++){
-	        		 $j('#inRecord' + i).attr('href', '/admin/students/previousgrades.html?frn=' + '~(frn)'
+	        		 $j('#inRecord' + i).attr('href', '/admin/students/esg.html?frn=031' + powerTools.gpaValidation.includedGrades[i].dcid
 	                    );
 	        	}
 	        	for(var i = 0; i < powerTools.gpaValidation.excludedGrades.length; i ++){
-	        		 $j('#exRecord' + i).attr('href', '/admin/students/previousgrades.html?frn=' + '~(frn)'
+	        		 $j('#exRecord' + i).attr('href', '/admin/students/esg.html?frn=031' + powerTools.gpaValidation.excludedGrades[i].dcid
 	                    )
 	        	}
         	}

@@ -12,7 +12,7 @@
                 studentInfo: [],
                 dateInfo: [],
                 attPrefs: [],
-                dailyExpressions: [{expression:'1(B)'},{expression:'2(B)'},{expression:'3(B)'}],
+                dailyExpressions: [],
                 currentDate: {
                   day: 0,
                   month: 0,
@@ -137,10 +137,11 @@
                   $j.ajaxSetup({
                     async: false
                   })
-                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
+                  console.log("above get JSON");
+                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/grabExpressions.json?bellID=' + powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].bellScheduleID , function(result) {
                     result.pop();
                     powerTools.ADATroubleshooter.dailyExpressions = result;
-            	  })*/
+            	  })
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
                                   .currentDate.year, function(result) {
                     result.pop();
@@ -414,7 +415,8 @@
                           powerTools.ADATroubleshooter.dateInfo[i].presenceStatus = 'Present';
                           powerTools.ADATroubleshooter.dateInfo[i].countsInAda = 1;
                           powerTools.ADATroubleshooter.dateInfo[i].countsInAdm = 1;
-                          powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = '(Full Time)';
+                          powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = '(Full GTime)';
+                          console.log("triggered");
                           powerTools.ADATroubleshooter.dateInfo[i].schoolName = '(Current School)';
                           if (powerTools.ADATroubleshooter.dateInfo[i].attModeCode == '') {
                             powerTools.ADATroubleshooter.dateInfo[i].attModeCode = 'ATT_ModeDaily';
@@ -432,7 +434,10 @@
                       1 ? 'true' : 'false');
                       if (powerTools.ADATroubleshooter.dateInfo[i].totalMinutes == "") {
                         powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = (powerTools.ADATroubleshooter.dateInfo[i].presenceStatus ==
-                        'Present' ? '(Full Time)' : 0);
+                        'Present' ? '(Full FTime)' : 0);
+                      }
+                      if(powerTools.ADATroubleshooter.dateInfo[i].expression != ''){
+                        powerTools.ADATroubleshooter.dateInfo[i].expression = powerTools.ADATroubleshooter.dateInfo[i].expression.split('(')[0];
                       }
                     }
                     $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/calculateADA.json?frn=' + '~(frn)' +
@@ -462,9 +467,9 @@
                                           59)) + ')';
                         }
                       }
-                      if ($j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color:lightgreen' || 
+                      if ($j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color:lightgreen' ||
                     		  $j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color:green' ||
-                              $j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color: lightgreen;' || 
+                              $j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color: lightgreen;' ||
                               $j('#' + startRecord + 'record' + endRecord).attr('style') == 'background-color: green;') {
                        	  $j('#' + startRecord + 'record' + endRecord).attr('style', 'background-color:' + ADAColor);
                       }
@@ -485,7 +490,7 @@
                         );
                       }
                     });
-                  }                  
+                  }
                 },
                 /* Retrieve attendance preferences from current school in the following indexes:
                  *  0: Count other schools, 1: Present or Absences Counted, 2: Interval Duration
@@ -495,7 +500,8 @@
                   $j.ajaxSetup({
                       async: false
                   });
-                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
+                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/grabExpressions.json?bellID=' + powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[
+                   0]].bellScheduleId, function(result) {
                     result.pop();
                     powerTools.ADATroubleshooter.dailyExpressions = result;
             	  })*/
@@ -512,7 +518,7 @@
                   powerTools.ADATroubleshooter.displayDayInformation(function() {
                     powerTools.ADATroubleshooter.changeFTECells();
                   });
-                  
+
                 },
                 displayAttendancePrefs: function() {
                   $j('#attPrefData').empty();
@@ -721,16 +727,16 @@
 	                                  $j('#meetingTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-	                                          '</td><td class="meeting time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td class="meeting time">' + powerTools.ADATroubleshooter.dateInfo[j].totalMinutes +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
 	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-	                                  );                			  
-	                				  break;                				  
+	                                  );
+	                				  break;
 	                			  }
 	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
 		                			  $j('#meetingTable > tbody:last-child').append(
-		                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="meeting period">' + '(Present)' + '</td><td class="meeting time">' + '(Full Time)' + 
+		                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="meeting period">' + '(Present)' + '</td><td class="meeting time">' + '(Full Time)' +
 		                                      '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
 		                              );
 	                			  }
@@ -756,16 +762,16 @@
 	                                  $j('#timeTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="time period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-	                                          '</td><td class="modeTime time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td class="modeTime time">' + powerTools.ADATroubleshooter.dateInfo[j].totalMinutes +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
 	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-	                                  );                			  
-	                				  break;                				  
+	                                  );
+	                				  break;
 	                			  }
 	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
 	                			  	$j('#timeTable > tbody:last-child').append(
-	                                      	'<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="time period">' + '(Present)' + '</td><td class="modeTime time">' + '(Full Time)' + 
+	                                      	'<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="time period">' + '(Present)' + '</td><td class="modeTime time">' + '(Full Time)' +
 	                                        '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
 	                			  	);
 	                			  }
@@ -791,16 +797,16 @@
 	                                  $j('#intervalTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="interval period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-	                                          '</td><td class="interval time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td class="interval time">' + powerTools.ADATroubleshooter.dateInfo[j].totalMinutes +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
 	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
 	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-	                                  );                			  
-	                				  break;                				  
+	                                  );
+	                				  break;
 	                			  }
 	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
 	                				  $j('#intervalTable > tbody:last-child').append(
-	                                 	     '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="interval period">' + '(Present)' + '</td><td class="interval time">' + '(Full Time)' + 
+	                                 	     '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="interval period">' + '(Present)' + '</td><td class="interval time">' + '(Full Time)' +
 	                                 	     '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
 	                				  );
 	                			  }
@@ -834,7 +840,7 @@
                   if (fteElements.mode != 0) {
                     $j('.' + fteElements.mode + '.' + fteElements.conversion).each(function() {
                       $j(this).attr('style', 'color:#c6b806; font-weight:bold')
-                    });                 
+                    });
                   }
                 },
                 displayPreviousEnrollments: function() {
