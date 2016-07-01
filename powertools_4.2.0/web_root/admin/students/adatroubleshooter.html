@@ -12,7 +12,7 @@
                 studentInfo: [],
                 dateInfo: [],
                 attPrefs: [],
-                dailyExpressions: []
+                dailyExpressions: [{expression:'1(B)'},{expression:'2(B)'},{expression:'3(B)'}],
                 currentDate: {
                   day: 0,
                   month: 0,
@@ -137,10 +137,10 @@
                   $j.ajaxSetup({
                     async: false
                   })
-                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
+                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
                     result.pop();
                     powerTools.ADATroubleshooter.dailyExpressions = result;
-            	  })
+            	  })*/
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
                                   .currentDate.year, function(result) {
                     result.pop();
@@ -495,10 +495,10 @@
                   $j.ajaxSetup({
                       async: false
                   });
-                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
+                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/JASONSFILE', function(result) {
                     result.pop();
                     powerTools.ADATroubleshooter.dailyExpressions = result;
-            	  })
+            	  })*/
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
                                   .currentDate.year, function(result) {
                     result.pop();
@@ -704,101 +704,112 @@
                       );
                     }
                   }
-                  if (meeting) {
-                      $j('#dayInformation').append(
-                              '<table class="grid" id="meetingTable"><th colspan=6>Meeting Attendance Records</th><tbody>' +
-                              '<td>Expression</td>' +
-                              '<td class="meeting period">Code</td>' +
-                              '<td class="meeting time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
-                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
-                      );
-                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
-                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-                			  if(powerTools.ADATroubleshooter.dailyExpressions[i] == powerTool.ADATroubleshooter.dateInfo[j].expression){
-                                  $j('#meetingTable > tbody:last-child').append(
-                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
-                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-                                          '</td><td class="meeting time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
-                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-                                  );                			  
-                				  break;                				  
-                			  }
-                			  $j('#meetingTable > tbody:last-child').append(
-                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i] + '</td><td class="meeting period">' + '(Present)' + '</td><td class="meeting time">' + '(Full Time)' + 
-                                      '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
-                		  }
-                	  }
-                    $j('#meetingTable > tbody:last-child').append(
-                            '</tbody</table>'
-                    );
-                  }
-                  if (time) {
-                	  $j('#dayInformation').append(
-                              '<table class="grid" id="timeTable"><th colspan=6>time Attendance Records</th><tbody>' +
-                              '<td>Expression</td>' +
-                              '<td class="time period">Code</td>' +
-                              '<td class="modeTime time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
-                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
-                      );
-                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
-                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-                			  if(powerTools.ADATroubleshooter.dailyExpressions[i] == powerTool.ADATroubleshooter.dateInfo[j].expression){
-                                  $j('#timeTable > tbody:last-child').append(
-                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="time period">' +
-                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-                                          '</td><td class="modeTime time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
-                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-                                  );                			  
-                				  break;                				  
-                			  }
-                			  $j('#timeTable > tbody:last-child').append(
-                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i] + '</td><td class="time period">' + '(Present)' + '</td><td class="modeTime time">' + '(Full Time)' + 
-                                      '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
-                		  }
-                	  }
-                    $j('#timeTable > tbody:last-child').append(
-                            '</tbody</table>'
-                    );
-                  }
-                  if (interval) {
-                	  $j('#dayInformation').append(
-                              '<table class="grid" id="intervalTable"><th colspan=6>interval Attendance Records</th><tbody>' +
-                              '<td>Expression</td>' +
-                              '<td class="interval period">Code</td>' +
-                              '<td class="interval time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
-                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
-                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
-                      );
-                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
-                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-                			  if(powerTools.ADATroubleshooter.dailyExpressions[i] == powerTool.ADATroubleshooter.dateInfo[j].expression){
-                                  $j('#intervalTable > tbody:last-child').append(
-                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="interval period">' +
-                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
-                                          '</td><td class="interval time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
-                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
-                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
-                                  );                			  
-                				  break;                				  
-                			  }
-                			  $j('#intervalTable > tbody:last-child').append(
-                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i] + '</td><td class="interval period">' + '(Present)' + '</td><td class="interval time">' + '(Full Time)' + 
-                                      '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
-                		  }
-                	  }
-                    $j('#intervalTable > tbody:last-child').append(
-                            '</tbody</table>'
-                    );
+                  if(powerTools.ADATroubleshooter.dateInfo[curRecord].inSession ==1){
+	                  if (meeting) {
+	                      $j('#dayInformation').append(
+	                              '<table class="grid" id="meetingTable"><th colspan=6>Meeting Attendance Records</th><tbody>' +
+	                              '<td>Expression</td>' +
+	                              '<td class="meeting period">Code</td>' +
+	                              '<td class="meeting time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
+	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
+	                      );
+	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
+	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                                  $j('#meetingTable > tbody:last-child').append(
+	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
+	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
+	                                          '</td><td class="meeting time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
+	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
+	                                  );                			  
+	                				  break;                				  
+	                			  }
+	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
+		                			  $j('#meetingTable > tbody:last-child').append(
+		                                      '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="meeting period">' + '(Present)' + '</td><td class="meeting time">' + '(Full Time)' + 
+		                                      '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
+		                              );
+	                			  }
+	                		  }
+	                	  }
+	                    $j('#meetingTable > tbody:last-child').append(
+	                            '</tbody</table>'
+	                    );
+	                  }
+	                  if (time) {
+	                	  $j('#dayInformation').append(
+	                              '<table class="grid" id="timeTable"><th colspan=6>time Attendance Records</th><tbody>' +
+	                              '<td>Expression</td>' +
+	                              '<td class="time period">Code</td>' +
+	                              '<td class="modeTime time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
+	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
+	                      );
+	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
+	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                                  $j('#timeTable > tbody:last-child').append(
+	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="time period">' +
+	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
+	                                          '</td><td class="modeTime time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
+	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
+	                                  );                			  
+	                				  break;                				  
+	                			  }
+	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
+	                			  	$j('#timeTable > tbody:last-child').append(
+	                                      	'<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="time period">' + '(Present)' + '</td><td class="modeTime time">' + '(Full Time)' + 
+	                                        '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
+	                			  	);
+	                			  }
+	                		  }
+	                	  }
+	                    $j('#timeTable > tbody:last-child').append(
+	                            '</tbody</table>'
+	                    );
+	                  }
+	                  if (interval) {
+	                	  $j('#dayInformation').append(
+	                              '<table class="grid" id="intervalTable"><th colspan=6>interval Attendance Records</th><tbody>' +
+	                              '<td>Expression</td>' +
+	                              '<td class="interval period">Code</td>' +
+	                              '<td class="interval time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
+	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Presence Status<span class="tooltiptext"><table class="grid"><th>Presence Status</th><tr><td>Is the attendance code counted as Present or Absent</td></tr></table></span></div></td>' +
+	                              '<td><div class="tooltip">Bridge Period<span class="tooltiptext"><table class="grid"><th>Bridge Period</th><tr><td>Is the current record from a bridge period</td></tr></table></span></div></td>'
+	                      );
+	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
+	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                                  $j('#intervalTable > tbody:last-child').append(
+	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="interval period">' +
+	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
+	                                          '</td><td class="interval time">' + powerTools.ADATroubleshooter.dateInfo[i].totalMinutes +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].minutesAttended +
+	                                          '</td><td>' + powerTools.ADATroubleshooter.dateInfo[j].presenceStatus + '</td><td>' + powerTools.ADATroubleshooter
+	                                                  .dateInfo[i].dailyAttendanceCode + '</td></tr>'
+	                                  );                			  
+	                				  break;                				  
+	                			  }
+	                			  if(j== powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]){
+	                				  $j('#intervalTable > tbody:last-child').append(
+	                                 	     '<tr><td>' + powerTools.ADATroubleshooter.dailyExpressions[i].expression + '</td><td class="interval period">' + '(Present)' + '</td><td class="interval time">' + '(Full Time)' + 
+	                                 	     '</td><td>' + '(Full Time)' + '</td><td>' + 'Present' + '</td><td>' + '(Unknown)' + '</td></tr>'
+	                				  );
+	                			  }
+	                		  }
+	                	  }
+	                    $j('#intervalTable > tbody:last-child').append(
+	                            '</tbody</table>'
+	                    );
+	                  }
                   }
                   _callback();
                 },
