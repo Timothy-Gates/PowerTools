@@ -137,6 +137,7 @@
                   $j.ajaxSetup({
                     async: false
                   })
+                  if(powerTools.ADATroubleshooter.currentDate.year)
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
 	              	  .currentDate.year, function(result) {
 	                result.pop();
@@ -510,7 +511,7 @@
                 displayAttendancePrefs: function() {
                   $j('#attPrefData').empty();
                   $j('#attPrefData').append(
-                          '<table id="attPrefTable" class="grid" style="width:100%"><th colspan="2">Attendance Preferences</th>' +
+                          '<table id="attPrefTable" class="grid" style="width:100%"><th colspan="2">Attendance Preferences (based on term selector)</th>' +
                           '<tbody id="attPrefBody"></tbody></table>'
                   );
                   $j('#attPrefBody').append(
@@ -710,7 +711,7 @@
 	                      );
 	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
 	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[i].expression.split('(')[0]){
 	                				  $j('#meetingTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
