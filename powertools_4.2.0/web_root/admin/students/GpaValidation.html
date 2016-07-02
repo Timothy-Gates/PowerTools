@@ -353,7 +353,7 @@
           $j('#method').append(
             '<table class = "grid"><th colspan="2" align="center"><b>Calculation Method Info</b></th>' +
             '<tr><td><b>Name:</b></td><td>' + powerTools.gpaValidation.methodInfo.methodName + '</td></tr>' +
-            '<tr><td><b>Formula:</b></td><td>' + powerTools.gpaValidation.methodInfo.methodFormula + '</td></tr>' +
+            '<tr><td><b>Formula:</b></td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.methodFormula + '</a></td></tr>' +
             '<tr><td><b>Grade Point Average (GPA):</b></td><td>' + powerTools.gpaValidation.gpa.gpa + '</td></tr>' +
             '<tr><td> Calculation Type:</td><td>' + powerTools.gpaValidation.methodInfo.calcType + '</td></tr>' +
             '<tr><td>Grade Scale:</td><td>' + powerTools.gpaValidation.methodInfo.gradeScale + '</td></tr>' +
@@ -368,19 +368,20 @@
           /* Generate Tables for Calculations to Show */
           $j('#calculations').append(
             '<table class = "grid" id="calcTable"><th colspan="2" align="center"><b>Query Options</b></th>' +
-            '<tr><td> Terms Included:</td><td>' + powerTools.gpaValidation.methodInfo.queryTerms + '</td></tr>' +
-            '<tr><td> Grade Levels Included:</td><td>' + powerTools.gpaValidation.methodInfo.queryGrades + '</td></tr>' +
-            '<tr><td> Years Included:</td><td>' + powerTools.gpaValidation.methodInfo.queryYears + '</td></tr>' +
-            '<tr><td> Credit Types Included:</td><td>' + powerTools.gpaValidation.methodInfo.queryCreditTypes +
-            '</td></tr>' +
-            '<tr><td> Only Grades that Count in GPA:</td><td>' + powerTools.gpaValidation.methodInfo.queryCountGpa +
-            '</td></tr>' +
-            '<tr><td> Only Grades that Count in Class Rank:</td><td>' + powerTools.gpaValidation.methodInfo.queryClassRank +
-            '</td></tr>' +
-            '<tr><td> Only Grades that Count in Honor Roll:</td><td>' + powerTools.gpaValidation.methodInfo.queryHonorRoll +
-            '</td></tr>' +
-            '<tr><td> Only Grades that Have Potential Credit:</td><td>' + powerTools.gpaValidation.methodInfo.queryPotential +
-            '</td></tr>' +
+            '<tr><td> Terms Included:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryTerms + '</a></td></tr>' +
+            '<tr><td> Grade Levels Included:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryGrades + '</a></td></tr>' +
+            '<tr><td> Years Included:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryYears +
+            '</a></td></tr>' +
+            '<tr><td> Credit Types Included:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryCreditTypes +
+            '</a></td></tr>' +
+            '<tr><td> Only Grades that Count in GPA:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryCountGpa +
+            '</a></td></tr>' +
+            '<tr><td> Only Grades that Count in Class Rank:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryClassRank +
+            '</a></td></tr>' +
+            '<tr><td> Only Grades that Count in Honor Roll:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryHonorRoll +
+            '</a></td></tr>' +
+            '<tr><td> Only Grades that Have Potential Credit:</td><td><a href="https://training93.powerschool.com/admin/schoolsetup/gpa/listcalculationmethods.html">' + powerTools.gpaValidation.methodInfo.queryPotential +
+            '</a></td></tr>' +
             '</table>'
           );
           <!-- check if projected options need to be displayed, only show if projected grades used -->
