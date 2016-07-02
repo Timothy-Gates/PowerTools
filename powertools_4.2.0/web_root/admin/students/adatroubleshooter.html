@@ -137,16 +137,11 @@
                   $j.ajaxSetup({
                     async: false
                   })
-                  console.log("above get JSON");
-                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/grabExpressions.json?bellID=' + powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].bellScheduleID , function(result) {
-                    result.pop();
-                    powerTools.ADATroubleshooter.dailyExpressions = result;
-            	  })
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
-                                  .currentDate.year, function(result) {
-                    result.pop();
-                    powerTools.ADATroubleshooter.attPrefs = result;
-                  });
+	              	  .currentDate.year, function(result) {
+	                result.pop();
+	                powerTools.ADATroubleshooter.attPrefs = result;
+	              });
                   $j.getJSON('/admin/tech/PowerTools/json/ADATroubleshooter/calendarinfo.json?startDate=' + firstDay +
                           '&endDate=' + lastDay + '&otherSchools=' + powerTools.ADATroubleshooter.attPrefs[0].value, function(result) {
                     result.pop();
@@ -220,11 +215,7 @@
                         if (inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day) {
                           powerTools.ADATroubleshooter.currentDate.recordNum = recordStart + 'record' + recordCount;
                           powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                          powerTools.ADATroubleshooter.displayAttendancePrefs();
-                          powerTools.ADATroubleshooter.displayStudent();
-                          powerTools.ADATroubleshooter.displayDayInformation(function() {
-                            powerTools.ADATroubleshooter.changeFTECells();
-                          });
+                          powerTools.ADATroubleshooter.retrieveAttendancePrefs(0);
                         }
                         for (var k = 0, tracksString = '', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length,
                                      trackType; k < len; k++) {
@@ -283,11 +274,7 @@
                         if (inMonth == 1 && powerTools.ADATroubleshooter.currentDate.day == day) {
                           powerTools.ADATroubleshooter.currentDate.recordNum = recordStart + 'record' + recordCount;
                           powerTools.ADATroubleshooter.currentDate.prevColor = curColor;
-                          powerTools.ADATroubleshooter.displayAttendancePrefs();
-                          powerTools.ADATroubleshooter.displayStudent();
-                          powerTools.ADATroubleshooter.displayDayInformation(function() {
-                            powerTools.ADATroubleshooter.changeFTECells();
-                          });
+                          powerTools.ADATroubleshooter.retrieveAttendancePrefs(0);
                         }
                         for (var k = 0, tracksString = '', len = powerTools.ADATroubleshooter.dateInfo[recordStart].tracks.length,
                                      trackType; k < len; k++) {
@@ -415,8 +402,7 @@
                           powerTools.ADATroubleshooter.dateInfo[i].presenceStatus = 'Present';
                           powerTools.ADATroubleshooter.dateInfo[i].countsInAda = 1;
                           powerTools.ADATroubleshooter.dateInfo[i].countsInAdm = 1;
-                          powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = '(Full GTime)';
-                          console.log("triggered");
+                          powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = '(Full Time)';
                           powerTools.ADATroubleshooter.dateInfo[i].schoolName = '(Current School)';
                           if (powerTools.ADATroubleshooter.dateInfo[i].attModeCode == '') {
                             powerTools.ADATroubleshooter.dateInfo[i].attModeCode = 'ATT_ModeDaily';
@@ -434,7 +420,7 @@
                       1 ? 'true' : 'false');
                       if (powerTools.ADATroubleshooter.dateInfo[i].totalMinutes == "") {
                         powerTools.ADATroubleshooter.dateInfo[i].totalMinutes = (powerTools.ADATroubleshooter.dateInfo[i].presenceStatus ==
-                        'Present' ? '(Full FTime)' : 0);
+                        'Present' ? '(Full Time)' : 0);
                       }
                       if(powerTools.ADATroubleshooter.dateInfo[i].expression != ''){
                         powerTools.ADATroubleshooter.dateInfo[i].expression = powerTools.ADATroubleshooter.dateInfo[i].expression.split('(')[0];
@@ -496,20 +482,21 @@
                  *  0: Count other schools, 1: Present or Absences Counted, 2: Interval Duration
                  *  3: Record Daily? 4: Record Interval? 5: Record Meeting? 6: Record Time? 7: Bridge Direction */
                 /*Need to add a check for attendance prefs that haven't been setup yet */
-                retrieveAttendancePrefs: function() {
+                retrieveAttendancePrefs: function(onClick) {
                   $j.ajaxSetup({
                       async: false
                   });
-                  /*$j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/grabExpressions.json?bellID=' + powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[
-                   0]].bellScheduleId, function(result) {
-                    result.pop();
-                    powerTools.ADATroubleshooter.dailyExpressions = result;
-            	  })*/
-                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
-                                  .currentDate.year, function(result) {
-                    result.pop();
-                    powerTools.ADATroubleshooter.attPrefs = result;
-                  });
+                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/grabExpressions.json?bellID=' + powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].bellScheduleID , function(result) {
+                      result.pop();
+                      powerTools.ADATroubleshooter.dailyExpressions = result;
+              	  })
+            	  if(onClick == 1){
+	                  $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
+	                                  .currentDate.year, function(result) {
+	                    result.pop();
+	                    powerTools.ADATroubleshooter.attPrefs = result;
+	                  });
+                  }
                   $j.ajaxSetup({
                       async: true
                   });
@@ -714,7 +701,7 @@
 	                  if (meeting) {
 	                      $j('#dayInformation').append(
 	                              '<table class="grid" id="meetingTable"><th colspan=6>Meeting Attendance Records</th><tbody>' +
-	                              '<td>Expression</td>' +
+	                              '<td>Period</td>' +
 	                              '<td class="meeting period">Code</td>' +
 	                              '<td class="meeting time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
 	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
@@ -724,7 +711,7 @@
 	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
 	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
 	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
-	                                  $j('#meetingTable > tbody:last-child').append(
+	                				  $j('#meetingTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
 	                                          '</td><td class="meeting time">' + powerTools.ADATroubleshooter.dateInfo[j].totalMinutes +
@@ -749,7 +736,7 @@
 	                  if (time) {
 	                	  $j('#dayInformation').append(
 	                              '<table class="grid" id="timeTable"><th colspan=6>time Attendance Records</th><tbody>' +
-	                              '<td>Expression</td>' +
+	                              '<td>Period</td>' +
 	                              '<td class="time period">Code</td>' +
 	                              '<td class="modeTime time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
 	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
@@ -784,7 +771,7 @@
 	                  if (interval) {
 	                	  $j('#dayInformation').append(
 	                              '<table class="grid" id="intervalTable"><th colspan=6>interval Attendance Records</th><tbody>' +
-	                              '<td>Expression</td>' +
+	                              '<td>Period</td>' +
 	                              '<td class="interval period">Code</td>' +
 	                              '<td class="interval time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
 	                              '<td><div class="tooltip">Minutes in Period<span class="tooltiptext"><table class="grid"><th>Minutes in Period</th><tr><td>Total minutes possible for attendance in this expression</td></tr></table></span></div></td>' +
@@ -943,7 +930,7 @@
         powerTools.ADATroubleshooter.currentDate.recordNum = $j(this).attr('id');
         powerTools.ADATroubleshooter.currentDate.prevColor = $j(this).attr('style').split(':')[1];
         $j(this).attr('style', 'background-color: yellow');
-        powerTools.ADATroubleshooter.retrieveAttendancePrefs();
+        powerTools.ADATroubleshooter.retrieveAttendancePrefs(1);
         $j('#dateSelector').val(powerTools.ADATroubleshooter.dateInfo[powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[0]].date);
       });
     });
