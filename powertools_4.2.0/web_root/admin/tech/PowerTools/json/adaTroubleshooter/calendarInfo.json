@@ -2,7 +2,7 @@
   ~[tlist_sql;
 SELECT to_char(a.date_value, '~[datetext:mmddyyyy]'), a.insession, a.membershipvalue,
 a.a, a.b, a.c, a.d, a.e, a.f,
-b.name, b.attendance_conversion_id, c.day_name, d.total_minutes, d.att_mode_code,
+b.name, b.id, b.attendance_conversion_id, c.day_name, d.total_minutes, d.att_mode_code,
 e.att_code, e.calculate_ada_yn, e.calculate_adm_yn, e.presence_status_cd, f.expression, g.daily_attendance_code,
 g.ada_code, g.minutes_attended, h.name
 FROM ps.calendar_day a 
@@ -32,6 +32,7 @@ ORDER BY a.date_value, d.att_mode_code, f.expression
   "membershipValue": "~(a.membershipvalue)",
   "tracks": ["~(a.a)", "~(a.b)", "~(a.c)", "~(a.d)", "~(a.e)", "~(a.f)"],
   "bellScheduleName": "~(b.name)",
+  "bellScheduleID": "~(b.id)",
   "attConversionId": "~(b.attendance_conversion_id)",
   "cycleDayName": "~(c.day_name)",
   "totalMinutes": "~(d.total_minutes)",
