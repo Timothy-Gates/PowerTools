@@ -711,7 +711,8 @@
 	                      );
 	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
 	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[i].expression.split('(')[0]){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression.split('(')[0] &&
+	                					  powerTools.ADATroubleshooter.dateInfo[j].attModeCode == 'ATT_ModeMeeting'){
 	                				  $j('#meetingTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="meeting period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
@@ -736,7 +737,7 @@
 	                  }
 	                  if (time) {
 	                	  $j('#dayInformation').append(
-	                              '<table class="grid" id="timeTable"><th colspan=6>time Attendance Records</th><tbody>' +
+	                              '<table class="grid" id="timeTable"><th colspan=6>Time Attendance Records</th><tbody>' +
 	                              '<td>Period</td>' +
 	                              '<td class="time period">Code</td>' +
 	                              '<td class="modeTime time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
@@ -746,7 +747,8 @@
 	                      );
 	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
 	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression  &&
+	                					  powerTools.ADATroubleshooter.dateInfo[j].attModeCode == 'ATT_ModeTime'){
 	                                  $j('#timeTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="time period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
@@ -771,7 +773,7 @@
 	                  }
 	                  if (interval) {
 	                	  $j('#dayInformation').append(
-	                              '<table class="grid" id="intervalTable"><th colspan=6>interval Attendance Records</th><tbody>' +
+	                              '<table class="grid" id="intervalTable"><th colspan=6>Interval Attendance Records</th><tbody>' +
 	                              '<td>Period</td>' +
 	                              '<td class="interval period">Code</td>' +
 	                              '<td class="interval time"><div class="tooltip">Minutes Attended<span class="tooltiptext"><table><th>Minutes Attended</th><tr><td>Total minutes student attended the current expression</td></tr></table></span></td>' +
@@ -781,7 +783,8 @@
 	                      );
 	                	  for(var i = 0; i < powerTools.ADATroubleshooter.dailyExpressions.length; i ++){
 	                		  for(var j = curRecord; j <= powerTools.ADATroubleshooter.currentDate.recordNum.split('record')[1]; j++){
-	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression){
+	                			  if(powerTools.ADATroubleshooter.dailyExpressions[i].expression == powerTools.ADATroubleshooter.dateInfo[j].expression  &&
+	                					  powerTools.ADATroubleshooter.dateInfo[j].attModeCode == 'ATT_ModeInterval'){
 	                                  $j('#intervalTable > tbody:last-child').append(
 	                                          '<tr><td>' + powerTools.ADATroubleshooter.dateInfo[j].expression + '</td><td class="interval period">' +
 	                                          powerTools.ADATroubleshooter.dateInfo[j].attCode +
