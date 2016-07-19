@@ -136,7 +136,7 @@
                   lastDay = (lastDay.getMonth() + 1) + '/' + lastDay.getDate() + '/' + lastDay.getFullYear();
                   $j.ajaxSetup({
                     async: false
-                  })
+                  });
                   if(powerTools.ADATroubleshooter.currentDate.year)
                   $j.getJSON('/admin/tech/powerTools/json/ADATroubleshooter/attendancePrefs.json?currentYear=' + powerTools.ADATroubleshooter
 	              	  .currentDate.year, function(result) {
@@ -515,33 +515,33 @@
                           '<tbody id="attPrefBody"></tbody></table>'
                   );
                   $j('#attPrefBody').append(
-                          '<tr><td>Record Meeting Attendance</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + Boolean(powerTools.ADATroubleshooter.attPrefs[5].value) + '</a>' +
+                          '<tr><td>Record Meeting Attendance</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + Boolean(powerTools.ADATroubleshooter.attPrefs[5].value) + '</a>' +
                           '</td></tr>' +
-                          '<tr><td>Record Daily Attendance</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + Boolean(powerTools.ADATroubleshooter.attPrefs[3].value) + '</a>' +
+                          '<tr><td>Record Daily Attendance</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + Boolean(powerTools.ADATroubleshooter.attPrefs[3].value) + '</a>' +
                           '</td></tr>' +
-                          '<tr><td>Record Time Attendance</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + Boolean(powerTools.ADATroubleshooter.attPrefs[6].value) + '</a>' +
+                          '<tr><td>Record Time Attendance</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + Boolean(powerTools.ADATroubleshooter.attPrefs[6].value) + '</a>' +
                           '</td></tr>' +
-                          '<tr><td>Record Interval Attendance</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + Boolean(powerTools.ADATroubleshooter.attPrefs[4].value) + '</a>' +
+                          '<tr><td>Record Interval Attendance</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + Boolean(powerTools.ADATroubleshooter.attPrefs[4].value) + '</a>' +
                           '</td></tr>');
                   /*If record interval attendance exists, display interval duration */
                   if (powerTools.ADATroubleshooter.attPrefs[4].value == 1) {
                     $j('#attPrefBody').append(
-                            '<tr><td>Interval Duration</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + powerTools.ADATroubleshooter.attPrefs[2].value + '</a></td></tr>'
+                            '<tr><td>Interval Duration</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + powerTools.ADATroubleshooter.attPrefs[2].value + '</a></td></tr>'
                     );
                   };
                   $j('#attPrefBody').append(
-                          '<tr><td>Daily Attendance Bridge Direction</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + powerTools.ADATroubleshooter.attPrefs[7].value + '</a>' +
+                          '<tr><td>Daily Attendance Bridge Direction</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + powerTools.ADATroubleshooter.attPrefs[7].value + '</a>' +
                           '</td></tr>' +
-                          '<tr><td>Count Meeting Attendance from Other Schools</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">' + Boolean(powerTools.ADATroubleshooter.attPrefs[
+                          '<tr><td>Count Meeting Attendance from Other Schools</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">' + Boolean(powerTools.ADATroubleshooter.attPrefs[
                                   0].value) + '</a></td></tr>'
                   );
                   /* if attPrefs[2] == 0, display present, else display absences */
                   if (powerTools.ADATroubleshooter.attPrefs[1].value == "P") {
                     $j('#attPrefBody').append(
-                            '<tr><td>Count Presents or Absences for Attendance Conversion</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">Present</a></td></tr>');
+                            '<tr><td>Count Presents or Absences for Attendance Conversion</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">Present</a></td></tr>');
                   } else {
                     $j('#attPrefBody').append(
-                            '<tr><td>Count Presents or Absences for Attendance Conversion</td><td><a href="https://training93.powerschool.com/admin/attendance/preferences/home.html">Absences</a></td></tr>');
+                            '<tr><td>Count Presents or Absences for Attendance Conversion</td><td><a href="/admin/attendance/preferences/home.html" target="_parent">Absences</a></td></tr>');
                   };
                 },
                 /* Display student enrollment data from studentInfo.json using index[0] for current enrollment */
@@ -994,7 +994,7 @@
       padding: 5px 0;
       position: absolute;
       z-index: 1;
-      top: 0%;
+      top: 100%;
       left: 0%;
       opacity: 0;
       transition: opacity 1s;

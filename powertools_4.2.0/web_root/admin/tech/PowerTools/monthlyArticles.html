@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<!-- non framed -->
+<head>
+<title>Trending PowerSource ARticles</title>
+~[wc:commonscripts]
+<link href="/images/css/screen.css" rel="stylesheet" media="screen">
+<link href="/images/css/print.css" rel="stylesheet" media="print">
+
+</head>
+
+<body>
+~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">Home</a> &gt;Trending PowerSource Articles<!-- breadcrumb end -->
+~[wc:admin_navigation_css]
+<!-- start of content and bounding box -->
+<h1 id="monthlyArticlesTitle">Trending PowerSource Articles For </h1>
+<div class="box-round">
+	<div class="tableBody" id="powerToolsArticles">
+	</div>
+	<form id="prefSubmit" class="noSubmitLoading" style="display:none;">
+  <textarea name="[pref]dynamic_videos_json" id="dynamic_videos_json"></textarea>
+  <input type="hidden" name="ac" value="prim">
+</form>
+<script src="/scripts/training_videos.js"></script>
+<script>
+  var formatedDate= formatMonth();
+  psTrainingVideo.update = '~(gpv:update;encodejsstring)';
+  psTrainingVideo.getData(populateArticles);
+  function populateArticles(){
+	var powerToolsArticlesArr = psTrainingVideo.videoData.monthlyArticles;
+	for(var i = 0; i < powerToolsArticlesArr.length; i++){
+		$j('#powerToolsArticles').append(
+			'<div class="box-round">' +
+				'<h2>' + powerToolsArticlesArr[i].category + '</h2>' +
+				'<div class="box-round">' +
+					'<table class="linkDescList">' +
+						'<tbody id="powerToolsArticlesTable' + i + '">' +
+						'</tbody>' +
+					'</table>' +
+				'</div>' +
+			'</div>'
+		);
+		for(var j = 0; j < powerToolsArticlesArr[i].articles.length; j++){
+			$j('#powerToolsArticlesTable'+i).append(
+				'<tr>' +
+					'<td style="font-weight:bold;" class="powerToolsArticle" id="powerToolsTr' + i + j + '">' +
+						'<div style="float:left; width:85%"><a href="https://support.powerschool.com/' + powerToolsArticlesArr[i].articles[j].number + '" target="_blank">'+ powerToolsArticlesArr[i].articles[j].name + '</a></div>' +
+						'<div align="right" style="float:right; width:14%">'+ 
+							'<a href="https://support.powerschool.com/' + powerToolsArticlesArr[i].articles[j].number + '" target="_blank">' + powerToolsArticlesArr[i].articles[j].number.split('/')[powerToolsArticlesArr[i].articles[j].number.split('/').length -1] +'</a></div>' +
+						'<div id="powerToolsArticle' + i + j + '" style="display: none; width:100%;">'+ 
+							'<div style="float:right; width: 90% ">' + powerToolsArticlesArr[i].articles[j].body + '</div>' +
+						'</div>' +
+					'</td>' +
+				'</tr>' 
+			);
+		}
+	}
+  }
+  function formatMonth(){
+	  var date = '~[date]';
+	  switch(date.split('/')[0]){
+	  case '01':
+		  date= 'January, ' + date.split('/')[2];
+		  break;
+	  case '02':
+		  date= 'February, ' + date.split('/')[2];
+		  break;
+	  case '03':
+		  date= 'March, ' + date.split('/')[2];
+		  break;
+	  case '04':
+		  date= 'April, ' + date.split('/')[2];
+		  break;
+	  case '05':
+		  date= 'May, ' + date.split('/')[2];
+		  break;
+	  case '06':
+		  date= 'June, ' + date.split('/')[2];
+		  break;
+	  case '07':
+		  date= 'July, ' + date.split('/')[2];
+		  break;
+	  case '08':
+		  date= 'August, ' + date.split('/')[2];
+		  break;
+	  case '09':
+		  date= 'September, ' + date.split('/')[2];
+		  break;
+	  case '10':
+		  date= 'October, ' + date.split('/')[2];
+		  break;
+	  case '11':
+		  date= 'November, ' + date.split('/')[2];
+		  break;
+	  case '12':
+		  date= 'December, ' + date.split('/')[2];
+	  }
+	  return date;
+  }
+  	$j('#monthlyArticlesTitle').append(formatedDate);
+	$j(document).on('mouseenter', '.powerToolsArticle', function() {
+		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).show('fast');
+	});
+	$j(document).on('mouseleave', '.powerToolsArticle', function() {
+		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).hide('fast');
+	});
+</script>
+</div>
+<!-- end of content of bounding box -->
+
+~[wc:admin_footer_css]
+
+</body>
+</html><!-- non framed -->
