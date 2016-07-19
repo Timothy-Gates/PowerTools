@@ -34,7 +34,7 @@
         excludedTriggers: [],
         projectedGrades: [],
         errors: [],
-        <!-- this will build the drop down list for the methods -->
+    	/* Checks for duplicate stored grades and prints them in the error div */
         checkForDuplicates: function() {
         	var duplicateRecords= [];
         	$j.getJSON('/admin/tech/PowerTools/json/DupStoredGrades.json?frn=' + powerTools.gpaValidation.studentFrn, function(result){
@@ -42,9 +42,10 @@
         		duplicateRecords = result.ResultSet;
         	});
         	for(var i = 0; i < duplicateRecords.length; i++){
-        		displayError('Duplicate Stored Grade For: ' + duplicateRecords[i].storeCode + ',' + duplicateRecords[i].courseName);
+        		powerTools.GpaValidation.displayError('Duplicate Stored Grade For: ' + duplicateRecords[i].storeCode + ',' + duplicateRecords[i].courseName);
         	}
         },
+        /*this will build the drop down list for the methods */
         retrieveGpaMethods: function() {
           $j.getJSON('/admin/tech/PowerTools/json/gpaValidation/grabMethods.json', function(result) {
             result.pop();
@@ -66,7 +67,7 @@
             '</select>'
           )
         },
-        <!-- On submit this will get the method info and stores it as strings in gpaMethodInfo[] -->
+        /* On submit this will get the method info and stores it as strings in gpaMethodInfo[] */
         submitMethod: function() {
           powerTools.gpaValidation.check = 0;
           powerTools.gpaValidation.includedGrades = [];
@@ -103,14 +104,14 @@
             powerTools.gpaValidation.retrieveGpa();
           })
         },
-        <!-- this will pull all relevant grade records and sort them into either includedGrades[] or excludedGrades[] -->
+        /* this will pull all relevant grade records and sort them into either includedGrades[] or excludedGrades[] */
         retrieveGrades: function() {
           var gradePushed;
           var current = [];
           var thisYearFlag = null;
           var currentYear;
           var triggers = {queryTerms:0,queryGrades:0,queryYears:0,queryCreditTypes:0,countgpa:0,classrank:0,honorroll:0,potentialcrhrs:0};  ;
-          <!-- will get the current year if the method will default to current year -->
+          /* will get the current year if the method will default to current year */
           if (powerTools.gpaValidation.methodInfo.calcType != 'current') {
             $j.ajaxSetup({
               async: false
@@ -129,7 +130,7 @@
           $j.getJSON('/admin/tech/PowerTools/json/gpaValidation/grabGpa.json?frn=' + powerTools.gpaValidation.studentFrn +
             '&calcType=' + powerTools.gpaValidation.methodInfo.calcType, function(result) {
               result.pop();
-              <!-- if the grades are cumulative or projected this block will trigger -->
+              /* if the grades are cumulative or projected this block will trigger */
               if (powerTools.gpaValidation.methodInfo.calcType == 'cumulative' || powerTools.gpaValidation.methodInfo.calcType ==
                 'projected' ||
                 powerTools.gpaValidation.methodInfo.calcType == '') {
@@ -197,7 +198,7 @@
                   }
                 }
               }
-              <!-- if current grade is selected this block will trigger -->
+              /* if current grade is selected this block will trigger */
               else {
                 for (var i = 0; i < result.length; i++) {
                   if (validGradeScale(result[i])) {
@@ -207,7 +208,7 @@
                   }
                 }
               }
-              <!-- if projected is selected this block will trigger as well -->
+              /* if projected is selected this block will trigger as well */
               if (powerTools.gpaValidation.methodInfo.calcType == "projected") {
                 if (powerTools.gpaValidation.methodInfo.projectType == "historical") {
                   var temp;
@@ -225,7 +226,7 @@
                     }
                   }
                 } else {
-                  <!-- returns an array with all of the current grades -->
+                  /* returns an array with all of the current grades */
                   $j.ajaxSetup({
                     async: false
                   });
@@ -252,14 +253,14 @@
             }).done(function() {
             powerTools.gpaValidation.readyCheck();
           });
-          <!-- Returns true if the method is blank or if record exists in the method -->
+          /* Returns true if the method is blank or if record exists in the method */
           function isIn(method, record) {
             if (!method || method.includes(record)) {
               return true;
             }
             return false;
           }
-          <!-- Returns true if the gradeScale is blank or if the grade exists in the grade scale -->
+          /* Returns true if the gradeScale is blank or if the grade exists in the grade scale */
           function validGradeScale(record) {
             if (!powerTools.gpaValidation.gradeScale == false) {
               return true;
@@ -271,7 +272,7 @@
             }            
             return false;
           }
-          <!-- returns true if the record is a current course and it meets the projected search critera -->
+          /* returns true if the record is a current course and it meets the projected search critera */
           function checkForCurrent(record) {
             for (var j = 0; j < powerTools.gpaValidation.includedGrades.length; j++) {
               if (Math.floor(powerTools.gpaValidation.includedGrades[j].termid / 100) == Math.floor(record.termid / 100) &&
@@ -292,7 +293,7 @@
             return true;
           }
         },
-        <!-- this will use powerSchool to calculate the gpa for display -->
+        /* this will use powerSchool to calculate the gpa for display */
         retrieveGpa: function() {
           $j.getJSON('/admin/tech/PowerTools/json/gpaValidation/calculateGpa.json?frn=' + powerTools.gpaValidation.studentFrn +
             '&gpaMethod="' +
@@ -302,7 +303,7 @@
             powerTools.gpaValidation.readyCheck();
           });
         },
-        <!-- waits to see that all relevant functions have compleated before displaying the data -->
+        /* waits to see that all relevant functions have compleated before displaying the data */
         readyCheck: function() {
           powerTools.gpaValidation.check++;
           if (powerTools.gpaValidation.check === 2) {
@@ -312,7 +313,7 @@
         /* Link to edit stored grades to insert into anchor on grade
            '<a href="/admin/students/esg.html?frn=031' + powerTools.adaTroubleshooter.includedGrades[i].dcid + '">'
            */
-        <!-- display function shows all grade data: Method, info, and records (included and excluded) -->
+        /* display function shows all grade data: Method, info, and records (included and excluded) */
         displayGpaData: function() {
           /* clear Divs before displaying records */
           $j('#calculations').empty();
@@ -394,7 +395,7 @@
             '</a></td></tr>' +
             '</table>'
           );
-          <!-- check if projected options need to be displayed, only show if projected grades used -->
+          /* check if projected options need to be displayed, only show if projected grades used */
           if (powerTools.gpaValidation.methodInfo.calcType == 'projected') {
             $j('#calcTable').append(
               '<tr><td> Projected Grades Are:</td><td>' + powerTools.gpaValidation.methodInfo.projectType + ' ' +
@@ -405,7 +406,7 @@
               '</td></tr>'
             )
           };
-          <!--table for all of the included grades and their relevant information -->
+          /*table for all of the included grades and their relevant information */
           $j('#includedGrades').append(
             '<table class = "grid"><th colspan="15" align="center"><b>Grades Included in GPA</b></th>' +
             '<tr><td>Term ID</td><td>Store Code</td><td>Grade Level</td><td>Course Number</td><td>Section Number</td>' +
@@ -438,7 +439,7 @@
             '</tbody>' +
             '</table>'
           );
-          <!-- If Projected grades is not empty this will build the table that will display them -->
+          /* If Projected grades is not empty this will build the table that will display them */
           if (powerTools.gpaValidation.projectedGrades.length > 0) {
             $j('#projectedGrades').append(
               '<table class = "grid"><th colspan="15" align="center"><b>Grades Projected in GPA</b></th>' +
@@ -473,7 +474,7 @@
               '</table>'
             );
           }
-          <!-- This will add the table for all of the grades that are excluded from the gpa calculation -->
+          /* This will add the table for all of the grades that are excluded from the gpa calculation */
           if (powerTools.gpaValidation.excludedGrades.length > 0) {
             $j('#excludedGrades').append(
               '<table class = "grid"><th colspan="15" align="center"><b>Grades Excluded in GPA</b></th>' +
@@ -508,12 +509,12 @@
               '</table>'
             );
           }
-          <!-- Replaces anything that is not a number with 0 -->
+          /* Replaces anything that is not a number with 0 */
           function isANumber(num) {
             if (num !== num) return 0;
             else return num;
           }
-          <!-- changes all null values to presets -->
+          /* changes all null values to presets */
           function changeValues() {
             var yearsArr = [0];
             var uniqueYear;
@@ -569,7 +570,7 @@
               powerTools.gpaValidation.methodInfo.queryYears = '(Default: All)';
             }
           }
-          <!-- sets all of the null values for records to appropriate values -->
+          /* sets all of the null values for records to appropriate values */
           function changeRecords(record) {
             if (!record.gpa_addedvalue) record.gpa_addedvalue = '(Blank)';
             if (!record.earnedcrhrs) record.earnedcrhrs = '(Blank)';
@@ -641,7 +642,7 @@
         },
       }
     };
-     <!-- when document loads retrieve the methods for the selection and wait for selection to call methodSubmit -->
+     /* when document loads retrieve the methods for the selection and wait for selection to call methodSubmit */
     $j(document).ready(function() {
       powerTools.gpaValidation.retrieveGpaMethods();
       powerTools.gpaValidation.checkForDuplicates();
