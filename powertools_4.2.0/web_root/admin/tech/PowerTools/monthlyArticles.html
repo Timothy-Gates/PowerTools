@@ -10,7 +10,8 @@
 </head>
 
 <body>
-~[wc:admin_header_css]<!-- breadcrumb start --><a href="/admin/home.html" target="_top">Home</a> &gt;Trending PowerSource Articles<!-- breadcrumb end -->
+~[wc:admin_header_css]
+<!-- breadcrumb start --><a href="/admin/home.html" target="_top">Home</a> &gt;Trending PowerSource Articles<!-- breadcrumb end -->
 ~[wc:admin_navigation_css]
 <!-- start of content and bounding box -->
 <h1 id="monthlyArticlesTitle">Trending PowerSource Articles For </h1>
@@ -46,7 +47,7 @@
 					'<td style="font-weight:bold;" class="powerToolsArticle" id="powerToolsTr' + i + j + '">' +
 						'<div style="float:left; width:85%"><a href="https://support.powerschool.com/' + powerToolsArticlesArr[i].articles[j].number + '" target="_blank">'+ powerToolsArticlesArr[i].articles[j].name + '</a></div>' +
 						'<div align="right" style="float:right; width:14%">'+ 
-							'<a href="https://support.powerschool.com/' + powerToolsArticlesArr[i].articles[j].number + '" target="_blank">' + powerToolsArticlesArr[i].articles[j].number.split('/')[powerToolsArticlesArr[i].articles[j].number.split('/').length -1] +'</a></div>' +
+							'<a href="https://support.powerschool.com/' + powerToolsArticlesArr[i].articles[j].number + '" target="_blank"># ' + powerToolsArticlesArr[i].articles[j].number.split('/')[powerToolsArticlesArr[i].articles[j].number.split('/').length -1] +'</a></div>' +
 						'<div id="powerToolsArticle' + i + j + '" style="display: none; width:100%;">'+ 
 							'<div style="float:right; width: 90% ">' + powerToolsArticlesArr[i].articles[j].body + '</div>' +
 						'</div>' +
@@ -99,10 +100,10 @@
   }
   	$j('#monthlyArticlesTitle').append(formatedDate);
 	$j(document).on('mouseenter', '.powerToolsArticle', function() {
-		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).show('fast');
+		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).stop(true,false).show('fast');
 	});
 	$j(document).on('mouseleave', '.powerToolsArticle', function() {
-		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).hide('fast');
+		$j('#powerToolsArticle'+ $j(this).attr('id').split('powerToolsTr')[1]).stop(true,false).hide('slow');
 	});
 </script>
 </div>

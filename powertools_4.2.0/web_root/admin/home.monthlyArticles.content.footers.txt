@@ -1,0 +1,55 @@
+
+<script>
+	var formatedDate = formatMonth();
+	function formatMonth(){
+		  var date = '~[date]';
+		  switch(date.split('/')[0]){
+		  case '01':
+			  date= 'January, ' + date.split('/')[2];
+			  break;
+		  case '02':
+			  date= 'February, ' + date.split('/')[2];
+			  break;
+		  case '03':
+			  date= 'March, ' + date.split('/')[2];
+			  break;
+		  case '04':
+			  date= 'April, ' + date.split('/')[2];
+			  break;
+		  case '05':
+			  date= 'May, ' + date.split('/')[2];
+			  break;
+		  case '06':
+			  date= 'June, ' + date.split('/')[2];
+			  break;
+		  case '07':
+			  date= 'July, ' + date.split('/')[2];
+			  break;
+		  case '08':
+			  date= 'August, ' + date.split('/')[2];
+			  break;
+		  case '09':
+			  date= 'September, ' + date.split('/')[2];
+			  break;
+		  case '10':
+			  date= 'October, ' + date.split('/')[2];
+			  break;
+		  case '11':
+			  date= 'November, ' + date.split('/')[2];
+			  break;
+		  case '12':
+			  date= 'December, ' + date.split('/')[2];
+		  }
+		  return date;
+	}
+	$j(document).ready(function(){
+		$j('#content-main').append(
+			'<div class="box-round">' +
+				'<h2><a href="/admin/tech/powerTools/monthlyArticles.html" id="monthlyArticlesTitle">Trending PowerSource Articles For </a></h2>' +
+				'<p>See what articles are trending for users in PowerSource this month! <a href="/admin/tech/powerTools/monthlyArticles.html">Read more...</a></p>' +
+				'<div class="tableBody" id="powerToolsArticles"></div>' +
+			'</div>'
+		);	
+		$j('#monthlyArticlesTitle').append(formatedDate + '    <img src="/images/powerToolsBookOwl.jpeg" width="20px">');
+	});
+</script>
