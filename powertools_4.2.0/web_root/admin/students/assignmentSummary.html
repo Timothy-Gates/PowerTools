@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<!-- start right frame -->
+<head>
+  <title>Assignment Summary</title>
+  ~[wc:commonscripts]
+  <link href="/images/css/screen.css" rel="stylesheet" media="screen">
+  <link href="/images/css/print.css" rel="stylesheet" media="print">
+  <script>
+  var powerTools = powerTools || {
+      assignmentSummary: {
+        studentFrn: '~(frn)',
+        currentSection: ''
+        grades: [{section: 'Math', grade: 'A', bin: 'Q1'},{section: 'Math', grade: 'A', bin: 'Q1'},{section: 'Math', grade: 'B', bin: 'Q2'},{section: 'Science', grade: 'C+', bin: 'Q1'},{section: 'Science', grade: 'A', bin: 'Q1'},{section: 'Science', grade: 'A', bin: 'Q2'},{section: 'Science', grade: 'D-', bin: 'Q2'}],
+        buildGradeTree: function(){
+        	for(var i = 0; i < powerTools.assignmentSummary.grades.length; i++){
+        		powerTools.assingmentSummary.currentSection = powerTools.assignmentSummary.grades[i].section;
+            	$j('')	
+        	}
+        }         
+      }
+  };
+  $j(document).ready(function(){
+	  powerTools.assignmentSummary.buildGradeTree();
+  });
+  </script>
+</head>
+<body>
+  ~[wc:admin_header_frame_css]
+  <!-- breadcrumb start -->
+  <a href="/admin/home.html" target="_top">~[text:psx.html.admin_students.honorroll.start_page]</a>
+  &gt; <a href="home.html?selectstudent=nosearch" target="_top">~[text:psx.html.admin_students.honorroll.student_selection]</a>
+  &gt; Assignment Summary
+  <!-- breadcrumb end -->
+  ~[wc:admin_navigation_frame_css] ~[wc:title_student_begin_css]Assignment Summary~[wc:title_student_end_css]
+  <h1>Classes with Grade Records:</h1>
+  <div class="box-round">
+    <div id="Error" name="Error" style="border-color: red;"></div>
+    <div name="classInfo" id="classInfo" style="border-color : green">
+    	<h2>GET BACK TO WORK... I SEE YOU SNOOPIN!!!!</h2>
+    </div>
+    <!-- end of content of bounding box -->
+    ~[wc:admin_footer_frame_css]
+  </div>
+</body>
+</html>
