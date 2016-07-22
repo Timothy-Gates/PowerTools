@@ -9,5 +9,4 @@
                ('<li><a href="/admin/students/assignmentSummary.html?frn=~(studentfrn)">Assignment Summary</a></li>')+
                ('<li><a href="/admin/tech/PowerTools/ptstudentreport.html?frn=~(studentfrn)">Student Report</a></li>')
            );
-           test
          </script>
