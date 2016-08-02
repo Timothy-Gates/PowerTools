@@ -9,11 +9,15 @@ var GradeNode = function(grade){
 	this.value = grade;
 	this.x = 0;
 	this.y = 0;
+<<<<<<< HEAD
 	this.preX = 0;
 	this.prevY = 0;
 	this.visibility= false;
 	this.tree = [];
 	this.height = 0;
+=======
+	this.visible = false;
+>>>>>>> bb0c08f4a9c4b6d0aedf843cf3b0b96f1f6da71d
 }
 GradeNode.prototype.addChild = function(grade, parent){
 	if(this.value == parent){
@@ -25,6 +29,7 @@ GradeNode.prototype.addChild = function(grade, parent){
 		this.children[i].addChild(grade, parent);
 	}
 }
+<<<<<<< HEAD
 GradeNode.prototype.makeVisible = function(head){
 	for(var i = 0; i < this.children.length; i++){
 		this.children[i].visibility = true;
@@ -71,5 +76,17 @@ GradeNode.prototype.setPosition = function(head){
 	}
 	else{
 		
+=======
+GradeNode.prototype.setPosition = function(x,y){
+	this.x = x;
+	this.y = y;
+}
+GradeNode.prototype.buildTreePositions = function(head){
+	if(this == head){
+		
+	}
+	else{
+		this
+>>>>>>> bb0c08f4a9c4b6d0aedf843cf3b0b96f1f6da71d
 	}
 }
