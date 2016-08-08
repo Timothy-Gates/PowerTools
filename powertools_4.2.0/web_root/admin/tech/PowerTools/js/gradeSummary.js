@@ -9,15 +9,12 @@ var GradeNode = function(grade){
 	this.value = grade;
 	this.x = 0;
 	this.y = 0;
-<<<<<<< HEAD
 	this.preX = 0;
 	this.prevY = 0;
 	this.visibility= false;
 	this.tree = [];
 	this.height = 0;
-=======
-	this.visible = false;
->>>>>>> bb0c08f4a9c4b6d0aedf843cf3b0b96f1f6da71d
+	this.maxWidth = 0;
 }
 GradeNode.prototype.addChild = function(grade, parent){
 	if(this.value == parent){
@@ -29,7 +26,6 @@ GradeNode.prototype.addChild = function(grade, parent){
 		this.children[i].addChild(grade, parent);
 	}
 }
-<<<<<<< HEAD
 GradeNode.prototype.makeVisible = function(head){
 	for(var i = 0; i < this.children.length; i++){
 		this.children[i].visibility = true;
@@ -38,10 +34,10 @@ GradeNode.prototype.makeVisible = function(head){
 }
 GradeNode.prototype.getDimentions = function(head){
 	if(head.tree.length < head.tree.height - 1){
-		head.tree.length.push(1);
+		head.tree.push({size: 1, place: 1});
 	}
 	else{
-		head.tree[height-1] += 1;
+		head.tree[height-1].size += 1;
 	}
 	for(var i = 0; i < this.children.length; i++){
 		if(this.children[i].visibility == true){
@@ -54,39 +50,29 @@ GradeNode.prototype.getDimentions = function(head){
 		}
 	}
 	if(this == head){
+		for(var i = 0; i < head.tree.length; i++){
+			if(head.tree[i].size > head.maxWidth){
+				head.maxWidth = head.tree[i].size;
+			}
+		}
 		this.setPosition(head);
 	}
 }
 GradeNode.prototype.setPosition = function(head){
-	for(var i = 0; i < this.children.length; i++){
-		if(this.children[i].visibility == true){
+	this.prevX = this.x;
+	this.prevY = this.y;
+	this.x = (this.tree.length - 1 - head.height) * 100;
+	if(this.children.length > 0){
+		this.y = (this.children[0].y + this.children[this.children.length -1].y)/2;
+	}
+	else{
+		
+	}
+	if(this.children.length > 0){
+		for(var i = 0; i < this.children.length; i++){
 			head.height++;
 			this.children[i].setPosition(head);
 			head.height--;
 		}
-		else{
-			break;
-		}
-	}
-	this.prevX = this.x;
-	this.prevY = this.y;
-	this.x = (this.tree.length - 1 - this.height) * 100;
-	if(this.children.length > 0){
-		
-	}
-	else{
-		
-=======
-GradeNode.prototype.setPosition = function(x,y){
-	this.x = x;
-	this.y = y;
-}
-GradeNode.prototype.buildTreePositions = function(head){
-	if(this == head){
-		
-	}
-	else{
-		this
->>>>>>> bb0c08f4a9c4b6d0aedf843cf3b0b96f1f6da71d
 	}
 }
